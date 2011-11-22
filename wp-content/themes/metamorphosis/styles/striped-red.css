@@ -1,0 +1,4 @@
+/* Style: striped-red */
+
+body { background:#000000 url(striped-red/bg-tile.jpg) repeat center top;}
+#wrap { background: url(striped-red/bg.jpg) repeat-x center top; }

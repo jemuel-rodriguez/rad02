@@ -1,0 +1,11 @@
+#pagenav li a:hover span.left, #pagenav li.current_page_item span.left  {
+	background: none;
+}
+
+#pagenav li a:hover span.right, #pagenav li.current_page_item span.right  {
+	background: none !important;
+}
+
+#pagenav li a:hover, #pagenav li.current_page_item a:link, #pagenav li.current_page_item a:visited  {
+	background: #7F7F7F;
+}

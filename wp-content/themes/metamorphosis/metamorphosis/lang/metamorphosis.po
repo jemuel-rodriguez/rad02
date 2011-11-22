@@ -1,0 +1,321 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Text in function
+#: metamorphosis/archive.php:30
+msgid " Older Entries &raquo;"
+msgstr ""
+
+#. Text in function
+#: metamorphosis/comments.php:19
+#: metamorphosis/search.php:16
+#: metamorphosis/index.php:33
+#: metamorphosis/archive.php:16
+msgid "% Comments"
+msgstr ""
+
+#. Text in function
+#: metamorphosis/archive.php:29
+msgid "&laquo; Newer Entries "
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:141
+#: metamorphosis/comments-legacy.php:144
+#: metamorphosis/comments.php:79
+#: metamorphosis/comments.php:82
+msgid "(required)"
+msgstr ""
+
+#. Text in function
+#: metamorphosis/comments.php:19
+#: metamorphosis/search.php:16
+#: metamorphosis/index.php:33
+#: metamorphosis/archive.php:16
+msgid "0 Comments"
+msgstr ""
+
+#. Text in function
+#: metamorphosis/comments.php:19
+#: metamorphosis/search.php:16
+#: metamorphosis/index.php:33
+#: metamorphosis/archive.php:16
+msgid "1 Comment"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/footer.php:46
+msgid "All Rights Reserved"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/header.php:11
+#: metamorphosis/header.php:12
+msgid "Archive"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/header.php:8
+msgid "Author Archives"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:37
+msgid "Comments For This Post"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:117
+#: metamorphosis/comments.php:48
+msgid "Comments are closed."
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/footer.php:49
+msgid "Delicious font by"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/footer.php:49
+msgid "Designed by"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/404.php:11
+msgid "Error 404 - Page not found!"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/header.php:73
+msgid "Go"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/header.php:47
+msgid "Home"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:126
+msgid "Leave a Reply"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments.php:74
+msgid "Log out of this account"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:136
+#: metamorphosis/comments.php:74
+msgid "Logged in as"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments.php:74
+msgid "Logout"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:136
+msgid "Logout &raquo;"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:144
+#: metamorphosis/comments.php:82
+msgid "Mail (will not be published)"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/index.php:14
+msgid "More Featured Stories"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:141
+#: metamorphosis/comments.php:79
+msgid "Name"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/includes/theme-widgets.php:14
+msgid "Photos on"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/search.php:16
+#: metamorphosis/index.php:33
+#: metamorphosis/index.php:72
+#: metamorphosis/archive.php:16
+msgid "Posted by"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/single.php:15
+msgid "Posted on"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/footer.php:49
+msgid "Powered by"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/index.php:53
+msgid "Recently Added"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:55
+msgid "Says:"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/header.php:7
+msgid "Search Results"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/page.php:22
+#: metamorphosis/single.php:36
+#: metamorphosis/search.php:24
+#: metamorphosis/index.php:82
+#: metamorphosis/archive.php:24
+msgid "Sorry, no posts matched your criteria."
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments.php:93
+msgid "Submit"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:155
+msgid "Submit Comment"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/header.php:13
+msgid "Tag Archive"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/404.php:12
+msgid "The page you trying to reach does not exist, or has been moved. Please use the menus or the search box to find what you are looking for."
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/footer.php:20
+msgid "This area is controlled in your WP admin under <strong>Apperance > Widgets</strong>. You need to"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/index.php:44
+msgid "This is the <strong>featured posts area</strong> where you can add posts by"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:9
+#: metamorphosis/comments.php:7
+msgid "This post is password protected. Enter the password to view comments."
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:79
+msgid "Trackbacks For This Post"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments.php:33
+msgid "Trackbacks/Pingbacks"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:147
+#: metamorphosis/comments.php:85
+msgid "Website"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:129
+#: metamorphosis/comments.php:67
+msgid "You must be"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:57
+#: metamorphosis/comments-legacy.php:89
+msgid "Your comment is awaiting moderation."
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/includes/theme-comments.php:18
+msgid "Your comment is awaiting moderation.<"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/footer.php:20
+msgid "add your desired widgets"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/index.php:44
+msgid "adding a tag named \"featured\""
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:61
+msgid "at"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/single.php:15
+msgid "by"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/single.php:15
+#: metamorphosis/search.php:16
+#: metamorphosis/index.php:33
+#: metamorphosis/index.php:72
+#: metamorphosis/archive.php:16
+msgid "in"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:129
+#: metamorphosis/comments.php:67
+msgid "logged in"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/search.php:16
+#: metamorphosis/index.php:33
+#: metamorphosis/index.php:72
+#: metamorphosis/archive.php:16
+msgid "on"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/header.php:72
+msgid "search"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments.php:19
+msgid "to"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/footer.php:20
+msgid "to one of the 9 widget areas (Footer1-9)"
+msgstr ""
+
+#. Text in echo
+#: metamorphosis/comments-legacy.php:129
+#: metamorphosis/comments.php:67
+msgid "to post a comment."
+msgstr ""

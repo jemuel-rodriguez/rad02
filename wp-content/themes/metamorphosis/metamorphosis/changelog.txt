@@ -1,0 +1,60 @@
+*** Meta-Morphosis Changelog ***
+
+2011.01.03 - version 1.4.2
+ * style.css - IE8 footer widgets opacity bug
+
+2010.06.28 - version 1.4.1
+ * style.css - Fixed Gravity forms styling bug
+
+2010.06.21 - version 1.4.0
+ * header.php - Added theme support for WordPress 3.0 Menu Management
+ * /includes/theme-functions.php - Added theme support for WordPress 3.0 Menu Management
+ 
+2010.06.15 - version 1.3.1
+ * style.css - Added styling for Gravity forms
+
+2010.04.21 - version 1.3
+ * /functions/* - MAJOR UPDATE - Framework V.2.7.0
+ * header.php  - Added SEO tags, prime_title(); & prime_meta();
+ * functions.php - Changed layout for loading required files.
+
+2010.03.18 - version 1.2.4
+ * header.php - added IE7 emulation for IE8 footer display bug
+
+2009.09.17 - version 1.2.3
+ * /functions/* - Core Framework 1.1
+ * /psd/* - Added Photoshop file
+
+2009.08.19 - version 1.2.2
+ * /functions/* - Core Framework 1.0.7
+ * /lang/metamorphosis.po - Added language file. See: http://www.primethemes.com/2009/08/how-to-translate-a-theme/
+ * Added gettext functions to template php files to support localization.
+
+2009.08.19 - version 1.2.1
+ * header.php - fixed bug in logo (line 54)
+
+2009.08.11 - version 1.2
+  * /functions/ - Core framework upgrade to V.1.0.5
+
+2009.07.28 - version 1.1
+  * /functions/ - Core framework upgrade to V.1.0.4
+  * /includes/theme-options.php - Added Custom CSS backend option
+  * /includes/theme-functions.php - Removed duplicate get_page_id() function
+
+2009.06.08 - version 1.0.4
+	* /includes/theme-comments.php - Fixed comment styling
+
+2009.06.05 - version 1.0.3
+	* /functions/ - core update (auto save bug)
+
+2009.06.03 - version 1.0.2
+	* /functions/ - core update
+	* /includes/theme-options.php - Copy Update
+
+2009.05.18 - version 1.0.1
+	* functions.php - Defualt framework reset
+        * /functions/ - Upgrade
+        * /includes/ Added new files and renames others (sidebar-init.php, theme-comments.php, theme-functions.php, theme-js, theme-options.php, theme-widgets.php)
+
+2009.04.23 - version 1.0
+	* First release!

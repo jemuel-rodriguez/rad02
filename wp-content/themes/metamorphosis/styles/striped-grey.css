@@ -1,0 +1,4 @@
+/* Style: striped-grey */
+
+body { background:#000000 url(striped-grey/bg-tile.jpg) repeat center top;}
+#wrap { background: url(striped-grey/bg.jpg) repeat-x center top; }
