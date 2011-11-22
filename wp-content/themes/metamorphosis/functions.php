@@ -25,4 +25,7 @@ require_once ($includes_path . 'theme-widgets.php');		// Theme widgets
 /* End primeThemes Functions - You can add custom functions below */
 /*===================================================================================*/
 
+
+/* Comments */
+
 ?>
