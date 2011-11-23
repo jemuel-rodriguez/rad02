@@ -2003,9 +2003,12 @@ function prime_custom_navigation_default_sub_items($childof, $intCounter, $paren
 
 }
 
-/*===================================================================================*/
+/**
+ *
+ *
+ *
 /* Recursive get children */
-/*===================================================================================*/
+
 
 function get_children_menu_elements($childof, $intCounter, $parentli, $type, $menu_id, $table_name) {
 
@@ -2119,9 +2122,12 @@ function get_children_menu_elements($childof, $intCounter, $parentli, $type, $me
 	return $counter;
 }
 
-/*================================================================================-*/
+/**
+ *
+ *
+ *
 /* primethemes Custom Navigation Menu Widget */
-/*================================================================================-*/
+
 
 class prime_NavWidget extends WP_Widget {
 
