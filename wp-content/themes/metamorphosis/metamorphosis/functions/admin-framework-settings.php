@@ -1,8 +1,9 @@
 <?php
-/*===================================================================================*/
-/* Framework Settings page - primethemes_framework_settings_page */
-/*===================================================================================*/
-
+/**
+ * 
+ *
+ * Framework Settings page - primethemes_framework_settings_page
+ */
 function primethemes_framework_settings_page(){
 
     $themename =  get_option('prime_themename');      
