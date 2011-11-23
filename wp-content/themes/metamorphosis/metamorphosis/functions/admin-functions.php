@@ -4,14 +4,14 @@
 
 TABLE OF CONTENTS
 
-- prime_image - Get Image from custom field
+* prime_image - Get Image from custom field
     - vt_resize - Resize post thumbnail
     - prime_get_youtube_video_image - Get thumbnail from YouTube
-- prime_get_embed - Get Video
-- prime Show Page Menu
-- Get the style path currently selected
-- Get page ID
-- Tidy up the image source url
+* prime_get_embed - Get Video
+* prime Show Page Menu
+* Get the style path currently selected
+* Get page ID
+* Tidy up the image source url
 - Show image in RSS feed
 - Show analytics code footer
 - Browser detection body_class() output

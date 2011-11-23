@@ -48,7 +48,6 @@ function express_version() {
  * Returns in a specific range to enable paging.
  *
  */
-	
 function express_getPostsWithOffset($args){
 	global $wpdb;
 	global $wp_xmlrpc_server;
@@ -168,7 +167,6 @@ function express_getPostsWithOffset($args){
  * Adds the post_id in the returned value
  *
  */
-	
 function express_uploadFile($args) {
 	global $wpdb;
 	global $wp_xmlrpc_server;
@@ -247,7 +245,6 @@ function express_uploadFile($args) {
  * Set the proper taxonomy
  *
  */
-	
 function express_prime_taxonomy($args) {
 	$content_struct = $args[3];
 
@@ -296,7 +293,6 @@ function express_prime_taxonomy($args) {
  * Sets post custom taxonomy
  *
  */
-	
 function express_newPost($args) {
 	global $wp_xmlrpc_server;
 	
@@ -336,7 +332,6 @@ function express_newPost($args) {
  * Sets post custom taxonomy
  *
  */
-	
 function express_editPost($args) {
 	global $wp_xmlrpc_server;
 	

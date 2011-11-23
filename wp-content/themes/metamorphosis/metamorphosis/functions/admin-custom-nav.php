@@ -4,10 +4,10 @@
 
 TABLE OF CONTENTS
 
-- primethemes Custom Navigation Setup
--- primethemes Custom Navigation Setup
--- primethemes Custom Navigation Menu Item
--- primethemes Custom Navigation Scripts
+* primethemes Custom Navigation Setup
+* primethemes Custom Navigation Setup
+* primethemes Custom Navigation Menu Item
+* primethemes Custom Navigation Scripts
 - primethemes Custom Navigation Interface
 - primethemes Custom Navigation Functions
 -- prime_custom_navigation_output()
