@@ -1,6 +1,9 @@
 <?php
 
-/*===================================================================================
+/**
+ *
+ *
+ *
 
 TABLE OF CONTENTS
 
@@ -19,15 +22,18 @@ TABLE OF CONTENTS
 - Recursive Get Child Items Function
 - primethemes Custom Navigation Menu Widget
 
-===================================================================================*/
+ */
 
 
-/*===================================================================================*/
+/**
+ *
+ *
+ *
 /* primethemes Custom Navigation Menu Setup
 /* Setup of the Menu
 /* Add Menu Item to the theme
 /* Scripts - JS and CSS
-/*===================================================================================*/
+ */
 
 
 function prime_custom_navigation_setup() {
