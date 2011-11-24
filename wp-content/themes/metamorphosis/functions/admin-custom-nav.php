@@ -6,28 +6,24 @@
  * primethemes Custom Navigation Setup
  * primethemes Custom Navigation Menu Item
  * primethemes Custom Navigation Scripts
-- primethemes Custom Navigation Interface
-- primethemes Custom Navigation Functions
--- prime_custom_navigation_output()
--- prime_custom_navigation_sub_items()
--- prime_child_is_current()
--- prime_get_pages()
--- prime_get_categories()
--- prime_custom_navigation_default_sub_items()
-- Recursive Get Child Items Function
-- primethemes Custom Navigation Menu Widget
-
+ * primethemes Custom Navigation Interface
+ * primethemes Custom Navigation Functions
+ * prime_custom_navigation_output()
+ * prime_custom_navigation_sub_items()
+ * prime_child_is_current()
+ * prime_get_pages()
+ * prime_get_categories()
+ * prime_custom_navigation_default_sub_items()
+ * Recursive Get Child Items Function
+ * primethemes Custom Navigation Menu Widget
  */
 
 
 /**
- *
- *
- *
-/* primethemes Custom Navigation Menu Setup
-/* Setup of the Menu
-/* Add Menu Item to the theme
-/* Scripts - JS and CSS
+ * primethemes Custom Navigation Menu Setup
+ * Setup of the Menu
+ * Add Menu Item to the theme
+ * Scripts - JS and CSS
  */
 
 
