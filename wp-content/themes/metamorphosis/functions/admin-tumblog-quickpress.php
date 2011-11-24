@@ -12,19 +12,19 @@
 
 TABLE OF CONTENTS
 
-- Register Actions
--- prime_register_tumblog_dashboard_widget()
--- prime_load_tumblog_libraries()
--- prime_load_tumblog_css()
-- AJAX Callback Functions
--- prime_tumblog_ajax_post()
--- prime_tumblog_publish()
--- prime_tumblog_file_upload()
-- Dashboard Widget
--- prime_tumblog_dashboard_widget_output()
-- Tumblog Upgrade
--- primethemes_tumblog_page
--- prime_upgrade_existing_tumblog_posts
+ * Register Actions
+ * prime_register_tumblog_dashboard_widget()
+ * prime_load_tumblog_libraries()
+ * prime_load_tumblog_css()
+ * AJAX Callback Functions
+ * prime_tumblog_ajax_post()
+ * prime_tumblog_publish()
+ * prime_tumblog_file_upload()
+ * Dashboard Widget
+ * prime_tumblog_dashboard_widget_output()
+ * Tumblog Upgrade
+ * primethemes_tumblog_page
+ * prime_upgrade_existing_tumblog_posts
 ===================================================================================*/
 
 /*===================================================================================*/
