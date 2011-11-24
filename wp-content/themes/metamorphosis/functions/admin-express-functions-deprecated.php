@@ -10,25 +10,31 @@
  * Enter Values as array
  * array ( 'tags' => '', 'taxonomy' => '' )
  */
-function set_new_taxonomy_tag($post_id, $fields) {
+
+function set_new_taxonomy_tag($post_id, $fields)
+{
 	$post_id = (int) $post_id;
 
-	foreach ( (array) $fields as $tax ) {
-		if ( isset($tax['id']) ) {
+	foreach ( (array) $fields as $tax )
+	{
+		if ( isset($tax['id']) )
+		{
 			$tax['id'] = (int) $tax['id'];
 			
-			if ( isset($tax['taxonomy']) ) {
+				if ( isset($tax['taxonomy']) )
+				{
 				wp_set_post_terms($tax['id'], $tax['tags'], $tax['taxonomy']);
-			}
+				}
 		}	
-		elseif ($post_id != '') {
-			if ( isset($tax['taxonomy']) ) {
+		elseif ($post_id != '')
+		{
+			if ( isset($tax['taxonomy']) )
+			{
 				wp_set_post_terms($post_id, $tax['tags'], $tax['taxonomy']);
 			}			
 		}
 	}
 }
-
 
 /*
  * Express version
@@ -41,12 +47,10 @@ function express_version() {
 	return "1.0";
 }
 
-
 /*
  * Get Posts With Offset
  *
  * Returns in a specific range to enable paging.
- *
  */
 	
 function express_getPostsWithOffset($args){
