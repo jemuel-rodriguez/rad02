@@ -1,8 +1,6 @@
 <?php
 
-/*===================================================================================*/
 /* Start primeThemes Functions - Please refrain from editing this section */
-/*===================================================================================*/
 
 // Set path to primeFramework and theme specific functions
 $functions_path = TEMPLATEPATH . '/functions/';
@@ -21,9 +19,7 @@ require_once ($includes_path . 'theme-js.php');				// Load javascript in wp_head
 require_once ($includes_path . 'sidebar-init.php');			// Initialize widgetized areas
 require_once ($includes_path . 'theme-widgets.php');		// Theme widgets
 
-/*===================================================================================*/
 /* End primeThemes Functions - You can add custom functions below */
-/*===================================================================================*/
 
 
 /* Comments */
