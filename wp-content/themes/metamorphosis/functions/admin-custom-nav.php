@@ -1,6 +1,6 @@
 <?php
 
-/*===================================================================================
+/*
 
 TABLE OF CONTENTS
 
@@ -19,15 +19,15 @@ TABLE OF CONTENTS
 - Recursive Get Child Items Function
 - primethemes Custom Navigation Menu Widget
 
-===================================================================================*/
+*/
 
 
-/*===================================================================================*/
-/* primethemes Custom Navigation Menu Setup
-/* Setup of the Menu
-/* Add Menu Item to the theme
-/* Scripts - JS and CSS
-/*===================================================================================*/
+/*
+  primethemes Custom Navigation Menu Setup
+  Setup of the Menu
+  Add Menu Item to the theme
+  Scripts - JS and CSS
+*/
 
 
 function prime_custom_navigation_setup() {
@@ -118,8 +118,10 @@ function prime_custom_navigation_setup() {
 				$insert = "INSERT INTO ".$table_name_menus." (menu_name) "."VALUES ('prime Menu 1')";
   				$results = $wpdb->query( $insert );
   			
-  				//POPULATE with first menu content
-  				//Pages
+  				/*
+  				POPULATE with first menu content
+  				Pages
+  				*/
   				$table_name = $wpdb->prefix . "prime_custom_nav_records";
   				
   				//GET all current pages
@@ -158,12 +160,16 @@ function prime_custom_navigation_setup() {
 							$parent_id = 0;
 						}
 						
-						//INSERT page		
-						//Convert string to UTF-8
+						/*
+						INSERT page		
+						Convert string to UTF-8
+						*/
 						$str_converted = stripslashes($post->post_title);
-						//$insert_title = htmlspecialchars($str_converted, ENT_QUOTES, 'UTF-8');						
-						//$insert = "INSERT INTO ".$table_name." (position,post_id,parent_id,custom_title,custom_link,custom_description,menu_icon,link_type,menu_id,custom_anchor_title) "."VALUES ('".$counter."','".$post->ID."','".$parent_id."','".$insert_title."','".get_permalink($post->ID)."','','','page','1','".$insert_title."')";
-	  					//$results = $wpdb->query( $insert );
+						/*
+						$insert_title = htmlspecialchars($str_converted, ENT_QUOTES, 'UTF-8');						
+						$insert = "INSERT INTO ".$table_name." (position,post_id,parent_id,custom_title,custom_link,custom_description,menu_icon,link_type,menu_id,custom_anchor_title) "."VALUES ('".$counter."','".$post->ID."','".$parent_id."','".$insert_title."','".get_permalink($post->ID)."','','','page','1','".$insert_title."')";
+	  					$results = $wpdb->query( $insert );
+	  					*/
 	  					$results = $wpdb->insert( $table_name, array( 'position' => $counter, 'post_id' => $post->ID, 'parent_id' => $parent_id, 'custom_title' => $str_converted, 'custom_link' => get_permalink($post->ID), 'custom_description' => '', 'menu_icon' => '', 'link_type' => 'page', 'menu_id' => '1', 'custom_anchor_title' => $str_converted ));
 	  					
 	  					$counter++;
@@ -201,9 +207,10 @@ function prime_custom_navigation_setup() {
 				$insert = "INSERT INTO ".$table_name_menus." (menu_name) "."VALUES ('prime Menu 2')";
   				$results = $wpdb->query( $insert );
 
-				//POPULATE with second menu content
-  				//GET all current pages
-					
+				/*
+				POPULATE with second menu content
+  				GET all current pages
+				*/	
 				$counter = 1;
 				
   				//GET all current categories
@@ -225,12 +232,16 @@ function prime_custom_navigation_setup() {
 							$parent_id = 0;
 						}
 						
-						//INSERT category
-						//Convert string to UTF-8
+						/*
+						INSERT category
+						Convert string to UTF-8
+						*/
 						$str_converted = stripslashes($cat_item->cat_name);
-						//$insert_title = htmlspecialchars($str_converted, ENT_QUOTES, 'UTF-8');
-						//$insert = "INSERT INTO ".$table_name." (position,post_id,parent_id,custom_title,custom_link,custom_description,menu_icon,link_type,menu_id) "."VALUES ('".$counter."','".$cat_item->cat_ID."','".$parent_id."','".$insert_title."','".get_category_link($cat_item->cat_ID)."','','','category','2')";
-	  					//$results = $wpdb->query( $insert );
+						/*
+						$insert_title = htmlspecialchars($str_converted, ENT_QUOTES, 'UTF-8');
+						$insert = "INSERT INTO ".$table_name." (position,post_id,parent_id,custom_title,custom_link,custom_description,menu_icon,link_type,menu_id) "."VALUES ('".$counter."','".$cat_item->cat_ID."','".$parent_id."','".$insert_title."','".get_category_link($cat_item->cat_ID)."','','','category','2')";
+	  					$results = $wpdb->query( $insert );
+	  					*/
 	  					$results = $wpdb->insert( $table_name, array( 'position' => $counter, 'post_id' => $cat_item->cat_ID, 'parent_id' => $parent_id, 'custom_title' => $str_converted, 'custom_link' => get_category_link($cat_item->cat_ID), 'custom_description' => '', 'menu_icon' => '', 'link_type' => 'category', 'menu_id' => '2', 'custom_anchor_title' => $str_converted ));
 		 
 	  					$counter++;
@@ -304,11 +315,11 @@ function prime_custom_nav_scripts() {
 
 
 
-/*===================================================================================*/
-/* primethemes Custom Navigation Menu Interface
-/* prime_custom_navigation() is the main function for the Custom Navigation
-/* See functions in admin-functions.php
-/*===================================================================================*/
+/*
+ primethemes Custom Navigation Menu Interface
+ prime_custom_navigation() is the main function for the Custom Navigation
+ See functions in admin-functions.php
+*/
 
 function prime_custom_navigation() {
 	global $wpdb;
@@ -988,25 +999,25 @@ function prime_custom_navigation() {
 
 
 
-/*===================================================================================*/
-/* primeThemes Custom Navigation Functions */
-/* prime_custom_navigation_output() displays the menu in the back/frontend
-/* prime_custom_navigation_sub_items() is a recursive sub menu item function
-/* prime_get_pages()
-/* prime_get_categories()
-/* prime_custom_navigation_default_sub_items() is a recursive sub menu item function
-/*===================================================================================*/
+/*
+ primeThemes Custom Navigation Functions 
+ prime_custom_navigation_output() displays the menu in the back/frontend
+ prime_custom_navigation_sub_items() is a recursive sub menu item function
+ prime_get_pages()
+ prime_get_categories()
+ prime_custom_navigation_default_sub_items() is a recursive sub menu item function
 
-/*===================================================================================*/
-/* Main Output Function
-/* args list
-/* type - frontend or backend
-/* name - name of your menu
-/* id - id of menu in db
-/* desc - 1 = show descriptions, 2 = dont show descriptions
-/* before_title - html before title is outputted in <a> tag
-/* after_title - html after title is outputted in <a> tag
-/*===================================================================================*/
+
+
+ Main Output Function
+ args list
+ type - frontend or backend
+ name - name of your menu
+ id - id of menu in db
+ desc - 1 = show descriptions, 2 = dont show descriptions
+ before_title - html before title is outputted in <a> tag
+ after_title - html after title is outputted in <a> tag
+*/
 function prime_custom_navigation_output($args = array()) {
 		
 		//DEFAULT ARGS
@@ -1037,8 +1048,10 @@ function prime_custom_navigation_output($args = array()) {
 			$desc = 2;
 		}
 		
-		//GET Menu Items
-		//FRONTEND
+		/*
+		GET Menu Items
+		FRONTEND
+		*/
 		if ($type == "frontend") 
 		{
 			$table_name_menus = $wpdb->prefix . "prime_custom_nav_menus";
@@ -1072,8 +1085,10 @@ function prime_custom_navigation_output($args = array()) {
 	    //DISPLAY Loop
 		foreach ($prime_custom_nav_menu as $prime_custom_nav_menu_items) {
 			
-			//PREPARE Menu Data
-			//Page Menu Item
+			/*
+			PREPARE Menu Data
+			Page Menu Item
+			*/
 			if ($prime_custom_nav_menu_items->link_type == 'page')
 			{
 				if ($prime_custom_nav_menu_items->custom_link == '') {
@@ -1211,9 +1226,11 @@ function prime_custom_navigation_output($args = array()) {
 						
 							if ( $advanced_option_descriptions == 'no' ) 
 							{ 
-								// 2 widget override do NOT display descriptions
-								// 1 widget override display descriptions
-								// 0 widget override not set
+								/*
+								 2 widget override do NOT display descriptions
+								 1 widget override display descriptions
+								 0 widget override not set
+								*/
 								if (($desc == 1) || ($desc == 0) )
 								{
 									?><span class="nav-description"><?php echo $description; ?></span><?php
@@ -1225,9 +1242,11 @@ function prime_custom_navigation_output($args = array()) {
 							} 
 							else 
 							{
-								// 2 widget override do NOT display descriptions
-								// 1 widget override display descriptions
-								// 0 widget override not set
+								/*
+								 2 widget override do NOT display descriptions
+								 1 widget override display descriptions
+								 0 widget override not set
+								*/
 								if ($desc == 1)
 								{
 									?><span class="nav-description"><?php echo $description; ?></span><?php
@@ -1874,8 +1893,10 @@ function prime_custom_navigation_default_sub_items($childof, $intCounter, $paren
 		//DISPLAY Loop
 		foreach ($sub_array as $sub_item)
 		{
-			//Prepare Menu Data
-			//Category Menu Item
+			/*
+			Prepare Menu Data
+			Category Menu Item
+			*/
 			if ($type == 'categories') 
 			{
 				$link = get_category_link($sub_item->cat_ID);
@@ -1997,9 +2018,7 @@ function prime_custom_navigation_default_sub_items($childof, $intCounter, $paren
 
 }
 
-/*===================================================================================*/
 /* Recursive get children */
-/*===================================================================================*/
 
 function get_children_menu_elements($childof, $intCounter, $parentli, $type, $menu_id, $table_name) {
 
@@ -2048,8 +2067,10 @@ function get_children_menu_elements($childof, $intCounter, $parentli, $type, $me
 			//Is child
 			if ($sub_item_parent == $childof)
 			{
-				//Prepare Menu Data
-				//Category Menu Item
+				/*
+				Prepare Menu Data
+				Category Menu Item
+				*/
 				if ($type == 'categories') 
 				{
 					$link = get_category_link($sub_item->cat_ID);
@@ -2083,8 +2104,10 @@ function get_children_menu_elements($childof, $intCounter, $parentli, $type, $me
 					$appendtype= 'Custom';
 				}
 				
-				//CHECK for existing parent records
-				//echo $parent_id;
+				/*
+				CHECK for existing parent records
+				echo $parent_id;
+				*/
 				$prime_result = $wpdb->get_results("SELECT id FROM ".$table_name." WHERE post_id='".$parent_id."' AND link_type='".$linktype."' AND menu_id='".$menu_id."'");
 				if ($prime_result > 0 && isset($prime_result[0]->id)) {
 					$parent_id = $prime_result[0]->id;
@@ -2093,12 +2116,16 @@ function get_children_menu_elements($childof, $intCounter, $parentli, $type, $me
 					//$parent_id = 0;
 				}
 				
-				//INSERT item
-				//Convert string to UTF-8
+				/*
+				INSERT item
+				Convert string to UTF-8
+				*/
 				$str_converted = stripslashes($title);
-				//$insert_title = htmlspecialchars($str_converted, ENT_QUOTES, 'UTF-8');
-				//$insert = "INSERT INTO ".$table_name." (position,post_id,parent_id,custom_title,custom_link,custom_description,menu_icon,link_type,menu_id,custom_anchor_title) "."VALUES ('".$counter."','".$itemid."','".$parent_id."','".$title."','".$link."','','','".$linktype."','".$menu_id."','".$title."')";
-	  			//$results = $wpdb->query( $insert );
+				/*
+				$insert_title = htmlspecialchars($str_converted, ENT_QUOTES, 'UTF-8');
+				$insert = "INSERT INTO ".$table_name." (position,post_id,parent_id,custom_title,custom_link,custom_description,menu_icon,link_type,menu_id,custom_anchor_title) "."VALUES ('".$counter."','".$itemid."','".$parent_id."','".$title."','".$link."','','','".$linktype."','".$menu_id."','".$title."')";
+	  			$results = $wpdb->query( $insert );
+	  			*/
 	  			$results = $wpdb->insert( $table_name, array( 'position' => $counter, 'post_id' => $itemid, 'parent_id' => $parent_id, 'custom_title' => $str_converted, 'custom_link' => $link, 'custom_description' => '', 'menu_icon' => '', 'link_type' => $linktype, 'menu_id' => $menu_id, 'custom_anchor_title' => $str_converted ));
 	 
 	  			$counter++;
@@ -2113,9 +2140,7 @@ function get_children_menu_elements($childof, $intCounter, $parentli, $type, $me
 	return $counter;
 }
 
-/*================================================================================-*/
 /* primethemes Custom Navigation Menu Widget */
-/*================================================================================-*/
 
 class prime_NavWidget extends WP_Widget {
 
