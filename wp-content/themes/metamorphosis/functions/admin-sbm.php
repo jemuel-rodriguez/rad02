@@ -1,6 +1,6 @@
 <?php
-/*====================================================================================*/
-/* 	primeThemes - Sidebar Manager
+/*
+ 	primeThemes - Sidebar Manager
 	Version - V.1.05
 	---
 	Installation: Make sure all dynamic_sidebar are converted to prime_sidebar,
@@ -9,13 +9,17 @@
 	delete sidebars for your theme.
 	Author: Foxinni (http://foxinni.com)
 
-*/
-/*====================================================================================*/
 
-//Delete Options
-//delete_option('sbm_prime_sbm_options');
+*/
+
+/*
+Delete Options
+delete_option('sbm_prime_sbm_options');
+*/
+
 
 //Created a function that adds a filter to sidebar delegation
+
 function prime_sidebar($id = 1){
 	
 	$id = apply_filters( 'prime_inject_sidebar', $id );	
@@ -61,9 +65,9 @@ function prime_sbm_sidebar($current_sidebar_id){
 			//For query posts in the wild
 			wp_reset_query();
 			
-			/*============================================================*/
-			/* Support for custom post types, if using WordPress 3.0+.
-			/*============================================================*/
+
+			// Support for custom post types, if using WordPress 3.0+.
+			
 			
 			global $wp_version, $post;
 			
@@ -300,8 +304,8 @@ if (!function_exists('prime_sbm_widgets_init')) {
 
 add_action( 'init', 'prime_sbm_widgets_init' );
 
-/* Sidebar Manager - Reset Function
-================================================--*/
+
+// Sidebar Manager - Reset Function
 
 function primethemes_sbm_reset () {
 
@@ -362,22 +366,23 @@ function primethemes_sbm_page(){
 	//Start script output
 	?>
 	<script type="text/javascript">
-	/* Below is the IE fix for .live('submit')  error */
-	/**
-	 * Patch (plugin) for jQuery bug 6359: "live('submit') does nothing in IE if
-	 * live('click') was called before. same with delegate."
-	 *
-	 * The workaround is to ensure that live('click') calls happen *after*
-	 * live('submit') calls. Fixing live() fixes delegate(), which calls live().
-	 *
-	 * This plugin uses setTimeout(..., 0) to effect the workaround. That is, it
-	 * defers live('click') calls to a future execution context. It should work
-	 * around the issue in most cases.
-	 *
-	 * @author Jonathan Aquino
-	 * @see http://dev.jquery.com/ticket/6359
-	 * @see TEZLA-538
-	 */
+	/* 
+	  Below is the IE fix for .live('submit')  error 
+	
+	  Patch (plugin) for jQuery bug 6359: "live('submit') does nothing in IE if
+	  live('click') was called before. same with delegate."
+	 
+	  The workaround is to ensure that live('click') calls happen *after*
+	  live('submit') calls. Fixing live() fixes delegate(), which calls live().
+	 
+	  This plugin uses setTimeout(..., 0) to effect the workaround. That is, it
+	  defers live('click') calls to a future execution context. It should work
+	  around the issue in most cases.
+	 
+	  @author Jonathan Aquino
+	  @see http://dev.jquery.com/ticket/6359
+	  @see TEZLA-538
+	*/
 	(function($) {
 		    var originalLive = jQuery.fn.live;
 		    jQuery.fn.live = function(types) {
@@ -862,9 +867,9 @@ function primethemes_sbm_page(){
 	     					</ul>
 	     				</li>
 	     				<?php
-	     					/*============================================================*/
-	     					/* Support for custom post types, if using WordPress 3.0+.
-	     					/*============================================================*/
+	     					
+	     					
+	     					// Support for custom post types, if using WordPress 3.0+.
 	     					
 	     					global $wp_version;
 	     					
@@ -1163,9 +1168,9 @@ function primethemes_sbm_page(){
     </div><!--wrap-->
 
 <?php } 
-/*===================================================================================*/
-/* Ajax Save Action - prime_ajax_callback */
-/*===================================================================================*/
+
+
+// Ajax Save Action - prime_ajax_callback 
 
 add_action('wp_ajax_prime_sbm_post_action', 'prime_sbm_callback');
 
@@ -1270,8 +1275,10 @@ function prime_sbm_callback() {
 			$sidebar_sourceback = false;
 		}
 		
-		// Get the data for the sidebar we're looking to replace.
-		// This will be used in the before_title, after_title, etc.
+		/*
+		 Get the data for the sidebar we're looking to replace.
+		 This will be used in the before_title, after_title, etc.
+		*/
 		
 		$index = $sidebar_replace;
 		
