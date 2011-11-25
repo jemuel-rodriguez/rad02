@@ -1,7 +1,5 @@
 <?php
-// primeThemes Admin Interface
-
-/*===================================================================================
+/* primeThemes Admin Interface
 
 TABLE OF CONTENTS
 
@@ -15,13 +13,11 @@ TABLE OF CONTENTS
 - primeThemes Uploader - primethemes_uploader_function
 - primethemes Theme Version Checker - primethemes_version_checker
 
-===================================================================================*/
+*/
 
 
+// primeThemes Admin Interface - primethemes_add_admin 
 
-/*===================================================================================*/
-/* primeThemes Admin Interface - primethemes_add_admin */
-/*===================================================================================*/
 
 if (!function_exists('primethemes_add_admin')) {
 function primethemes_add_admin() {
@@ -34,11 +30,12 @@ function primethemes_add_admin() {
     $themename =  get_option('prime_themename');      
     $shortname =  get_option('prime_shortname'); 
    
-   	// Reset the settings, sanitizing the various requests made.
-   	// Use a SWITCH to determine which settings to update.
+   	/*
+   	 Reset the settings, sanitizing the various requests made.
+   	 Use a SWITCH to determine which settings to update.
    	
-   	/* Make sure we're making a request.
-   	============================================================*/
+   	 Make sure we're making a request.
+   	*/
    	
    	if ( isset( $_REQUEST['page'] ) ) {
    	
@@ -56,10 +53,11 @@ function primethemes_add_admin() {
 			
 		} // End IF Statement
 		
-		// If the action is "reset", run the SWITCH.
+		/* 
+		 If the action is "reset", run the SWITCH.
 		
-		/* Perform settings reset.
-  		============================================================*/
+		 Perform settings reset.
+  		*/
 		
 		if ( $_action == 'reset' ) {
 		
@@ -171,9 +169,9 @@ function primethemes_add_admin() {
 
 add_action('admin_menu', 'primethemes_add_admin');
 
-/*===================================================================================*/
-/* primeThemes Reset Function - prime_reset_options */
-/*===================================================================================*/
+
+
+// primeThemes Reset Function - prime_reset_options 
 
 if (!function_exists('prime_reset_options')) {
 function prime_reset_options($options,$page = ''){
@@ -212,9 +210,9 @@ function prime_reset_options($options,$page = ''){
 }
 }
 
-/*===================================================================================*/
-/* Framework options panel - primethemes_options_page */
-/*===================================================================================*/
+
+
+// Framework options panel - primethemes_options_page 
 
 if (!function_exists('primethemes_options_page')) {
 function primethemes_options_page(){
@@ -238,8 +236,10 @@ function primethemes_options_page(){
 	$pos = strpos($manualurl, 'documentation');
 	$theme_slug = str_replace("/", "", substr($manualurl, ($pos + 13))); //13 for the word documentation
 
-	//add filter to make the rss read cache clear every 4 hours
-	//add_filter( 'wp_feed_cache_transient_lifetime', create_function( '$a', 'return 14400;' ) );
+	/*
+	add filter to make the rss read cache clear every 4 hours
+	add_filter( 'wp_feed_cache_transient_lifetime', create_function( '$a', 'return 14400;' ) );
+	*/
 	
     //Check for latest version of the theme
 	$update_message = '';
@@ -344,9 +344,9 @@ function primethemes_options_page(){
 }
 }
 
-/*==================================================================================*/
-/* prime_load_only */
-/*===================================================================================*/
+
+
+// prime_load_only 
 
 if (!function_exists('prime_load_only')) {
 function prime_load_only() {
@@ -359,9 +359,10 @@ function prime_load_only() {
 	wp_register_script('jquery-input-mask', get_bloginfo('template_directory').'/functions/js/jquery.maskedinput-1.2.2.js', array( 'jquery' ));
 	wp_enqueue_script('jquery-input-mask');
 	wp_enqueue_script('prime-scripts', get_bloginfo('template_directory').'/functions/js/prime-scripts.js', array( 'jquery' ));	
-	/* prime_admin_head()
-	================================================================================*/
-	
+
+
+// prime_admin_head()
+		
 	function prime_admin_head() { 
 			
 		echo '<link rel="stylesheet" type="text/css" href="'.get_bloginfo('template_directory').'/functions/admin-style.css" media="screen" />';
@@ -675,7 +676,7 @@ function prime_load_only() {
 			//Adding string builder add
 			jQuery('.string_builder_add').click(function(){
 			
-					<?php // Nonce Security ?>
+					// Nonce Security 
 					<?php if ( function_exists( 'wp_create_nonce' ) ) { $prime_nonce = wp_create_nonce( 'primeframework-theme-options-update' ); } // End IF Statement ?>
 
 			
@@ -794,9 +795,9 @@ function prime_load_only() {
 }
 }
 
-/*===================================================================================*/
-/* Ajax Save Action - prime_ajax_callback */
-/*===================================================================================*/
+
+
+// Ajax Save Action - prime_ajax_callback 
 
 add_action('wp_ajax_prime_ajax_post_action', 'prime_ajax_callback');
 
@@ -898,9 +899,11 @@ function prime_ajax_callback() {
 					$new_import = base64_decode($new_value);
 					$new_import = unserialize($new_import);
 					
-					//echo '<pre>';
-					//print_r($new_import);
-					//echo '</pre>';
+					/*
+					echo '<pre>';
+					print_r($new_import);
+					echo '</pre>';
+					*/
 					if(!empty($new_import)) {
 						foreach($new_import as $id2 => $value2){
 							if(is_serialized($value2)) {
@@ -1053,9 +1056,8 @@ function prime_ajax_callback() {
 }
 
 
-/*===================================================================================*/
-/* Generates The Options - primethemes_machine */
-/*===================================================================================*/
+
+// Generates The Options - primethemes_machine 
 
 if (!function_exists('primethemes_machine')) {
 function primethemes_machine($options) {
@@ -1597,16 +1599,17 @@ function primethemes_machine($options) {
 }
 }
 
-/*===================================================================================*/
-/* primeThemes Uploader - primethemes_uploader_function */
-/*===================================================================================*/
+
+
+// primeThemes Uploader - primethemes_uploader_function 
 
 if (!function_exists('primethemes_uploader_function')) {
 function primethemes_uploader_function($id,$std,$mod){
-
-    //$uploader .= '<input type="file" id="attachement_'.$id.'" name="attachement_'.$id.'" class="upload_input"></input>';
-    //$uploader .= '<span class="submit"><input name="save" type="submit" value="Upload" class="button upload_save" /></span>';
-    
+	
+    /*
+     $uploader .= '<input type="file" id="attachement_'.$id.'" name="attachement_'.$id.'" class="upload_input"></input>';
+     $uploader .= '<span class="submit"><input name="save" type="submit" value="Upload" class="button upload_save" /></span>';
+    */
 	$uploader = '';
     $upload = get_option($id);
 	
@@ -1637,10 +1640,10 @@ return $uploader;
 }
 
 
-/*===================================================================================*/
-/* primethemes Theme Version Checker - primethemes_version_checker */
-/* @local_version is the installed theme version number */
-/*===================================================================================*/
+/*
+ primethemes Theme Version Checker - primethemes_version_checker 
+ @local_version is the installed theme version number 
+*/
 
 if (!function_exists('primethemes_version_checker')) {
 function primethemes_version_checker ($local_version) {
