@@ -1,6 +1,6 @@
 <?php
 
-/*===================================================================================
+/*
 
 TABLE OF CONTENTS
 
@@ -36,13 +36,12 @@ TABLE OF CONTENTS
 -- prime_breadcrumbs_get_parents()
 -- prime_breadcrumbs_get_term_parents()
 
-===================================================================================*/
+*/
 
-/*===================================================================================*/
-/* prime_image - Get Image from custom field  */
-/*===================================================================================*/
 
 /*
+prime_image - Get Image from custom field
+
 This function retrieves/resizes the image to be used with the post in this order:
 
 1. Image passed through parameter 'src'
@@ -78,9 +77,9 @@ Parameters:
 
 function prime_image($args) {
 
-	/* ========================================================================= */
-	/* SET VARIABLES */
-	/* ========================================================================= */
+	/*
+	 SET VARIABLES 
+	*/
 
 	global $post;
 	global $prime_options;
@@ -134,9 +133,9 @@ function prime_image($args) {
 		$height = '100';
 	}
     
-	/* ========================================================================= */
-	/* FIND IMAGE TO USE */
-	/* ========================================================================= */
+	/* 
+	 FIND IMAGE TO USE 
+	*/
 
 	// When a custom image is sent through
 	if ( $src != '' ) { 
@@ -283,9 +282,9 @@ function prime_image($args) {
 	
 	if(empty($src_arr) && empty($img_link)){ $src_arr[] = $custom_field; }
 	
-	/* ========================================================================= */
-	/* BEGIN OUTPUT */
-	/* ========================================================================= */
+	/* 
+	 BEGIN OUTPUT 
+	*/
 
     $output = '';
 	
@@ -507,30 +506,29 @@ if (!function_exists('prime_get_video_image')) {
 }
 
 
-/*===================================================================================*/
-/* vt_resize - Resize images dynamically using wp built in functions
-/*===================================================================================*/
 /*
- * Resize images dynamically using wp built in functions
- * Victor Teixeira
- *
- * php 5.2+
- *
- * Exemplo de uso:
- * 
- * <?php 
- * $thumb = get_post_thumbnail_id(); 
- * $image = vt_resize( $thumb, '', 140, 110, true );
- * ?>
- * <img src="<?php echo $image[url]; ?>" width="<?php echo $image[width]; ?>" height="<?php echo $image[height]; ?>" />
- *
- * @param int $attach_id
- * @param string $img_url
- * @param int $width
- * @param int $height
- * @param bool $crop
- * @return array
- */
+  vt_resize - Resize images dynamically using wp built in functions
+
+  Resize images dynamically using wp built in functions
+  Victor Teixeira
+ 
+  php 5.2+
+ 
+  Exemplo de uso:
+  
+  <?php 
+  $thumb = get_post_thumbnail_id(); 
+  $image = vt_resize( $thumb, '', 140, 110, true );
+  ?>
+  <img src="<?php echo $image[url]; ?>" width="<?php echo $image[width]; ?>" height="<?php echo $image[height]; ?>" />
+ 
+  @param int $attach_id
+  @param string $img_url
+  @param int $width
+  @param int $height
+  @param bool $crop
+  @return array
+*/
 if ( !function_exists('vt_resize') ) {
 	function vt_resize( $attach_id = null, $img_url = null, $width, $height, $crop = false ) {
 	
@@ -546,8 +544,10 @@ if ( !function_exists('vt_resize') ) {
 			$file_path = parse_url( $img_url );
 			$file_path = $_SERVER['DOCUMENT_ROOT'] . $file_path['path'];
 			
-			//$file_path = ltrim( $file_path['path'], '/' );
-			//$file_path = rtrim( ABSPATH, '/' ).$file_path['path'];
+			/*
+			$file_path = ltrim( $file_path['path'], '/' );
+			$file_path = rtrim( ABSPATH, '/' ).$file_path['path'];
+			*/
 			
 			$orig_size = getimagesize( $file_path );
 			
@@ -571,8 +571,10 @@ if ( !function_exists('vt_resize') ) {
 		
 		$cropped_img_path = $no_ext_path.'-'.$width.'x'.$height.$extension;
 	
-		// checking if the file size is larger than the target size
-		// if it is smaller or the same size, stop right here and return
+		/*
+		 checking if the file size is larger than the target size
+		 if it is smaller or the same size, stop right here and return
+		*/ 
 		if ( $image_src[1] > $width || $image_src[2] > $height ) {
 	
 			// the file is larger, check if the resized version already exists (for $crop = true but will also work for $crop = false if the sizes match)
@@ -642,9 +644,9 @@ if ( !function_exists('vt_resize') ) {
 }
 
 
-/*===================================================================================*/
-/* Depreciated - prime_get_image - Get Image from custom field */
-/*===================================================================================*/
+/*
+ Depreciated - prime_get_image - Get Image from custom field 
+*/
 
 // Depreciated
 function prime_get_image($key = 'image', $width = null, $height = null, $class = "thumbnail", $quality = 90,$id = null,$link = 'src',$repeat = 1,$offset = 0,$before = '', $after = '',$single = false, $force = false, $return = false) {
@@ -656,11 +658,10 @@ function prime_get_image($key = 'image', $width = null, $height = null, $class =
 
 
 
-/*===================================================================================*/
-/* prime_embed - Get Video embed code from custom field */
-/*===================================================================================*/
-
 /*
+ prime_embed - Get Video embed code from custom field
+
+
 Get Video
 This function gets the embed code from the custom field
 Parameters: 
@@ -756,9 +757,9 @@ endif;
 
 }
 
-/*===================================================================================*/
-/* Depreciated - prime_get_embed - Get Video embed code from custom field */
-/*===================================================================================*/
+/*
+ Depreciated - prime_get_embed - Get Video embed code from custom field 
+*/
 
 // Depreciated
 function prime_get_embed($key = 'embed', $width, $height, $class = 'video', $id = null) {
@@ -769,12 +770,13 @@ function prime_get_embed($key = 'embed', $width, $height, $class = 'video', $id 
 
 
 
-/*===================================================================================*/
-/* prime Show Page Menu */
-/*===================================================================================*/
+/*
+ prime Show Page Menu 
 
-// Show menu in header.php
-// Exlude the pages from the slider
+
+ Show menu in header.php
+ Exlude the pages from the slider
+*/
 function prime_show_pagemenu( $exclude="" ) {
     // Split the featured pages from the options, and put in an array
     if ( get_option('prime_ex_featpages') ) {
@@ -790,9 +792,9 @@ function prime_show_pagemenu( $exclude="" ) {
 
 
 
-/*===================================================================================*/
-/* Get the style path currently selected */
-/*===================================================================================*/
+
+// Get the style path currently selected 
+
 
 function prime_style_path() {
 	
@@ -838,9 +840,9 @@ function prime_style_path() {
 } // End prime_style_path()
 
 
-/*===================================================================================*/
-/* Get page ID */
-/*===================================================================================*/
+
+// Get page ID 
+
 function get_page_id($page_slug){
 	$page_id = get_page_by_path($page_slug);
     if ($page_id) {
@@ -851,9 +853,9 @@ function get_page_id($page_slug){
     
 }
 
-/*===================================================================================*/
-/* Tidy up the image source url */
-/*===================================================================================*/
+
+// Tidy up the image source url 
+
 function cleanSource($src) {
 
 	// remove slash from start of string
@@ -881,10 +883,10 @@ function cleanSource($src) {
 
 
 
-/*===================================================================================*/
-/* Show image in RSS feed */
-/* Original code by Justin Tadlock http://justintadlock.com */
-/*===================================================================================*/
+/*
+ Show image in RSS feed 
+ Original code by Justin Tadlock http://justintadlock.com 
+*/
 if (get_option('prime_rss_thumb') == "true")
 	add_filter('the_content', 'add_image_RSS');
 	
@@ -915,9 +917,9 @@ function add_image_RSS( $content ) {
 
 
 
-/*===================================================================================*/
-/* Show analytics code in footer */
-/*===================================================================================*/
+
+// Show analytics code in footer 
+
 function prime_analytics(){
 	$output = get_option('prime_google_analytics');
 	if ( $output <> "" ) 
@@ -927,9 +929,9 @@ add_action('wp_footer','prime_analytics');
 
 
 
-/*===================================================================================*/
-/* Browser detection body_class() output */
-/*===================================================================================*/
+
+// Browser detection body_class() output 
+
 add_filter('body_class','browser_body_class');
 function browser_body_class($classes) {
 	global $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone;
@@ -956,9 +958,9 @@ function browser_body_class($classes) {
 	return $classes;
 }
 
-/*===================================================================================*/
-/* Twitter's Blogger.js output for Twitter widgets */
-/*===================================================================================*/
+
+// Twitter's Blogger.js output for Twitter widgets 
+
 
 if ( !function_exists('prime_twitter_script') ) {
 	function prime_twitter_script($unique_id,$username,$limit) {
@@ -1012,9 +1014,9 @@ if ( !function_exists('prime_twitter_script') ) {
 	}
 }
 
-/*===================================================================================*/
-/* Template Detector */
-/*===================================================================================*/
+
+// Template Detector 
+
 function prime_active_template($filename = null){
 
 	if(isset($filename)){
@@ -1039,9 +1041,9 @@ function prime_active_template($filename = null){
 	}
 
 }
-/*===================================================================================*/
-/* primeFramework Update Page */
-/*===================================================================================*/
+
+
+// primeFramework Update Page 
 
 function primethemes_framework_update_page(){
         $method = get_filesystem_method();
@@ -1118,9 +1120,9 @@ function primethemes_framework_update_page(){
             <?php
 };
 
-/*===================================================================================*/
-/* primeFramework Update Head */
-/*===================================================================================*/
+
+
+// primeFramework Update Head 
 
 function primethemes_framework_update_head(){
 
@@ -1243,9 +1245,9 @@ function primethemes_framework_update_head(){
                              
 add_action('admin_head','primethemes_framework_update_head');
 
-/*===================================================================================*/
-/* PrimeFramework Version Getter */
-/*===================================================================================*/
+
+
+// PrimeFramework Version Getter 
 
 function prime_get_fw_version($url = ''){
 	
@@ -1282,9 +1284,8 @@ function prime_get_fw_version($url = ''){
 
 }
 
-/*===================================================================================*/
-/* prime URL shortener */
-/*===================================================================================*/
+
+// prime URL shortener 
 
 function prime_short_url($url) {
 	$service = get_option('prime_url_shorten');
@@ -1387,9 +1388,9 @@ function _iscurlinstalled() {
 	}
 }
 
-/*===================================================================================*/
-/* prime_title() */
-/*===================================================================================*/
+
+
+// prime_title() 
 
 function prime_title(){
 
@@ -1531,10 +1532,9 @@ function prime_title(){
 	}
 }
 
-/*===================================================================================*/
-/* prime_meta() */
-/*===================================================================================*/
 
+
+// prime_meta() 
 
 function prime_meta(){
 		global $post;
@@ -1638,11 +1638,13 @@ function prime_meta(){
 							$post_content = get_the_content();
 						}
 					}
-					// $post_content = htmlentities(trim(strip_tags(strip_shortcodes($post_content))), ENT_QUOTES, 'UTF-8'); // Replaced with line below to accommodate special characters. // 2010-11-15.
-					// $post_content = html_entity_decode(trim(strip_tags(strip_shortcodes($post_content))), ENT_QUOTES, 'UTF-8'); // Replaced to fix PHP4 compatibility issue. // 2010-12-09.
-					// $post_content = utf8_decode( trim( strip_tags( strip_shortcodes( $post_content ) ) ) );
-					// $post_content = html_entity_decode( trim( strip_tags( strip_shortcodes( $post_content ) ) ) );
-					// $post_content = esc_html( htmlspecialchars ( strip_shortcodes( $post_content ) ) );
+					/*
+					 $post_content = htmlentities(trim(strip_tags(strip_shortcodes($post_content))), ENT_QUOTES, 'UTF-8'); // Replaced with line below to accommodate special characters. // 2010-11-15.
+					 $post_content = html_entity_decode(trim(strip_tags(strip_shortcodes($post_content))), ENT_QUOTES, 'UTF-8'); // Replaced to fix PHP4 compatibility issue. // 2010-12-09.
+					 $post_content = utf8_decode( trim( strip_tags( strip_shortcodes( $post_content ) ) ) );
+					 $post_content = html_entity_decode( trim( strip_tags( strip_shortcodes( $post_content ) ) ) );
+					 $post_content = esc_html( htmlspecialchars ( strip_shortcodes( $post_content ) ) );
+					*/ 
 					
 					$post_content = esc_attr( strip_tags( strip_shortcodes( $post_content ) ) );
 					
@@ -1666,8 +1668,10 @@ function prime_meta(){
 		$description = esc_attr( $description );
 		$description = stripslashes($description);
 		
-		// Faux-htmlentities using an array of key => value pairs.
-		// TO DO: Clean-up and move to a re-usable function.
+		/*
+		 Faux-htmlentities using an array of key => value pairs.
+		 TO DO: Clean-up and move to a re-usable function.
+		*/
 		$faux_htmlentities = array(
 								'& ' => '&amp; ', 
 								'<' => '&lt;', 
@@ -1894,9 +1898,9 @@ function seo_add_custom() {
 
 }
 
-/*===================================================================================*/
-/* prime Text Trimmer */
-/*===================================================================================*/
+
+
+// prime Text Trimmer 
 
 if ( !function_exists('prime_text_trim') ) {
 	function prime_text_trim($text, $words = 50)
@@ -1912,13 +1916,13 @@ if ( !function_exists('prime_text_trim') ) {
 	}
 }
 
-/*===================================================================================*/
-/* Google Webfonts Array */
-/* Documentation:
 /*
-/* name: The name of the Google Font.
-/* variant: The Google Font API variants available for the font.
-/*===================================================================================*/
+ Google Webfonts Array 
+ Documentation:
+
+ name: The name of the Google Font.
+ variant: The Google Font API variants available for the font.
+*/
 
 // Available Google webfont names
 $google_fonts = array(	array('name' => "Cantarell", 'variant' => ':r,b,i,bi'),
@@ -2008,10 +2012,10 @@ $google_fonts = array(	array('name' => "Cantarell", 'variant' => ':r,b,i,bi'),
 );
 
 
-/*===================================================================================*/
-/* Google Webfonts Stylesheet Generator */
-/*===================================================================================*/
-/* 
+/*
+ Google Webfonts Stylesheet Generator 
+
+ 
 INSTRUCTIONS: Needs to be loaded for the Google Fonts options to work for font options. Add this to
 the specific themes includes/theme-actions.php or functions.php:
 
@@ -2064,9 +2068,9 @@ if (!function_exists("prime_google_webfonts")) {
 }
 
 
-/*===================================================================================*/
-/* Enable Home link in WP Menus
-/*===================================================================================*/
+
+// Enable Home link in WP Menus
+
 if ( !function_exists('prime_home_page_menu_args') ) {
 	function prime_home_page_menu_args( $args ) {
 		$args['show_home'] = true;
@@ -2075,9 +2079,10 @@ if ( !function_exists('prime_home_page_menu_args') ) {
 	add_filter( 'wp_page_menu_args', 'prime_home_page_menu_args' );
 }
 
-/*===================================================================================*/
-/* Buy Themes page
-/*===================================================================================*/
+
+
+// Buy Themes page
+
 if ( !function_exists('primethemes_more_themes_page') ) {
 	function primethemes_more_themes_page(){
         ?>
@@ -2125,9 +2130,10 @@ if ( !function_exists('primethemes_more_themes_page') ) {
 	}
 }
 
-/*=================================================================================*/
-/* Detects the Charset of String and Converts it to UTF-8 */
-/*=================================================================================*/
+
+
+// Detects the Charset of String and Converts it to UTF-8 
+
 if ( !function_exists('prime_encoding_convert') ) {
 	function prime_encoding_convert($str_to_convert) {
 		if ( function_exists('mb_detect_encoding') ) {
@@ -2148,9 +2154,10 @@ if ( !function_exists('prime_encoding_convert') ) {
 	}
 }
 
-/*=================================================================================*/
-/* WP Login logo */
-/*=================================================================================*/
+
+
+// WP Login logo 
+
 if ( !function_exists('prime_custom_login_logo') ) {
 	function prime_custom_login_logo() {
 		$logo = get_option('framework_prime_custom_login_logo');
@@ -2161,47 +2168,48 @@ if ( !function_exists('prime_custom_login_logo') ) {
 		add_action('login_head', 'prime_custom_login_logo');
 }
 
-/*===================================================================================*/
-/* prime_pagination() - Custom loop pagination function  */
-/*===================================================================================*/
 /*
-/* Additional documentation: http://codex.wordpress.org/Function_Reference/paginate_links
-/*
-/* Params:
-/*
-/* Arguments Array:
-/*
-/* 'base' (optional) 				- The query argument on which to determine the pagination (for advanced users)
-/* 'format' (optional) 				- The format in which the query argument is formatted in it's raw format (for advanced users)
-/* 'total' (optional) 				- The total amount of pages
-/* 'current' (optional) 			- The current page number
-/* 'prev_next' (optional) 			- Whether to include the previous and next links in the list or not.
-/* 'prev_text' (optional) 			- The previous page text. Works only if 'prev_next' argument is set to true.
-/* 'next_text' (optional) 			- The next page text. Works only if 'prev_next' argument is set to true.
-/* 'show_all' (optional) 			- If set to True, then it will show all of the pages instead of a short list of the pages near the current page. By default, the 'show_all' is set to false and controlled by the 'end_size' and 'mid_size' arguments.
-/* 'end_size' (optional) 			- How many numbers on either the start and the end list edges.
-/* 'mid_size' (optional) 			- How many numbers to either side of current page, but not including current page.
-/* 'add_fragment' (optional) 		- An array of query args to add using add_query_arg().
-/* 'type' (optional) 				- Controls format of the returned value. Possible values are:
+ prime_pagination() - Custom loop pagination function  
+
+
+ Additional documentation: http://codex.wordpress.org/Function_Reference/paginate_links
+
+ Params:
+
+ Arguments Array:
+
+ 'base' (optional) 				- The query argument on which to determine the pagination (for advanced users)
+ 'format' (optional) 				- The format in which the query argument is formatted in it's raw format (for advanced users)
+ 'total' (optional) 				- The total amount of pages
+ 'current' (optional) 			- The current page number
+ 'prev_next' (optional) 			- Whether to include the previous and next links in the list or not.
+ 'prev_text' (optional) 			- The previous page text. Works only if 'prev_next' argument is set to true.
+ 'next_text' (optional) 			- The next page text. Works only if 'prev_next' argument is set to true.
+ 'show_all' (optional) 			- If set to True, then it will show all of the pages instead of a short list of the pages near the current page. By default, the 'show_all' is set to false and controlled by the 'end_size' and 'mid_size' arguments.
+ 'end_size' (optional) 			- How many numbers on either the start and the end list edges.
+ 'mid_size' (optional) 			- How many numbers to either side of current page, but not including current page.
+ 'add_fragment' (optional) 		- An array of query args to add using add_query_arg().
+ 'type' (optional) 				- Controls format of the returned value. Possible values are:
 									  'plain' - A string with the links separated by a newline character.
 									  'array' - An array of the paginated link list to offer full control of display.
 									  'list' - Unordered HTML list.
-/* 'before' (optional) 				- The HTML to display before the paginated links.
-/* 'after' (optional) 				- The HTML to display after the paginated links.
-/* 'echo' (optional) 				- Whether or not to display the paginated links (alternative is to "return").
-/*
-/* Query Parameter (optional) 		- Specify a custom query which you'd like to paginate.
-/*
-/*===================================================================================*/
-/**
- * prime_pagination() is used for paginating the various archive pages created by WordPress. This is not
- * to be used on single.php or other single view pages.
- *
- * @since 3.7.0
- * @uses paginate_links() Creates a string of paginated links based on the arguments given.
- * @param array $args Arguments to customize how the page links are output.
- * @param object $query An optional custom query to paginate.
- */
+ 'before' (optional) 				- The HTML to display before the paginated links.
+ 'after' (optional) 				- The HTML to display after the paginated links.
+ 'echo' (optional) 				- Whether or not to display the paginated links (alternative is to "return").
+
+ Query Parameter (optional) 		- Specify a custom query which you'd like to paginate.
+
+
+
+ 
+  prime_pagination() is used for paginating the various archive pages created by WordPress. This is not
+  to be used on single.php or other single view pages.
+ 
+  @since 3.7.0
+  @uses paginate_links() Creates a string of paginated links based on the arguments given.
+  @param array $args Arguments to customize how the page links are output.
+  @param object $query An optional custom query to paginate.
+*/
 
 if ( ! function_exists( 'prime_pagination' ) ) {
 
@@ -2290,31 +2298,33 @@ if ( ! function_exists( 'prime_pagination' ) ) {
 
 } // End IF Statement
 
-/*===================================================================================*/
-/* prime_breadcrumbs() - Custom breadcrumb generator function  */
+
 /*
-/* Params:
-/*
-/* Arguments Array:
-/*
-/* 'separator' 			- The character to display between the breadcrumbs.
-/* 'before' 			- HTML to display before the breadcrumbs.
-/* 'after' 				- HTML to display after the breadcrumbs.
-/* 'front_page' 		- Include the front page at the beginning of the breadcrumbs.
-/* 'show_home' 			- If $show_home is set and we're not on the front page of the site, link to the home page.
-/* 'echo' 				- Specify whether or not to echo the breadcrumbs. Alternative is "return".
-/*
-/*===================================================================================*/
-/**
- * The code below is inspired by Justin Tadlock's Hybrid Core.
- *
- * prime_breadcrumbs() shows a breadcrumb for all types of pages.  Themes and plugins can filter $args or input directly.  
- * Allow filtering of only the $args using get_the_breadcrumb_args.
- *
- * @since 3.7.0
- * @param array $args Mixed arguments for the menu.
- * @return string Output of the breadcrumb menu.
- */
+ prime_breadcrumbs() - Custom breadcrumb generator function  
+
+ Params:
+
+ Arguments Array:
+
+ 'separator' 			- The character to display between the breadcrumbs.
+ 'before' 			- HTML to display before the breadcrumbs.
+ 'after' 				- HTML to display after the breadcrumbs.
+ 'front_page' 		- Include the front page at the beginning of the breadcrumbs.
+ 'show_home' 			- If $show_home is set and we're not on the front page of the site, link to the home page.
+ 'echo' 				- Specify whether or not to echo the breadcrumbs. Alternative is "return".
+
+
+
+  The code below is inspired by Justin Tadlock's Hybrid Core.
+ 
+  prime_breadcrumbs() shows a breadcrumb for all types of pages.  Themes and plugins can filter $args or input directly.  
+  Allow filtering of only the $args using get_the_breadcrumb_args.
+ 
+  @since 3.7.0
+  @param array $args Mixed arguments for the menu.
+  @return string Output of the breadcrumb menu.
+  
+*/
 function prime_breadcrumbs( $args = array() ) {
 	global $wp_query, $wp_rewrite;
 
@@ -2576,19 +2586,20 @@ function prime_breadcrumbs( $args = array() ) {
 
 } // End prime_breadcrumbs()
 
-/*===================================================================================*/
-/* prime_breadcrumbs_get_parents() - Retrieve the parents of the current page/post */
-/*===================================================================================*/
-/**
- * Gets parent pages of any post type or taxonomy by the ID or Path.  The goal of this function is to create 
- * a clear path back to home given what would normally be a "ghost" directory.  If any page matches the given 
- * path, it'll be added.  But, it's also just a way to check for a hierarchy with hierarchical post types.
- *
- * @since 3.7.0
- * @param int $post_id ID of the post whose parents we want.
- * @param string $path Path of a potential parent page.
- * @return array $trail Array of parent page links.
- */
+/*
+ prime_breadcrumbs_get_parents() - Retrieve the parents of the current page/post 
+
+
+  Gets parent pages of any post type or taxonomy by the ID or Path.  The goal of this function is to create 
+  a clear path back to home given what would normally be a "ghost" directory.  If any page matches the given 
+  path, it'll be added.  But, it's also just a way to check for a hierarchy with hierarchical post types.
+ 
+  @since 3.7.0
+  @param int $post_id ID of the post whose parents we want.
+  @param string $path Path of a potential parent page.
+  @return array $trail Array of parent page links.
+ 
+*/
 function prime_breadcrumbs_get_parents( $post_id = '', $path = '' ) {
 
 	/* Set up an empty trail array. */
@@ -2664,18 +2675,21 @@ function prime_breadcrumbs_get_parents( $post_id = '', $path = '' ) {
 
 } // End prime_breadcrumbs_get_parents()
 
-/*===================================================================================*/
-/* prime_breadcrumbs_get_term_parents() - Retrieve the parents of the current term */
-/*===================================================================================*/
-/**
- * Searches for term parents of hierarchical taxonomies.  This function is similar to the WordPress 
- * function get_category_parents() but handles any type of taxonomy.
- *
- * @since 3.7.0
- * @param int $parent_id The ID of the first parent.
- * @param object|string $taxonomy The taxonomy of the term whose parents we want.
- * @return array $trail Array of links to parent terms.
- */
+
+
+/*
+  prime_breadcrumbs_get_term_parents() - Retrieve the parents of the current term 
+
+
+  Searches for term parents of hierarchical taxonomies.  This function is similar to the WordPress 
+  function get_category_parents() but handles any type of taxonomy.
+ 
+  @since 3.7.0
+  @param int $parent_id The ID of the first parent.
+  @param object|string $taxonomy The taxonomy of the term whose parents we want.
+  @return array $trail Array of links to parent terms.
+ 
+*/
 function prime_breadcrumbs_get_term_parents( $parent_id = '', $taxonomy = '' ) {
 
 	/* Set up some default arrays. */
@@ -2708,7 +2722,7 @@ function prime_breadcrumbs_get_term_parents( $parent_id = '', $taxonomy = '' ) {
 	
 } // End prime_breadcrumbs_get_term_parents()
 
-/*===================================================================================*/
-/* THE END */
-/*===================================================================================*/
+
+// THE END 
+
 ?>
