@@ -1,11 +1,11 @@
 <?php
-/*===================================================================================*/
-/* primeThemes Media Library-driven AJAX File Uploader Module */
-/* 2010-11-05. */
 /*
-/* If we're on a primeThemes specific administration page, add Media Library Uploader
-/* specific actions for CSS, JavaScript and several other functionalities.
-/*===================================================================================*/
+ primeThemes Media Library-driven AJAX File Uploader Module 
+ 2010-11-05. 
+
+ If we're on a primeThemes specific administration page, add Media Library Uploader
+ specific actions for CSS, JavaScript and several other functionalities.
+*/
 
 if ( is_admin() ) {
 
@@ -43,11 +43,11 @@ if ( is_admin() ) {
 	
 } // End IF Statement
 
-/*===================================================================================*/
-/* primethemes_mlu_init */
 /*
-/* Global init() function for the primeThemes Media Library-driven AJAX File Uploader.
-/*===================================================================================*/
+ primethemes_mlu_init 
+
+ Global init() function for the primeThemes Media Library-driven AJAX File Uploader.
+*/
 
 if ( ! function_exists( 'primethemes_mlu_init' ) ) {
 
@@ -72,12 +72,12 @@ if ( ! function_exists( 'primethemes_mlu_init' ) ) {
 
 } // End IF Statement
 
-/*===================================================================================*/
-/* primethemes_mlu_css */
 /*
-/* Add the Thickbox CSS file and specific loading and button images to the header
-/* on the pages where this function is called.
-/*===================================================================================*/
+ primethemes_mlu_css 
+
+ Add the Thickbox CSS file and specific loading and button images to the header
+ on the pages where this function is called.
+*/
 
 if ( ! function_exists( 'primethemes_mlu_css' ) ) {
 
@@ -97,12 +97,12 @@ if ( ! function_exists( 'primethemes_mlu_css' ) ) {
 
 } // End IF Statement
 
-/*==================================================================================*/
-/* primethemes_mlu_js */
 /*
-/* Register and enqueue (load) the necessary JavaScript file for working with the
-/* Media Library-driven AJAX File Uploader Module.
-/*===================================================================================*/
+ primethemes_mlu_js 
+
+ Register and enqueue (load) the necessary JavaScript file for working with the
+ Media Library-driven AJAX File Uploader Module.
+*/
 
 if ( ! function_exists( 'primethemes_mlu_js' ) ) {
 
@@ -117,21 +117,21 @@ if ( ! function_exists( 'primethemes_mlu_js' ) ) {
 
 } // End IF Statement
 
-/*==================================================================================*/
-/* primethemes_medialibrary_uploader */
 /*
-/* primeThemes Uploader Using the WordPress Media Library.
-/*
-/* Parameters:
-/* - string $_id - A token to identify this field (the name).
-/* - string $_value - The value of the field, if present.
-/* - string $_mode - The display mode of the field.
-/* - string $_desc - An optional description of the field.
-/* - int $_postid - An optional post id (used in the meta boxes).
-/*
-/* Dependencies:
-/* - primethemes_mlu_get_silentpost()
-/*===================================================================================*/
+ primethemes_medialibrary_uploader 
+
+ primeThemes Uploader Using the WordPress Media Library.
+
+ Parameters:
+ - string $_id - A token to identify this field (the name).
+ - string $_value - The value of the field, if present.
+ - string $_mode - The display mode of the field.
+ - string $_desc - An optional description of the field.
+ - int $_postid - An optional post id (used in the meta boxes).
+
+ Dependencies:
+ - primethemes_mlu_get_silentpost()
+*/
 
 if ( ! function_exists( 'primethemes_medialibrary_uploader' ) ) {
 
@@ -234,20 +234,20 @@ if ( ! function_exists( 'primethemes_medialibrary_uploader' ) ) {
 	
 } // End IF Statement
 
-/*===================================================================================*/
-/* primethemes_mlu_get_silentpost */
 /*
-/* Use "silent" posts in the database to store relationships for images.
-/* This also creates the facility to collect galleries of, for example, logo images.
-/*
-/* Return: $_postid.
-/*
-/* If no "silent" post is present, one will be created with the type "primeframework"
-/* and the post_name of "prime-wf-$_token".
-/*
-/* Example Usage:
-/* primethemes_mlu_get_silentpost ( 'prime_logo' );
-/*===================================================================================*/
+ primethemes_mlu_get_silentpost 
+
+ Use "silent" posts in the database to store relationships for images.
+ This also creates the facility to collect galleries of, for example, logo images.
+
+ Return: $_postid.
+
+ If no "silent" post is present, one will be created with the type "primeframework"
+ and the post_name of "prime-wf-$_token".
+
+ Example Usage:
+ primethemes_mlu_get_silentpost ( 'prime_logo' );
+*/
 
 if ( ! function_exists( 'primethemes_mlu_get_silentpost' ) ) {
 
@@ -257,11 +257,13 @@ if ( ! function_exists( 'primethemes_mlu_get_silentpost' ) ) {
 	
 		$_id = 0;
 	
-		// Check if the token is valid against a whitelist.
+		/*
+		 Check if the token is valid against a whitelist.
 		
-		// $_whitelist = array( 'prime_logo', 'prime_custom_favicon', 'prime_body_img', 'prime_ad_top_image' );
+		 $_whitelist = array( 'prime_logo', 'prime_custom_favicon', 'prime_body_img', 'prime_ad_top_image' );
 		
-		// Sanitise the token.
+		 Sanitize the token.
+		*/ 
 		
 		$_token = strtolower( str_replace( ' ', '_', $_token ) );
 		
@@ -295,9 +297,11 @@ if ( ! function_exists( 'primethemes_mlu_get_silentpost' ) ) {
 				
 			} else {
 			
-				// If no post is present, insert one.
+				/*
+				 If no post is present, insert one.
 				
-				// Prepare some additional data to go with the post insertion.
+				 Prepare some additional data to go with the post insertion.
+				*/ 
 				
 				$_words = explode( '_', $_token );
 				
@@ -323,11 +327,11 @@ if ( ! function_exists( 'primethemes_mlu_get_silentpost' ) ) {
 	
 } // End IF Statement
 
-/*===================================================================================*/
-/* primethemes_mlu_insidepopup */
 /*
-/* Trigger code inside the Media Library popup.
-/*===================================================================================*/
+ primethemes_mlu_insidepopup 
+
+ Trigger code inside the Media Library popup.
+*/
 
 if ( ! function_exists( 'primethemes_mlu_insidepopup' ) ) {
 
@@ -401,11 +405,11 @@ if ( ! function_exists( 'primethemes_mlu_js_popup' ) ) {
 
 } // End IF Statement
 
-/*===================================================================================*/
-/* primethemes_mlu_modify_tabs */
 /*
-/* Triggered inside the Media Library popup to modify the title of the "Gallery" tab.
-/*===================================================================================*/
+ primethemes_mlu_modify_tabs 
+
+ Triggered inside the Media Library popup to modify the title of the "Gallery" tab.
+*/
 
 if ( ! function_exists( 'primethemes_mlu_modify_tabs' ) ) {
 
