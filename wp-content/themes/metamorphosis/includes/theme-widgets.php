@@ -1,6 +1,6 @@
 <?php
 
-// =============================== Flickr widget ======================================
+//  Flickr widget 
 function flickrWidget()
 {
 	$settings = get_option("widget_flickrwidget");
