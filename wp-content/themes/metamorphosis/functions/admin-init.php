@@ -1,8 +1,8 @@
 <?php 
 
-/*===================================================================================*/
-/* primeThemes Framework Version & Theme Version */
-/*===================================================================================*/
+
+// primeThemes Framework Version & Theme Version 
+
 function prime_version_init(){
 
     $prime_framework_version = '3.7.03';
@@ -29,9 +29,9 @@ if ( get_option('framework_prime_disable_generator') == "true" )
 else 
 	add_action('wp_head','prime_version');
 
-/*===================================================================================*/
-/* Load the required Framework Files */
-/*===================================================================================*/
+
+
+// Load the required Framework Files 
 
 $functions_path = TEMPLATEPATH . '/functions/';
 
