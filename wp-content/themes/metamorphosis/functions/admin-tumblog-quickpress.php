@@ -1,15 +1,13 @@
 <?php
 /**
- * primethemes Tumblog Functionality
- *
- * @version 3.0.0
- *
- * @package primeFramework
- * @subpackage Tumblog
- */
+  primethemes Tumblog Functionality
  
-/*===================================================================================
+  @version 3.0.0
+ 
+  @package primeFramework
+  @subpackage Tumblog
 
+ 
 TABLE OF CONTENTS
 
 - Register Actions
@@ -25,11 +23,10 @@ TABLE OF CONTENTS
 - Tumblog Upgrade
 -- primethemes_tumblog_page
 -- prime_upgrade_existing_tumblog_posts
-===================================================================================*/
+*/
 
-/*===================================================================================*/
-/* Register Actions
-/*===================================================================================*/
+
+// Register Actions
 
 //Include iphone app functionality
 $content_method = get_option('prime_tumblog_content_method');
@@ -91,11 +88,12 @@ function prime_load_tumblog_css($hook) {
     
 }
 
-/*===================================================================================*/
-/* AJAX Callback Functions
-/*===================================================================================*/
 
-//Handles AJAX Form Post from prime QuickPress
+/* 
+ AJAX Callback Functions
+
+ Handles AJAX Form Post from prime QuickPress
+*/
 function prime_tumblog_ajax_post() {
 	//Publish Article							
 	if ($_POST['tumblog-type'] == 'article') 
@@ -205,8 +203,10 @@ function prime_tumblog_publish($type, $data) {
   				$note_mins = (int)$data['tumblog-mins'];
   				if ($note_mins == 0) { $note_mins = 0; }
   				elseif ($note_mins >= 60) { $note_mins = 0; }
-  				//Convert to Y-m-d H:i:s
-  				//if everything is unchanged
+  				/*
+  				 Convert to Y-m-d H:i:s
+  				 if everything is unchanged
+  				*/
   				if ( ($note_hours == $original_hours) && ($note_mins == $original_mins) && ($posted_date == $original_date) ) {
   					$time_now_hours = date_i18n("H");
 					$time_now_mins = date_i18n("i");
@@ -216,20 +216,23 @@ function prime_tumblog_publish($type, $data) {
   				}
   				$date_formatted = date($php_formatting, strtotime($date_raw));
   				$tumbl_note['post_date'] = $date_formatted;
-  			// DEPRECATED 
-  			// }
+  			/*
+  			 DEPRECATED 
+  			 }
+  			*/
   			$tumbl_note['post_author'] = $current_user->ID;
   			$tumbl_note['tags_input'] = $data['tumblog-tags'];
   			
-  			// DEPRECATED 
-  			// Get Category from Theme Options
-  			/* 
-  			if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
-  				$category_id = get_cat_ID( get_option('prime_articles_category') );
-  				$categories = array($category_id);
-  			} else {
-  				$categories = array();
-  			}
+  			/*
+  			 DEPRECATED 
+  			 Get Category from Theme Options
+  			 
+  			 if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
+  			 	$category_id = get_cat_ID( get_option('prime_articles_category') );
+  			 	$categories = array($category_id);
+  			 } else {
+  			 	$categories = array();
+  			 }
   			*/
   			
   			$categories = array();
@@ -248,8 +251,10 @@ function prime_tumblog_publish($type, $data) {
 			//Insert the note into the database
   			$post_id = wp_insert_post($tumbl_note);
   			
-  			// DEPRECATED 
-  			// if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+  			/*
+  			 DEPRECATED 
+  			 if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+  			*/
   				
   				if ($content_method == 'post_format') {
   					set_post_format( $post_id, 'aside' );
@@ -270,16 +275,20 @@ function prime_tumblog_publish($type, $data) {
 					wp_set_post_terms( $post_id, $tags, 'tumblog' );
 				}
 				
-			// DEPRECATED 
-			// }
+			/*
+			 DEPRECATED 
+			 }
+			*/
         	
         	break;
     	case 'video':
     	    //Create post object
   			$tumbl_note['post_title'] = $data['video-title'];
   			$tumbl_note['post_content'] = $data['tumblog-content'];
-  			// DEPRECATED
-  			//if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+  			/*
+  			 DEPRECATED
+  			 if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+  			*/
   				if ($data['tumblog-status'] != '') {
   					$tumbl_note['post_status'] = $data['tumblog-status'];
   				}
@@ -294,8 +303,10 @@ function prime_tumblog_publish($type, $data) {
   				$note_mins = (int)$data['tumblog-mins'];
   				if ($note_mins == 0) { $note_mins = 0; }
   				elseif ($note_mins >= 60) { $note_mins = 0; }
-  				//Convert to Y-m-d H:i:s
-  				//if everything is unchanged
+  				/*
+  				 Convert to Y-m-d H:i:s
+  				 if everything is unchanged
+  				*/
   				if ( ($note_hours == $original_hours) && ($note_mins == $original_mins) && ($posted_date == $original_date) ) {
   					$time_now_hours = date_i18n("H");
 					$time_now_mins = date_i18n("i");
@@ -305,20 +316,23 @@ function prime_tumblog_publish($type, $data) {
   				}
   				$date_formatted = date($php_formatting, strtotime($date_raw));
   				$tumbl_note['post_date'] = $date_formatted;
-  			// DEPRECATED
-  			// }
+  			/*
+  			 DEPRECATED
+  			 }
+  			*/
   			$tumbl_note['post_author'] = $current_user->ID;
   			$tumbl_note['tags_input'] = $data['tumblog-tags'];
   			
-  			// DEPRECATED 
-  			//Get Category from Theme Options
   			/*
-  			if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
+  			 DEPRECATED 
+  			 Get Category from Theme Options
+  			
+  			 if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
   				$category_id = get_cat_ID( get_option('prime_videos_category') );
   				$categories = array($category_id);
-  			} else {
+  			 } else {
   				$categories = array();
-  			}
+  			 }
   			*/
   			
   			$categories = array();
@@ -339,8 +353,10 @@ function prime_tumblog_publish($type, $data) {
   			//Add Custom Field Data to the Post
     	    add_post_meta($post_id, $tumblog_custom_fields['video-embed'], $data['video-embed'], true);
     	    
-    	    // DEPRECATED
-    	    // if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+    	    /*
+    	     DEPRECATED
+    	     if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+    	    */
     	    	
     	    	if ($content_method == 'post_format') {
   					set_post_format( $post_id, 'video' );
@@ -361,8 +377,10 @@ function prime_tumblog_publish($type, $data) {
 					wp_set_post_terms( $post_id, $tags, 'tumblog' );
 				}
 			
-			// DEPRECATED
-			// }
+			/*
+			 DEPRECATED
+			 }
+			*/
 			
     	    break;
     	case 'image':
@@ -370,8 +388,10 @@ function prime_tumblog_publish($type, $data) {
   			$tumbl_note['post_title'] = $data['image-title'];
   			$tumbl_note['post_content'] = $data['tumblog-content'];
   			
-  			// DEPRECATED
-  			// if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+  			/*
+  			 DEPRECATED
+  			 if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+  			*/
   				if ($data['tumblog-status'] != '') {
   					$tumbl_note['post_status'] = $data['tumblog-status'];
   				}
@@ -386,8 +406,10 @@ function prime_tumblog_publish($type, $data) {
   				$note_mins = (int)$data['tumblog-mins'];
   				if ($note_mins == 0) { $note_mins = 0; }
   				elseif ($note_mins >= 60) { $note_mins = 0; }
-  				//Convert to Y-m-d H:i:s
-  				//if everything is unchanged
+  				/*
+  				Convert to Y-m-d H:i:s
+  				if everything is unchanged
+  				*/
   				if ( ($note_hours == $original_hours) && ($note_mins == $original_mins) && ($posted_date == $original_date) ) {
   					$time_now_hours = date_i18n("H");
 					$time_now_mins = date_i18n("i");
@@ -398,20 +420,23 @@ function prime_tumblog_publish($type, $data) {
   				$date_formatted = date($php_formatting, strtotime($date_raw));
   				$tumbl_note['post_date'] = $date_formatted;
   			
-  			// DEPRECATED
-  			// }
+  			/*
+  			 DEPRECATED
+  			 }
+  			*/
   			$tumbl_note['post_author'] = $current_user->ID;
   			$tumbl_note['tags_input'] = $data['tumblog-tags'];
   			
-  			// DEPRECATED
-  			//Get Category from Theme Options
   			/*
-  			if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
+  			 DEPRECATED
+  			 Get Category from Theme Options
+  			
+  			 if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
   				$category_id = get_cat_ID( get_option('prime_images_category') );
   				$categories = array($category_id);
-  			} else {
+  			 } else {
   				$categories = array();
-  			}
+  			 }
   			*/
   			
   			$categories = array();
@@ -442,8 +467,10 @@ function prime_tumblog_publish($type, $data) {
     	    	add_post_meta($post_id, $tumblog_custom_fields['image-url'], $data['image-url'], true);
     	    } 
     	    
-    	    // DEPRECATED
-    	    // if (get_option('tumblog_prime_tumblog_upgraded') == 'true') { 	
+    	    /*
+    	     DEPRECATED
+    	     if (get_option('tumblog_prime_tumblog_upgraded') == 'true') { 	
+    	    */
     	    	
     	    	if ($content_method == 'post_format') {
   					set_post_format( $post_id, 'image' );
@@ -464,8 +491,10 @@ function prime_tumblog_publish($type, $data) {
 					wp_set_post_terms( $post_id, $tags, 'tumblog' );    
 				}
 			
-			// DEPRECATED
-			// }
+			/*
+			 DEPRECATED
+			 }
+			*/
 	   	    
 	   	    break;
 	   	case 'link':
@@ -473,8 +502,10 @@ function prime_tumblog_publish($type, $data) {
 			$tumbl_note['post_title'] = $data['link-title'];
 			$tumbl_note['post_content'] = $data['tumblog-content'];
 			
-			// DEPRECATED
-			// if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+			/*
+			 DEPRECATED
+			 if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+			*/
 				if ($data['tumblog-status'] != '') {
 	  				$tumbl_note['post_status'] = $data['tumblog-status'];
 	  			}
@@ -489,8 +520,10 @@ function prime_tumblog_publish($type, $data) {
 	  			$note_mins = (int)$data['tumblog-mins'];
 	  			if ($note_mins == 0) { $note_mins = 0; }
 	  			elseif ($note_mins >= 60) { $note_mins = 0; }
-	  			//Convert to Y-m-d H:i:s
-	  			//if everything is unchanged
+	  			/*
+	  			 Convert to Y-m-d H:i:s
+	  			 if everything is unchanged
+	  			*/
   				if ( ($note_hours == $original_hours) && ($note_mins == $original_mins) && ($posted_date == $original_date) ) {
   					$time_now_hours = date_i18n("H");
 					$time_now_mins = date_i18n("i");
@@ -500,20 +533,23 @@ function prime_tumblog_publish($type, $data) {
   				}
 	  			$date_formatted = date($php_formatting, strtotime($date_raw));
 	  			$tumbl_note['post_date'] = $date_formatted;
-	  		// DEPRECATED
-	  		// }
+	  		/*
+	  		 DEPRECATED
+	  		 }
+	  		*/
 	  		$tumbl_note['post_author'] = $current_user->ID;
 	  		$tumbl_note['tags_input'] = $data['tumblog-tags'];
 	  		
-	  		// DEPRECATED
-	  		//Get Category from Theme Options
 	  		/*
-	  		if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
+	  		 DEPRECATED
+	  		 Get Category from Theme Options
+	  		
+	  		 if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
 	  			$category_id = get_cat_ID( get_option('prime_links_category') );
 	  			$categories = array($category_id);
-	  		} else {
+	  		 } else {
 	  			$categories = array();
-	  		}
+	  		 }
 	  		*/
 	  		
 	  		$categories = array();
@@ -534,8 +570,10 @@ function prime_tumblog_publish($type, $data) {
 	  		//Add Custom Field Data to the Post
 	  		add_post_meta($post_id, $tumblog_custom_fields['link-url'], $data['link-url'], true);
 	  		
-	  		// DEPRECATED
-	  		// if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	  		/*
+	  		 DEPRECATED
+	  		 if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	  		*/
 	  			
 	  			if ($content_method == 'post_format') {
   					set_post_format( $post_id, 'link' );
@@ -555,8 +593,10 @@ function prime_tumblog_publish($type, $data) {
 					}
 					wp_set_post_terms( $post_id, $tags, 'tumblog' );
 				}
-			// DEPRECATED
-			// }
+			/*
+			 DEPRECATED
+			 }
+			*/
 			
 	        break;
 	    case 'quote':
@@ -564,8 +604,10 @@ function prime_tumblog_publish($type, $data) {
 	  		$tumbl_note['post_title'] = $data['quote-title'];
 	  		$tumbl_note['post_content'] = $data['tumblog-content'];
 	  		
-	  		// DEPRECATED
-	  		// if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	  		/*
+	  		 DEPRECATED
+	  		 if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	  		*/
 	  			if ($data['tumblog-status'] != '') {
 	  				$tumbl_note['post_status'] = $data['tumblog-status'];
 	  			}
@@ -591,20 +633,23 @@ function prime_tumblog_publish($type, $data) {
   				}
 	  			$date_formatted = date($php_formatting, strtotime($date_raw));
 	  			$tumbl_note['post_date'] = $date_formatted;
-	  		// DEPRECATED
-	  		// }
+	  		/*
+	  		 DEPRECATED
+	  		 }
+	  		*/
 	  		$tumbl_note['post_author'] = $current_user->ID;
 	  		$tumbl_note['tags_input'] = $data['tumblog-tags'];
 	  		
-	  		// DEPRECATED
-	  		//Get Category from Theme Options
 	  		/*
-	  		if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
+	  		 DEPRECATED
+	  		 Get Category from Theme Options
+	  		
+	  		 if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
 	  			$category_id = get_cat_ID( get_option('prime_quotes_category') );
 	  			$categories = array($category_id);
-	  		} else {
+	  		 } else {
 	  			$categories = array();
-	  		}
+	  		 }
 	  		*/
 	  		
 	  		$categories = array();
@@ -626,8 +671,10 @@ function prime_tumblog_publish($type, $data) {
 	        add_post_meta($post_id, $tumblog_custom_fields['quote-copy'], $data['quote-copy'], true);
 	        add_post_meta($post_id, $tumblog_custom_fields['quote-author'], $data['quote-author'], true);
 	        add_post_meta($post_id, $tumblog_custom_fields['quote-url'], $data['quote-url'], true);
-	        // DEPRECATED
-	        // if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	        /*
+	         DEPRECATED
+	         if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	        */
 	        	
 	        	if ($content_method == 'post_format') {
   					set_post_format( $post_id, 'quote' );
@@ -647,8 +694,10 @@ function prime_tumblog_publish($type, $data) {
 					}
 					wp_set_post_terms( $post_id, $tags, 'tumblog' );
 				}
-			// DEPRECATED
-			// }
+			/*
+			 DEPRECATED
+			 }
+			*/
 	        
 	        break;
 	    case 'audio':
@@ -656,8 +705,10 @@ function prime_tumblog_publish($type, $data) {
 	  		$tumbl_note['post_title'] = $data['audio-title'];
 	  		$tumbl_note['post_content'] = $data['tumblog-content'];
 	  		
-	  		// DEPRECATED
-	  		// if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	  		/*
+	  		 DEPRECATED
+	  		 if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	  		*/
 	  			if ($data['tumblog-status'] != '') {
 	  				$tumbl_note['post_status'] = $data['tumblog-status'];
 	  			}
@@ -672,8 +723,10 @@ function prime_tumblog_publish($type, $data) {
 	  			$note_mins = (int)$data['tumblog-mins'];
 	  			if ($note_mins == 0) { $note_mins = 0; }
 	  			elseif ($note_mins >= 60) { $note_mins = 0; }
-	  			//Convert to Y-m-d H:i:s
-	  			//if everything is unchanged
+	  			/*
+	  			 Convert to Y-m-d H:i:s
+	  			 if everything is unchanged
+	  			*/
   				if ( ($note_hours == $original_hours) && ($note_mins == $original_mins) && ($posted_date == $original_date) ) {
   					$time_now_hours = date_i18n("H");
 					$time_now_mins = date_i18n("i");
@@ -684,20 +737,23 @@ function prime_tumblog_publish($type, $data) {
 	  			$date_formatted = date($php_formatting, strtotime($date_raw));
 	  			$tumbl_note['post_date'] = $date_formatted;
 	  		
-	  		// DEPRECATED
-	  		// }
+	  		/*
+	  		 DEPRECATED
+	  		 }
+	  		*/
 	  		$tumbl_note['post_author'] = $current_user->ID;
 	  		$tumbl_note['tags_input'] = $data['tumblog-tags'];
 	  		
-	  		// DEPRECATED
-	  		//Get Category from Theme Options
 	  		/*
-	  		if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
+	  		 DEPRECATED
+	  		 Get Category from Theme Options
+	  		
+	  		 if (get_option('tumblog_prime_tumblog_upgraded') != 'true') {
 	  			$category_id = get_cat_ID( get_option('prime_audio_category') );
 	  			$categories = array($category_id);
-	  		} else {
+	  		 } else {
 	  			$categories = array();
-	  		}
+	  		 }
 	  		*/
 	  		
 	  		$categories = array();
@@ -727,8 +783,10 @@ function prime_tumblog_publish($type, $data) {
 	        else {
 	        	add_post_meta($post_id, $tumblog_custom_fields['audio-url'], $data['audio-url'], true);
 	    	}
-	    	// DEPRECATED
-	    	// if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	    	/*
+	    	 DEPRECATED
+	    	 if (get_option('tumblog_prime_tumblog_upgraded') == 'true') {
+	    	*/
 	    	   	if ($content_method == 'post_format') {
   					set_post_format( $post_id, 'audio' );
   				} else {
@@ -747,8 +805,10 @@ function prime_tumblog_publish($type, $data) {
 					}
 					wp_set_post_terms( $post_id, $tags, 'tumblog' );
 				}
-			// DEPRECATED
-			// }
+			/*
+			 DEPRECATED
+			 }
+			*/
 			
 	        break;
 	    default:
@@ -783,9 +843,8 @@ function prime_tumblog_file_upload() {
 	else { echo $uploaded_file['url'].'|'.$attach_id.'|'; } // Is the Response
 }
 
-/*===================================================================================*/
-/* Dashboard Widget
-/*===================================================================================*/
+
+// Dashboard Widget
 
 // Tumblog Dashboard Widget Output
 function prime_tumblog_dashboard_widget_output() {
