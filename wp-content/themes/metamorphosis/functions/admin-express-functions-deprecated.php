@@ -1,15 +1,15 @@
 <?php
 
-/**
- * Set taxonomies for post
- *
- * @custom code since 2.8.4 added by Dheer Gupta http://webdisect.com
- *
- * @param int $post_id Post ID.
- * @param array $fields Taxonomy Fields
- * Enter Values as array
- * array ( 'tags' => '', 'taxonomy' => '' )
- */
+/*
+  Set taxonomies for post
+ 
+  @custom code since 2.8.4 added by Dheer Gupta http://webdisect.com
+ 
+  @param int $post_id Post ID.
+  @param array $fields Taxonomy Fields
+  Enter Values as array
+  array ( 'tags' => '', 'taxonomy' => '' )
+*/
 function set_new_taxonomy_tag($post_id, $fields) {
 	$post_id = (int) $post_id;
 
@@ -31,11 +31,11 @@ function set_new_taxonomy_tag($post_id, $fields) {
 
 
 /*
- * Express version
- *
- * Returns the API version number for future compatibility consideration
- *
- */
+  Express version
+ 
+  Returns the API version number for future compatibility consideration
+ 
+*/
 	
 function express_version() {
 	return "1.0";
@@ -43,11 +43,11 @@ function express_version() {
 
 
 /*
- * Get Posts With Offset
- *
- * Returns in a specific range to enable paging.
- *
- */
+  Get Posts With Offset
+ 
+  Returns in a specific range to enable paging.
+ 
+*/
 	
 function express_getPostsWithOffset($args){
 	global $wpdb;
@@ -134,8 +134,10 @@ function express_getPostsWithOffset($args){
 			'title' => $entry['post_title'],
 			'link' => $link,
 			'permaLink' => $link,
-			// commented out because no other tool seems to use this
-			// 'content' => $entry['post_content'],
+			/*
+			commented out because no other tool seems to use this
+			'content' => $entry['post_content'],
+			*/
 			'categories' => $categories,
 			'mt_excerpt' => $entry['post_excerpt'],
 			'mt_text_more' => $post['extended'],
@@ -163,11 +165,11 @@ function express_getPostsWithOffset($args){
 
 
 /*
- * Upload file
- *
- * Adds the post_id in the returned value
- *
- */
+  Upload file
+ 
+  Adds the post_id in the returned value
+ 
+*/
 	
 function express_uploadFile($args) {
 	global $wpdb;
@@ -209,8 +211,10 @@ function express_uploadFile($args) {
 		// Delete previous file.
 		wp_delete_attachment($old_file->ID);
 
-		// Make sure the new name is different by pre-pending the
-		// previous post id.
+		/*	
+		Make sure the new name is different by pre-pending the
+		previous post id.
+		*/
 		$filename = preg_replace("/^wpid\d+-/", "", $name);
 		$name = "wpid{$old_file->ID}-{$filename}";
 	}
@@ -221,8 +225,10 @@ function express_uploadFile($args) {
 		logIO('O', '(MW) ' . $errorString);
 		return new IXR_Error(500, $errorString);
 	}
-	// Construct the attachment array
-	// attach to post_id 0
+	/*
+	Construct the attachment array
+	attach to post_id 0
+	*/ 
 	$post_id = 0;
 	$attachment = array(
 		'post_title' => $name,
@@ -242,11 +248,11 @@ function express_uploadFile($args) {
 
 
 /*
- * prime taxonomy
- *
- * Set the proper taxonomy
- *
- */
+  prime taxonomy
+ 
+  Set the proper taxonomy
+ 
+*/
 	
 function express_prime_taxonomy($args) {
 	$content_struct = $args[3];
@@ -290,12 +296,12 @@ function express_prime_taxonomy($args) {
 
 
 /*
- * New post
- *
- * Sets post attachements if specified
- * Sets post custom taxonomy
- *
- */
+  New post
+ 
+  Sets post attachements if specified
+  Sets post custom taxonomy
+ 
+*/
 	
 function express_newPost($args) {
 	global $wp_xmlrpc_server;
@@ -330,12 +336,12 @@ function express_newPost($args) {
 
 
 /*
- * Edit post
- *
- * Sets post attachements if specified
- * Sets post custom taxonomy
- *
- */
+  Edit post
+ 
+  Sets post attachements if specified
+  Sets post custom taxonomy
+ 
+*/
 	
 function express_editPost($args) {
 	global $wp_xmlrpc_server;
