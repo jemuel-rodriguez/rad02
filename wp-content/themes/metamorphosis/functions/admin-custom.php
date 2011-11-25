@@ -1,6 +1,6 @@
 <?php 
 
-/*===================================================================================
+/*
 
 TABLE OF CONTENTS
 
@@ -10,13 +10,13 @@ TABLE OF CONTENTS
 - primethemes_metabox_add
 - primethemes_metabox_header
 
-===================================================================================*/
+*/
 
 
 
-/*===================================================================================*/
-// Custom fields for WP write panel
-/*===================================================================================*/
+/*
+ Custom fields for WP write panel
+*/
 
 function primethemes_metabox_create($post,$callback) {
     global $post;
@@ -297,9 +297,9 @@ function primethemes_metabox_create($post,$callback) {
 
 
 
-/*===================================================================================*/
-// primethemes_uploader_custom_fields
-/*===================================================================================*/
+/*
+ primethemes_uploader_custom_fields
+*/
 
 function primethemes_uploader_custom_fields($pID,$id,$std,$desc){
 
@@ -319,9 +319,9 @@ return $uploader;
 
 
 
-/*===================================================================================*/
-// primethemes_metabox_handle
-/*===================================================================================*/
+/*
+ primethemes_metabox_handle
+*/
 
 function primethemes_metabox_handle(){
     
@@ -465,9 +465,9 @@ function primethemes_metabox_handle(){
 
 } // End primethemes_metabox_handle()
 
-/*===================================================================================*/
-// primethemes_metabox_add
-/*===================================================================================*/
+/*
+ primethemes_metabox_add
+*/
 
 function primethemes_metabox_add() {
 	$seo_metaboxes = get_option('prime_custom_seo_template');
@@ -509,9 +509,9 @@ function primethemes_metabox_add() {
     }
 }
 
-/*===================================================================================*/
-// primethemes_metabox_header
-/*===================================================================================*/
+/*
+ primethemes_metabox_header
+*/
 
 function primethemes_metabox_header(){
 ?>
