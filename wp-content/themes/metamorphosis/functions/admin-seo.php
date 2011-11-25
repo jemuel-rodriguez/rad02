@@ -1,7 +1,7 @@
 <?php
-/*===================================================================================*/
-/* SEO - primethemes_seo_page */
-/*===================================================================================*/
+
+// SEO - primethemes_seo_page 
+
 
 function primethemes_seo_page(){
 
@@ -144,11 +144,13 @@ function primethemes_seo_page(){
 					"icon" => "misc",
 					"type" => "heading");
 					
-	/*$seo_options[] = array( "name" => "Add Indexing Meta",
+	/*
+	$seo_options[] = array( "name" => "Add Indexing Meta",
 					"desc" => "Add links to the header telling the search engine what the start, next, previous and home urls are.",
 					"id" => $shortname."_meta_basics",
 					"std" => "false",
-					"type" => "checkbox"); */
+					"type" => "checkbox"); 
+	*/
 	
 	$seo_options[] = array( "name" => "Archive Indexing",
 					"desc" => "Select which archives to index on your site. Aids in removing duplicate content from being indexed, preventing content dilution.",
