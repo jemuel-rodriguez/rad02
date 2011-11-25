@@ -1,5 +1,5 @@
 <?php
-/*===================================================================================
+/*
 
 TABLE OF CONTENTS
 
@@ -29,11 +29,11 @@ TABLE OF CONTENTS
 22. List Styles - Ordered List
 23. Social Icon
 
-===================================================================================*/
+*/
 
-/*===================================================================================*/
-/* 1. prime Shortcodes  */
-/*===================================================================================*/
+
+// 1. prime Shortcodes  
+
 
 // Enable shortcodes in widget areas
 add_filter('widget_text', 'do_shortcode');
@@ -54,9 +54,10 @@ if (!function_exists("prime_remove_wpautop")) {
 	}
 }
 
-/*===================================================================================*/
-/* 1.1 Output shortcode JS in footer */
-/*===================================================================================*/
+
+
+
+// 1.1 Output shortcode JS in footer 
 
 // Enqueue shortcode JS file.
 
@@ -125,17 +126,16 @@ if (!function_exists("prime_output_shortcode_js")) {
 }
 add_action('wp_footer', 'prime_output_shortcode_js');
 
-/*===================================================================================*/
-/* 2. Boxes - box
-/*===================================================================================*/
 /*
+ 2. Boxes - box
 
-Optional arguments:
- - type: info, alert, tick, download, note
- - size: medium, large
- - style: rounded
- - border: none, full
- - icon: none OR full URL to a custom icon 
+
+ Optional arguments:
+  - type: info, alert, tick, download, note
+  - size: medium, large
+  - style: rounded
+  - border: none, full
+  - icon: none OR full URL to a custom icon 
 
 */
 function prime_shortcode_box($atts, $content = null) {
@@ -156,20 +156,19 @@ function prime_shortcode_box($atts, $content = null) {
 }
 add_shortcode('box', 'prime_shortcode_box');
 
-/*===================================================================================*/
-/* 3. Buttons - button
-/*===================================================================================*/
 /*
+ 3. Buttons - button
 
-Optional arguments:
- - size: small, large
- - style: info, alert, tick, download, note
- - color: red, green, black, grey OR custom hex color (e.g #000000)
- - border: border color (e.g. red or #000000)
- - text: black (for light color background on button) 
- - class: custom class
- - link: button link (e.g http://www.primethemes.com)
- - window: true/false
+
+ Optional arguments:
+  - size: small, large
+  - style: info, alert, tick, download, note
+  - color: red, green, black, grey OR custom hex color (e.g #000000)
+  - border: border color (e.g. red or #000000)
+  - text: black (for light color background on button) 
+  - class: custom class
+  - link: button link (e.g http://www.primethemes.com)
+  - window: true/false
  
 */
 function prime_shortcode_button($atts, $content = null) {
@@ -249,14 +248,12 @@ function prime_shortcode_button($atts, $content = null) {
 add_shortcode('button', 'prime_shortcode_button');
 
 
-/*====================================================================================*/
-/* 4. Related Posts - related_posts
-/*===================================================================================*/
 /*
+ 4. Related Posts - related_posts
 
-Optional arguments:
- - limit: number of posts to show (default: 5)
- - image: thumbnail size, 0 = off (default: 0)
+ Optional arguments:
+  - limit: number of posts to show (default: 5)
+  - image: thumbnail size, 0 = off (default: 0)
 */
 
 function prime_shortcode_related_posts( $atts ) {
@@ -324,18 +321,17 @@ function prime_shortcode_related_posts( $atts ) {
 add_shortcode('related_posts', 'prime_shortcode_related_posts');
 
 
-/*===================================================================================*/
-/* 5. Tweetmeme button - tweetmeme
-/*===================================================================================*/
 /*
+ 5. Tweetmeme button - tweetmeme
 
-Source: http://help.tweetmeme.com/2009/04/06/tweetmeme-button/
 
-Optional arguments:
- - link: specify URL directly 
- - style: compact
- - source: username
- - float: none, left, right (default: left)
+ Source: http://help.tweetmeme.com/2009/04/06/tweetmeme-button/
+
+ Optional arguments:
+  - link: specify URL directly 
+  - style: compact
+  - source: username
+  - float: none, left, right (default: left)
  
 */
 function prime_shortcode_tweetmeme($atts, $content = null) {
@@ -363,21 +359,20 @@ function prime_shortcode_tweetmeme($atts, $content = null) {
 }
 add_shortcode('tweetmeme', 'prime_shortcode_tweetmeme');
 
-/*===================================================================================*/
-/* 6. Twitter button - twitter
-/*===================================================================================*/
 /*
+ 6. Twitter button - twitter
 
-Source: http://twitter.com/goodies/tweetbutton
 
-Optional arguments:
- - style: vertical, horizontal, none ( default: vertical )
- - url: specify URL directly 
- - source: username to mention in tweet
- - related: related account 
- - text: optional tweet text (default: title of page)
- - float: none, left, right (default: left)
- - lang: fr, de, es, js (default: english)
+ Source: http://twitter.com/goodies/tweetbutton
+
+ Optional arguments:
+  - style: vertical, horizontal, none ( default: vertical )
+  - url: specify URL directly 
+  - source: username to mention in tweet
+  - related: related account 
+  - text: optional tweet text (default: title of page)
+  - float: none, left, right (default: left)
+  - lang: fr, de, es, js (default: english)
 */
 function prime_shortcode_twitter($atts, $content = null) {
    	extract(shortcode_atts(array(	'url' => '',
@@ -410,18 +405,17 @@ function prime_shortcode_twitter($atts, $content = null) {
 }
 add_shortcode('twitter', 'prime_shortcode_twitter');
 
-/*===================================================================================*/
-/* 7. Digg Button - digg
-/*===================================================================================*/
 /*
+ 7. Digg Button - digg
 
-Source: http://about.digg.com/button
 
-Optional arguments:
- - link: specify URL directly 
- - title: specify a title (must add link also)
- - style: medium, large, compact, icon (default: medium)
- - float: none, left, right (default: left)
+ Source: http://about.digg.com/button
+
+ Optional arguments:
+  - link: specify URL directly 
+  - title: specify a title (must add link also)
+  - style: medium, large, compact, icon (default: medium)
+  - float: none, left, right (default: left)
  
 */
 function prime_shortcode_digg($atts, $content = null) {
@@ -466,22 +460,22 @@ function prime_shortcode_digg($atts, $content = null) {
 add_shortcode('digg', 'prime_shortcode_digg');
 
 
-/*===================================================================================*/
-/* 8. Facebook Like Button - fblike
-/*===================================================================================*/
 /*
+ 8. Facebook Like Button - fblike
 
-Source: http://developers.facebook.com/docs/reference/plugins/like
 
-Optional arguments:
- - float: none (default), left, right 
- - url: link you want to share (default: current post ID)
- - style: standard (default), button
- - showfaces: true or false (default)
- - width: 450
- - verb: like (default) or recommend
- - colorscheme: light (default), dark
- - font: arial (default), lucida grande, segoe ui, tahoma, trebuchet ms, verdana 
+
+ Source: http://developers.facebook.com/docs/reference/plugins/like
+
+ Optional arguments:
+  - float: none (default), left, right 
+  - url: link you want to share (default: current post ID)
+  - style: standard (default), button
+  - showfaces: true or false (default)
+  - width: 450
+  - verb: like (default) or recommend
+  - colorscheme: light (default), dark
+  - font: arial (default), lucida grande, segoe ui, tahoma, trebuchet ms, verdana 
  
 */
 function prime_shortcode_fblike($atts, $content = null) {
@@ -546,20 +540,20 @@ function prime_shortcode_fblike($atts, $content = null) {
 add_shortcode('fblike', 'prime_shortcode_fblike');
 
 
-/*===================================================================================*/
-/* 9. Columns
-/*===================================================================================*/
 /*
+ 9. Columns
 
-Description:
 
-Columns are named with this convention Xcol_Y where X is the total number of columns and Y is 
-the number of columns you want this column to span. Add _last behind the shortcode if it is the
-last column.
+ Description:
+
+ Columns are named with this convention Xcol_Y where X is the total number of columns and Y is 
+ the number of columns you want this column to span. Add _last behind the shortcode if it is the
+ last column.
 
 */
 
-/* ============= Two Columns ============= */
+
+// Two Columns 
 
 function prime_shortcode_twocol_one($atts, $content = null) {
    return '<div class="twocol-one">' . prime_remove_wpautop($content) . '</div>';
@@ -572,7 +566,7 @@ function prime_shortcode_twocol_one_last($atts, $content = null) {
 add_shortcode('twocol_one_last', 'prime_shortcode_twocol_one_last');
 
 
-/* ============= Three Columns ============= */
+// Three Columns
 
 function prime_shortcode_threecol_one($atts, $content = null) {
    return '<div class="threecol-one">' . prime_remove_wpautop($content) . '</div>';
@@ -594,7 +588,7 @@ function prime_shortcode_threecol_two_last($atts, $content = null) {
 }
 add_shortcode('threecol_two_last', 'prime_shortcode_threecol_two_last');
 
-/* ============= Four Columns ============= */
+// Four Columns 
 
 function prime_shortcode_fourcol_one($atts, $content = null) {
    return '<div class="fourcol-one">' . prime_remove_wpautop($content) . '</div>';
@@ -626,7 +620,7 @@ function prime_shortcode_fourcol_three_last($atts, $content = null) {
 }
 add_shortcode('fourcol_three_last', 'prime_shortcode_fourcol_three_last');
 
-/* ============= Five Columns ============= */
+// Five Columns
 
 function prime_shortcode_fivecol_one($atts, $content = null) {
    return '<div class="fivecol-one">' . prime_remove_wpautop($content) . '</div>';
@@ -669,7 +663,7 @@ function prime_shortcode_fivecol_four_last($atts, $content = null) {
 add_shortcode('fivecol_four_last', 'prime_shortcode_fivecol_four_last');
 
 
-/* ============= Six Columns ============= */
+// Six Columns
 
 function prime_shortcode_sixcol_one($atts, $content = null) {
    return '<div class="sixcol-one">' . prime_remove_wpautop($content) . '</div>';
@@ -722,12 +716,10 @@ function prime_shortcode_sixcol_five_last($atts, $content = null) {
 add_shortcode('sixcol_five_last', 'prime_shortcode_sixcol_five_last');
 
 
-/*===================================================================================*/
-/* 10. Horizontal Rule / Divider - hr - divider
-/*===================================================================================*/
 /*
+ 10. Horizontal Rule / Divider - hr - divider
 
-Description: Use to separate text. 
+ Description: Use to separate text. 
 
 */
 function prime_shortcode_hr($atts, $content = null) {
@@ -746,14 +738,14 @@ function prime_shortcode_divider_flat($atts, $content = null) {
 add_shortcode('divider_flat', 'prime_shortcode_divider_flat');
 
 
-/*====================================================================================*/
-/* 11. Quote - quote
-/*====================================================================================*/
 /*
+ 11. Quote - quote
 
-Optional arguments:
- - style: boxed 
- - float: left, right
+
+
+ Optional arguments:
+  - style: boxed 
+  - float: left, right
  
 */
 function prime_shortcode_quote($atts, $content = null) {
@@ -769,15 +761,14 @@ function prime_shortcode_quote($atts, $content = null) {
 }
 add_shortcode('quote', 'prime_shortcode_quote');
 
-/*===================================================================================*/
-/* 12. Icon links - ilink
-/*===================================================================================*/
 /*
+ 12. Icon links - ilink
 
-Optional arguments:
- - style: download, note, tick, info, alert
- - url: the url for your link 
- - icon: add an url to a custom icon
+
+ Optional arguments:
+  - style: download, note, tick, info, alert
+  - url: the url for your link 
+  - icon: add an url to a custom icon
  
 */
 function prime_shortcode_ilink($atts, $content = null) {
@@ -791,17 +782,14 @@ function prime_shortcode_ilink($atts, $content = null) {
 }
 add_shortcode('ilink', 'prime_shortcode_ilink');
 
-/*===================================================================================*/
-/* 13. jQuery Toggle
-/*===================================================================================*/
 /*
+ 13. jQuery Toggle
 
-}
 
-Optional arguments:
- - title: The text in the main trigger
- - hide: Hide the toggle box on load
- - display_main_trigger: Display the main trigger on the toggle
+ Optional arguments:
+  - title: The text in the main trigger
+  - hide: Hide the toggle box on load
+  - display_main_trigger: Display the main trigger on the toggle
  
 */
 function prime_shortcode_toggle ( $atts, $content = null ) {
@@ -854,16 +842,15 @@ add_shortcode('toggle', 'prime_shortcode_toggle');
 */
 
 
-/*===================================================================================*/
-/* 14. Facebook Share Button - fbshare
-/*===================================================================================*/
+
 /*
+ 14. Facebook Share Button - fbshare
 
-Source: http://developers.facebook.com/docs/share
+ Source: http://developers.facebook.com/docs/share
 
-Optional arguments:
- - type: box_count, button_count, button (default), icon_link, or icon
- - float: none, left, right (default: left)
+ Optional arguments:
+  - type: box_count, button_count, button (default), icon_link, or icon
+  - float: none, left, right (default: left)
 
 */
 function prime_shortcode_fbshare($atts, $content = null) {
@@ -887,19 +874,18 @@ function prime_shortcode_fbshare($atts, $content = null) {
 add_shortcode('fbshare', 'prime_shortcode_fbshare');
 
 
-/*===================================================================================*/
-/* 15. Advanced Contact Form - contact_form
-/*===================================================================================*/
 /*
+ 15. Advanced Contact Form - contact_form
 
-Optional arguments:
- - email: The e-mail address to which the form will send (defaults to prime_contactform_email).
- - subject: The subject of the e-mail (defaults to "Message via the contact form".
+
+ Optional arguments:
+  - email: The e-mail address to which the form will send (defaults to prime_contactform_email).
+  - subject: The subject of the e-mail (defaults to "Message via the contact form".
  
- - Advanced form fields functionality, for creating dynamic form fields:
- --- Text Input: text_fieldname="Text Field Label|Optional Default Text"
- --- Select Box: select_fieldname="Select Box Label|key=value,key=value,key=value"
- --- Textarea Input: textarea_fieldname="Textarea Field Label|Optional Default Text|Optional Number of Rows|Optional Number of Columns"
+  - Advanced form fields functionality, for creating dynamic form fields:
+  --- Text Input: text_fieldname="Text Field Label|Optional Default Text"
+  --- Select Box: select_fieldname="Select Box Label|key=value,key=value,key=value"
+  --- Textarea Input: textarea_fieldname="Textarea Field Label|Optional Default Text|Optional Number of Rows|Optional Number of Columns"
 
 */
 
@@ -933,8 +919,7 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 		 
 			foreach ( $dynamic_atts as $k => $v ) {
 			
-				/* Parse the text inputs.
-				================================================--*/
+				// Parse the text inputs.
 				
 				if ( substr( $k, 0, 5 ) == 'text_' ) {
 				
@@ -954,8 +939,7 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 				
 				} // End IF Statement
 				
-				/* Parse the select boxes.
-				================================================--*/
+				// Parse the select boxes.
 				
 				if ( substr( $k, 0, 7 ) == 'select_' ) {
 				
@@ -1010,8 +994,7 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 				
 				} // End IF Statement
 				
-				/* Parse the textarea inputs.
-				================================================--*/
+				// Parse the textarea inputs.				
 				
 				if ( substr( $k, 0, 9 ) == 'textarea_' ) {
 				
@@ -1041,14 +1024,14 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 			
 		} // End IF Statement
 		
-		/*================================================--
-		 * Form Processing.
-		 *
-		 * Here is where we validate the POST'ed data and
-		 * format it for sending in an e-mail.
-		 *
-		 * We then send the e-mail and notify the user.
-		================================================--*/
+		/*
+		  Form Processing.
+		 
+		  Here is where we validate the POST'ed data and
+		  format it for sending in an e-mail.
+		 
+		  We then send the e-mail and notify the user.
+		*/
 		
 		$emailSent = false;
 		
@@ -1160,15 +1143,17 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 		
 		} // End IF Statement
 		
-		/* Generate the form HTML.
-		================================================--*/
+		
+		// Generate the form HTML.		
 		
 		$html .= '<div class="post contact-form">' . "\n";
 		
-		/* Display message HTML if necessary.
-		================================================--*/
+		/* 
+		 Display message HTML if necessary.
 		
-		// Success message.
+		
+		 Success message.
+		*/ 
 		
 		if( isset( $emailSent ) && $emailSent == true ) {
 		
@@ -1199,8 +1184,8 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 			
 				$html .= '<fieldset class="forms">' . "\n";
 			
-			/* Parse the "static" form fields.
-			================================================--*/
+			
+			// Parse the "static" form fields.
 			
 			$contactName = '';
 			if( isset( $_POST['contactName'] ) ) { $contactName = $_POST['contactName']; } // End IF Statement
@@ -1244,20 +1229,20 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 			
 			$html .= '</p>' . "\n";
 			
-			/* Parse dynamic fields into HTML.
-			================================================--*/
+			
+			// Parse dynamic fields into HTML.			
 			
 			if ( count( $formatted_dynamic_atts ) ) {
 			 
 				foreach ( $formatted_dynamic_atts as $k => $v ) {
 				
-					/* Parse the text inputs.
-					================================================--*/
+				
+					// Parse the text inputs.
 					
 					if ( substr( $k, 0, 5 ) == 'text_' ) {
-						
-						/* Generate Text Input Field HTML.
-						============================================--*/
+				
+				
+						// Generate Text Input Field HTML.						
 						
 						${$k} = $v['default_text'];
 						if ( isset( $_POST[$k] ) ) { ${$k} = trim( strip_tags( $_POST[$k] ) ); } // End IF Statement
@@ -1267,13 +1252,13 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 					
 					} // End IF Statement
 					
-					/* Parse the select boxes.
-					================================================--*/
+					
+					// Parse the select boxes.					
 					
 					if ( substr( $k, 0, 7 ) == 'select_' ) {
-						
-						/* Generate Select Box Field HTML.
-						============================================--*/
+					
+					
+						// Generate Select Box Field HTML.
 						
 						${$k} = '';
 						if ( isset( $_POST[$k] ) ) { ${$k} = trim( strip_tags( $_POST[$k] ) ); } // End IF Statement
@@ -1294,13 +1279,13 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 					
 					} // End IF Statement
 					
-					/* Parse the textarea inputs.
-					================================================--*/
+					
+					// Parse the textarea inputs.					
 					
 					if ( substr( $k, 0, 9 ) == 'textarea_' ) {
 						
-						/* Generate Textarea Input Field HTML.
-						============================================--*/
+						
+						// Generate Textarea Input Field HTML.					
 						
 						${$k} = $v['default_text'];
 						if ( isset( $_POST[$k] ) ) { ${$k} = trim( strip_tags( $_POST[$k] ) ); } // End IF Statement
@@ -1313,9 +1298,10 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 				} // End FOREACH Loop
 				
 			} // End IF Statement
+				
+			// The end of the form.
 			
-			/* The end of the form.
-			============================================--*/
+			
 			
 			$sendCopy = '';
 			if(isset($_POST['sendCopy']) && $_POST['sendCopy'] == true) {
@@ -1353,9 +1339,9 @@ function prime_shortcode_contactform ( $atts, $content = null ) {
 
 add_shortcode( 'contact_form', 'prime_shortcode_contactform' );
 
-/*===================================================================================*/
-/* 16. Tabs - [tabs][/tabs]
-/*===================================================================================*/
+
+
+// 16. Tabs - [tabs][/tabs]
 
 function prime_shortcode_tabs ( $atts, $content = null ) {
 
@@ -1399,9 +1385,9 @@ function prime_shortcode_tabs ( $atts, $content = null ) {
 
 add_shortcode( 'tabs', 'prime_shortcode_tabs', 90 );
 
-/*===================================================================================*/
-/* 16.1 A Single Tab - [tab title="The title goes here"][/tab]
-/*===================================================================================*/
+
+
+// 16.1 A Single Tab - [tab title="The title goes here"][/tab]
 
 function prime_shortcode_tab_single ( $atts, $content = null ) {
 
@@ -1423,9 +1409,9 @@ function prime_shortcode_tab_single ( $atts, $content = null ) {
 
 add_shortcode( 'tab', 'prime_shortcode_tab_single', 99 );
 
-/*===================================================================================*/
-/* 17. Dropcap - [dropcap][/dropcap]
-/*===================================================================================*/
+
+
+// 17. Dropcap - [dropcap][/dropcap]
 
 function prime_shortcode_dropcap ( $atts, $content = null ) {
 
@@ -1439,9 +1425,9 @@ function prime_shortcode_dropcap ( $atts, $content = null ) {
 
 add_shortcode( 'dropcap', 'prime_shortcode_dropcap' );
 
-/*===================================================================================*/
-/* 18. Highlight - [highlight][/highlight]
-/*===================================================================================*/
+
+
+// 18. Highlight - [highlight][/highlight]
 
 function prime_shortcode_highlight ( $atts, $content = null ) {
 
@@ -1455,9 +1441,8 @@ function prime_shortcode_highlight ( $atts, $content = null ) {
 
 add_shortcode( 'highlight', 'prime_shortcode_highlight' );
 
-/*===================================================================================*/
-/* 19. Abbreviation - [abbr][/abbr]
-/*===================================================================================*/
+
+// 19. Abbreviation - [abbr][/abbr]
 
 function prime_shortcode_abbreviation ( $atts, $content = null ) {
 
@@ -1471,9 +1456,8 @@ function prime_shortcode_abbreviation ( $atts, $content = null ) {
 
 add_shortcode( 'abbr', 'prime_shortcode_abbreviation' );
 
-/*===================================================================================*/
-/* 20. Typography - [typography font="" size="" color=""][/typography]
-/*===================================================================================*/
+
+// 20. Typography - [typography font="" size="" color=""][/typography]
 
 function prime_shortcode_typography ( $atts, $content = null ) {
 
@@ -1575,9 +1559,11 @@ function prime_shortcode_typography_loadgooglefonts ( $font = '' ) {
 	
 		global $google_fonts, $post;
 		
-		// Add variations for specific fonts that need variation on inclusion.
+		/*
+		 Add variations for specific fonts that need variation on inclusion.
 	
-		// Get just the names of the Google fonts.
+		 Get just the names of the Google fonts.
+		*/
 		$google_font_names = array();
 		
 		if ( count( $google_fonts ) ) {
@@ -1632,9 +1618,8 @@ function prime_shortcode_typography_loadgooglefonts ( $font = '' ) {
 
 } // End prime_shortcode_typography_loadgooglefonts()
 
-/*===================================================================================*/
-/* 21. List Styles - Unordered List - [unordered_list style=""][/unordered_list]
-/*===================================================================================*/
+
+// 21. List Styles - Unordered List - [unordered_list style=""][/unordered_list]
 
 function prime_shortcode_unorderedlist ( $atts, $content = null ) {
 
@@ -1648,9 +1633,8 @@ function prime_shortcode_unorderedlist ( $atts, $content = null ) {
 
 add_shortcode( 'unordered_list', 'prime_shortcode_unorderedlist' );
 
-/*===================================================================================*/
-/* 22. List Styles - Ordered List - [ordered_list style=""][/ordered_list]
-/*===================================================================================*/
+
+// 22. List Styles - Ordered List - [ordered_list style=""][/ordered_list]
 
 function prime_shortcode_orderedlist ( $atts, $content = null ) {
 
@@ -1664,9 +1648,8 @@ function prime_shortcode_orderedlist ( $atts, $content = null ) {
 
 add_shortcode( 'ordered_list', 'prime_shortcode_orderedlist' );
 
-/*===================================================================================*/
-/* 23. Social Icon - [social_icon url="" float="" icon_url="" title="" profile_type="" window=""]
-/*===================================================================================*/
+
+// 23. Social Icon - [social_icon url="" float="" icon_url="" title="" profile_type="" window=""]
 
 function prime_shortcode_socialicon ( $atts, $content = null ) {
 
@@ -1676,8 +1659,10 @@ function prime_shortcode_socialicon ( $atts, $content = null ) {
 	
 	if ( ! $url ) { return; } // End IF Statement - Don't run the shortcode if no URL has been supplied.
 	
-	// Attempt to determine the location of the social profile.
-	// If no location is found, a default icon will be used.
+	/*
+	 Attempt to determine the location of the social profile.
+	 If no location is found, a default icon will be used.
+	*/
 	
 	$_default_icon = '';
 	
@@ -1830,7 +1815,7 @@ function prime_shortcode_socialicon ( $atts, $content = null ) {
 
 add_shortcode( 'social_icon', 'prime_shortcode_socialicon' );
 
-/*===================================================================================*/
-/* THE END */
-/*===================================================================================*/
+
+// THE END 
+
 ?>
