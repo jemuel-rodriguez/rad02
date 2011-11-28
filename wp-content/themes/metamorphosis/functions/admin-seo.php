@@ -1,8 +1,7 @@
 <?php
-/*===================================================================================*/
-/* SEO - primethemes_seo_page */
-/*===================================================================================*/
-
+/**
+ * SEO - primethemes_seo_page
+ */
 function primethemes_seo_page(){
 
     $themename =  get_option('prime_themename');      
