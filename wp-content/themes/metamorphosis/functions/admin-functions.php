@@ -1,516 +1,515 @@
 <?php
 
-/*===================================================================================
+/**
+ * TABLE OF CONTENTS
+ * 
+ * - prime_image - Get Image from custom field
+ *     - vt_resize - Resize post thumbnail
+ *     - prime_get_youtube_video_image - Get thumbnail from YouTube
+ * - prime_get_embed - Get Video
+ * - prime Show Page Menu
+ * - Get the style path currently selected
+ * - Get page ID
+ * - Tidy up the image source url
+ * - Show image in RSS feed
+ * - Show analytics code footer
+ * - Browser detection body_class() output
+ * - Twitter's Blogger.js output for Twitter widgets
+ * - Template Detector
+ * - Framework Updater
+ *     - primeFramework Update Page  
+ *     - primeFramework Update Head
+ *     - primeFramework Version Getter
+ * - prime URL shortener
+ * - SEO - prime_title()
+ * - SEO - prime_meta()
+ * - prime Text Trimmer
+ * - Google Webfonts array 
+ * - Google Fonts Stylesheet Generator 
+ * - Enable Home link in WP Menus
+ * - Buy Themes page
+ * - Detects the Charset of String and Converts it to UTF-8
+ * - WP Login logo 
+ * - prime_pagination()
+ * - prime_breadcrumbs()
+ * -- prime_breadcrumbs_get_parents()
+ * -- prime_breadcrumbs_get_term_parents()
+ */
 
-TABLE OF CONTENTS
+/**
+ *  prime_image - Get Image from custom field
+ */
 
-- prime_image - Get Image from custom field
-    - vt_resize - Resize post thumbnail
-    - prime_get_youtube_video_image - Get thumbnail from YouTube
-- prime_get_embed - Get Video
-- prime Show Page Menu
-- Get the style path currently selected
-- Get page ID
-- Tidy up the image source url
-- Show image in RSS feed
-- Show analytics code footer
-- Browser detection body_class() output
-- Twitter's Blogger.js output for Twitter widgets
-- Template Detector
-- Framework Updater
-	- primeFramework Update Page  
- 	- primeFramework Update Head
- 	- primeFramework Version Getter
-- prime URL shortener
-- SEO - prime_title()
-- SEO - prime_meta()
-- prime Text Trimmer
-- Google Webfonts array 
-- Google Fonts Stylesheet Generator 
-- Enable Home link in WP Menus
-- Buy Themes page
-- Detects the Charset of String and Converts it to UTF-8
-- WP Login logo 
-- prime_pagination()
-- prime_breadcrumbs()
--- prime_breadcrumbs_get_parents()
--- prime_breadcrumbs_get_term_parents()
-
-===================================================================================*/
-
-/*===================================================================================*/
-/* prime_image - Get Image from custom field  */
-/*===================================================================================*/
-
-/*
-This function retrieves/resizes the image to be used with the post in this order:
-
-1. Image passed through parameter 'src'
-2. WP Post Thumbnail (if option activated)
-3. Custom field
-4. First attached image in post (if option activated)
-5. First inline image in post (if option activated)
-
-Resize options (enabled in options panel):
-- vt_resize() is used to natively resize #2 and #4
-- Thumb.php is used to resize #1, #3, #4 (only if vt_resize is disabled) and #5
-
-Parameters: 
-        $key = Custom field key eg. "image"
-        $width = Set width manually without using $type
-        $height = Set height manually without using $type
-        $class = CSS class to use on the img tag eg. "alignleft". Default is "thumbnail"
-        $quality = Enter a quality between 80-100. Default is 90
-        $id = Assign a custom ID, if alternative is required.
-        $link = Echo with anchor ('src'), without anchor ('img') or original image URL ('url').
-        $repeat = Auto Img Function. Adjust amount of images to return for the post attachments.
-        $offset = Auto Img Function. Offset the $repeat with assigned amount of objects.
-        $before = Auto Img Function. Add Syntax before image output.
-        $after = Auto Img Function. Add Syntax after image output.
-        $single = (true/false) Force thumbnail to link to the post instead of the image.
-        $force = Force smaller images to not be effected with image width and height dimentions (proportions fix)
-        $return = Return results instead of echoing out.
-		$src = A parameter that accepts a img url for resizing. (No anchor)
-		$meta = Add a custom meta text to the image and anchor of the image.
-		$alignment = Crop alignment for thumb.php (l, r, t, b)
-		$size = Custom pre-defined size for WP Thumbnail (string)
-*/
+/**
+ * This function retrieves/resizes the image to be used with the post in this order:
+ * 
+ * 1. Image passed through parameter 'src'
+ * 2. WP Post Thumbnail (if option activated)
+ * 3. Custom field
+ * 4. First attached image in post (if option activated)
+ * 5. First inline image in post (if option activated)
+ * 
+ * Resize options (enabled in options panel):
+ * - vt_resize() is used to natively resize #2 and #4
+ * - Thumb.php is used to resize #1, #3, #4 (only if vt_resize is disabled) and #5
+ * 
+ * Parameters: 
+ *         $key = Custom field key eg. "image"
+ *         $width = Set width manually without using $type
+ *         $height = Set height manually without using $type
+ *         $class = CSS class to use on the img tag eg. "alignleft". Default is "thumbnail"
+ *         $quality = Enter a quality between 80-100. Default is 90
+ *         $id = Assign a custom ID, if alternative is required.
+ *         $link = Echo with anchor ('src'), without anchor ('img') or original image URL ('url').
+ *         $repeat = Auto Img Function. Adjust amount of images to return for the post attachments.
+ *         $offset = Auto Img Function. Offset the $repeat with assigned amount of objects.
+ *         $before = Auto Img Function. Add Syntax before image output.
+ *         $after = Auto Img Function. Add Syntax after image output.
+ *         $single = (true/false) Force thumbnail to link to the post instead of the image.
+ *         $force = Force smaller images to not be effected with image width and height dimentions (proportions fix)
+ *         $return = Return results instead of echoing out.
+ *         $src = A parameter that accepts a img url for resizing. (No anchor)
+ *         $meta = Add a custom meta text to the image and anchor of the image.
+ *         $alignment = Crop alignment for thumb.php (l, r, t, b)
+ *         $size = Custom pre-defined size for WP Thumbnail (string)
+ */
 
 function prime_image($args) {
 
-	/* ========================================================================= */
-	/* SET VARIABLES */
-	/* ========================================================================= */
+    /**
+     *  SET VARIABLES
+     */
 
-	global $post;
-	global $prime_options;
-	
-	//Defaults
-	$key = 'image';
-	$width = null;
-	$height = null;
-	$class = '';
-	$quality = 90;
-	$id = null;
-	$link = 'src';
-	$repeat = 1;
-	$offset = 0;
-	$before = '';
-	$after = '';
-	$single = false;
-	$force = false;
-	$return = false;
-	$is_auto_image = false;
-	$src = '';
-	$meta = '';
-	$alignment = '';
-	$size = '';	
+    global $post;
+    global $prime_options;
+    
+    //Defaults
+    $key = 'image';
+    $width = null;
+    $height = null;
+    $class = '';
+    $quality = 90;
+    $id = null;
+    $link = 'src';
+    $repeat = 1;
+    $offset = 0;
+    $before = '';
+    $after = '';
+    $single = false;
+    $force = false;
+    $return = false;
+    $is_auto_image = false;
+    $src = '';
+    $meta = '';
+    $alignment = '';
+    $size = ''; 
 
-	$alt = '';
-	$img_link = '';
-	
-	$attachment_id = array();
-	$attachment_src = array();
-		
-	if ( !is_array($args) ) 
-		parse_str( $args, $args );
-	
-	extract($args);
-	
+    $alt = '';
+    $img_link = '';
+    
+    $attachment_id = array();
+    $attachment_src = array();
+        
+    if ( !is_array($args) ) 
+        parse_str( $args, $args );
+    
+    extract($args);
+    
     // Set post ID
     if ( empty($id) ) {
-		$id = $post->ID;
+        $id = $post->ID;
     }
 
-	$thumb_id = get_post_meta($id,'_thumbnail_id',true);
+    $thumb_id = get_post_meta($id,'_thumbnail_id',true);
     
-	// Set alignment 
-	if ( $alignment == '') 
-		$alignment = get_post_meta($id, '_image_alignment', true);
+    // Set alignment 
+    if ( $alignment == '') 
+        $alignment = get_post_meta($id, '_image_alignment', true);
 
-	// Get standard sizes
-	if ( !$width && !$height ) {
-		$width = '100';
-		$height = '100';
-	}
+    // Get standard sizes
+    if ( !$width && !$height ) {
+        $width = '100';
+        $height = '100';
+    }
     
-	/* ========================================================================= */
-	/* FIND IMAGE TO USE */
-	/* ========================================================================= */
+    /**
+     *  FIND IMAGE TO USE
+     */
 
-	// When a custom image is sent through
-	if ( $src != '' ) { 
-		$custom_field = $src;
-		$link = 'img';
-	
-	// WP 2.9 Post Thumbnail support	
-	} elseif ( get_option('prime_post_image_support') == 'true' AND !empty($thumb_id) ) {
+    // When a custom image is sent through
+    if ( $src != '' ) { 
+        $custom_field = $src;
+        $link = 'img';
+    
+    // WP 2.9 Post Thumbnail support    
+    } elseif ( get_option('prime_post_image_support') == 'true' AND !empty($thumb_id) ) {
 
-		if ( get_option('prime_pis_resize') == "true") {
-		
-			// Dynamically resize the post thumbnail 
-			$vt_crop = get_option('prime_pis_hard_crop');
-			if ($vt_crop == "true") $vt_crop = true; else $vt_crop = false;
-			$vt_image = vt_resize( $thumb_id, '', $width, $height, $vt_crop );
-			
-			// Set fields for output
-			$custom_field = $vt_image['url'];		
-			$width = $vt_image['width'];
-			$height = $vt_image['height'];
-			
-		} else {
-			// Use predefined size string
-			if ( $size ) 
-				$thumb_size = $size;
-			else 
-				$thumb_size = array($width,$height);
-				
-			$img_link = get_the_post_thumbnail($id,$thumb_size,array('class' => 'prime-image ' . $class));
-		}		
-		
-	// Grab the image from custom field
-	} else {
-    	$custom_field = get_post_meta($id, $key, true);
-	} 
+        if ( get_option('prime_pis_resize') == "true") {
+        
+            // Dynamically resize the post thumbnail 
+            $vt_crop = get_option('prime_pis_hard_crop');
+            if ($vt_crop == "true") $vt_crop = true; else $vt_crop = false;
+            $vt_image = vt_resize( $thumb_id, '', $width, $height, $vt_crop );
+            
+            // Set fields for output
+            $custom_field = $vt_image['url'];       
+            $width = $vt_image['width'];
+            $height = $vt_image['height'];
+            
+        } else {
+            // Use predefined size string
+            if ( $size ) 
+                $thumb_size = $size;
+            else 
+                $thumb_size = array($width,$height);
+                
+            $img_link = get_the_post_thumbnail($id,$thumb_size,array('class' => 'prime-image ' . $class));
+        }       
+        
+    // Grab the image from custom field
+    } else {
+        $custom_field = get_post_meta($id, $key, true);
+    } 
 
-	// Automatic Image Thumbs - get first image from post attachment
-	if ( empty($custom_field) && get_option('prime_auto_img') == 'true' && empty($img_link) && !(is_singular() AND in_the_loop() AND $link == "src") ) { 
-	        
+    // Automatic Image Thumbs - get first image from post attachment
+    if ( empty($custom_field) && get_option('prime_auto_img') == 'true' && empty($img_link) && !(is_singular() AND in_the_loop() AND $link == "src") ) { 
+            
         if( $offset >= 1 ) 
-			$repeat = $repeat + $offset;
+            $repeat = $repeat + $offset;
     
-        $attachments = get_children( array(	'post_parent' => $id,
-											'numberposts' => $repeat,
-											'post_type' => 'attachment',
-											'post_mime_type' => 'image',
-											'order' => 'DESC', 
-											'orderby' => 'menu_order date')
-											);
+        $attachments = get_children( array( 'post_parent' => $id,
+                                            'numberposts' => $repeat,
+                                            'post_type' => 'attachment',
+                                            'post_mime_type' => 'image',
+                                            'order' => 'DESC', 
+                                            'orderby' => 'menu_order date')
+                                            );
 
-		// Search for and get the post attachment
-		if ( !empty($attachments) ) { 
+        // Search for and get the post attachment
+        if ( !empty($attachments) ) { 
        
-			$counter = -1;
-			$size = 'large';
-			foreach ( $attachments as $att_id => $attachment ) {            
-				$counter++;
-				if ( $counter < $offset ) 
-					continue;
-			
-				if ( get_option('prime_pis_resize') == "true") {
-				
-					// Dynamically resize the post thumbnail 
-					$vt_crop = get_option('prime_pis_hard_crop');
-					if ($vt_crop == "true") $vt_crop = true; else $vt_crop = false;
-					$vt_image = vt_resize( $att_id, '', $width, $height, $vt_crop );
-					
-					// Set fields for output
-					$custom_field = $vt_image['url'];		
-					$width = $vt_image['width'];
-					$height = $vt_image['height'];
-				
-				} else {
+            $counter = -1;
+            $size = 'large';
+            foreach ( $attachments as $att_id => $attachment ) {            
+                $counter++;
+                if ( $counter < $offset ) 
+                    continue;
+            
+                if ( get_option('prime_pis_resize') == "true") {
+                
+                    // Dynamically resize the post thumbnail 
+                    $vt_crop = get_option('prime_pis_hard_crop');
+                    if ($vt_crop == "true") $vt_crop = true; else $vt_crop = false;
+                    $vt_image = vt_resize( $att_id, '', $width, $height, $vt_crop );
+                    
+                    // Set fields for output
+                    $custom_field = $vt_image['url'];       
+                    $width = $vt_image['width'];
+                    $height = $vt_image['height'];
+                
+                } else {
 
-					$src = wp_get_attachment_image_src($att_id, $size, true);
-					$custom_field = $src[0];
-					$attachment_id[] = $att_id;
-					$src_arr[] = $custom_field;
-						
-				}
-				$thumb_id = $att_id;
-				$is_auto_image = true;
-			}
+                    $src = wp_get_attachment_image_src($att_id, $size, true);
+                    $custom_field = $src[0];
+                    $attachment_id[] = $att_id;
+                    $src_arr[] = $custom_field;
+                        
+                }
+                $thumb_id = $att_id;
+                $is_auto_image = true;
+            }
 
-		// Get the first img tag from content
-		} else { 
+        // Get the first img tag from content
+        } else { 
 
-			$first_img = '';
-			$post = get_post($id); 
-			ob_start();
-			ob_end_clean();
-			$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches);
-			if ( !empty($matches[1][0]) ) {
-				
-				// Save Image URL
-				$custom_field = $matches[1][0];
-				
-				// Search for ALT tag
-				$output = preg_match_all('/<img.+alt=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches);
-				if ( !empty($matches[1][0]) ) {
-					$alt = $matches[1][0];
-				}
-			}
+            $first_img = '';
+            $post = get_post($id); 
+            ob_start();
+            ob_end_clean();
+            $output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches);
+            if ( !empty($matches[1][0]) ) {
+                
+                // Save Image URL
+                $custom_field = $matches[1][0];
+                
+                // Search for ALT tag
+                $output = preg_match_all('/<img.+alt=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches);
+                if ( !empty($matches[1][0]) ) {
+                    $alt = $matches[1][0];
+                }
+            }
 
-		}
-		
-	} 
-	
-	// Check if there is YouTube embed
-	if ( empty($custom_field) && empty($img_link) ) {
-		$embed = get_post_meta($id, "embed", true);
-		if ( $embed ) 
-	    	$custom_field = prime_get_video_image($embed);
-	}
-				
-	// Return if there is no attachment or custom field set
-	if ( empty($custom_field) && empty($img_link) ) {
-		
-		// Check if default placeholder image is uploaded
-		$placeholder = get_option('framework_prime_default_image');
-		if ( $placeholder && !(is_singular() AND in_the_loop()) ) {
-			$custom_field = $placeholder;	
+        }
+        
+    } 
+    
+    // Check if there is YouTube embed
+    if ( empty($custom_field) && empty($img_link) ) {
+        $embed = get_post_meta($id, "embed", true);
+        if ( $embed ) 
+            $custom_field = prime_get_video_image($embed);
+    }
+                
+    // Return if there is no attachment or custom field set
+    if ( empty($custom_field) && empty($img_link) ) {
+        
+        // Check if default placeholder image is uploaded
+        $placeholder = get_option('framework_prime_default_image');
+        if ( $placeholder && !(is_singular() AND in_the_loop()) ) {
+            $custom_field = $placeholder;   
 
-			// Resize the placeholder if
-			if ( get_option('prime_pis_resize') == "true") {
+            // Resize the placeholder if
+            if ( get_option('prime_pis_resize') == "true") {
 
-				// Dynamically resize the post thumbnail 
-				$vt_crop = get_option('prime_pis_hard_crop');
-				if ($vt_crop == "true") $vt_crop = true; else $vt_crop = false;
-				$vt_image = vt_resize( '', $placeholder, $width, $height, $vt_crop );
-				
-				// Set fields for output
-				$custom_field = $vt_image['url'];		
-				$width = $vt_image['width'];
-				$height = $vt_image['height'];
-			
-			}			
-			
-		} else {
-	       return;
-	    }
-	
-	}
-	
-	if(empty($src_arr) && empty($img_link)){ $src_arr[] = $custom_field; }
-	
-	/* ========================================================================= */
-	/* BEGIN OUTPUT */
-	/* ========================================================================= */
+                // Dynamically resize the post thumbnail 
+                $vt_crop = get_option('prime_pis_hard_crop');
+                if ($vt_crop == "true") $vt_crop = true; else $vt_crop = false;
+                $vt_image = vt_resize( '', $placeholder, $width, $height, $vt_crop );
+                
+                // Set fields for output
+                $custom_field = $vt_image['url'];       
+                $width = $vt_image['width'];
+                $height = $vt_image['height'];
+            
+            }           
+            
+        } else {
+           return;
+        }
+    
+    }
+    
+    if(empty($src_arr) && empty($img_link)){ $src_arr[] = $custom_field; }
+    
+    /**
+     *  BEGIN OUTPUT
+     */
 
     $output = '';
-	
+    
     // Set output height and width
     $set_width = ' width="' . $width .'" ';
     $set_height = ' height="' . $height .'" '; 
     if($height == null OR $height == '') $set_height = '';
-		
-	// Set standard class
-	if ( $class ) $class = 'prime-image ' . $class; else $class = 'prime-image';
+        
+    // Set standard class
+    if ( $class ) $class = 'prime-image ' . $class; else $class = 'prime-image';
 
-	// Do check to verify if images are smaller then specified.
-	if($force == true){ $set_width = ''; $set_height = ''; }
+    // Do check to verify if images are smaller then specified.
+    if($force == true){ $set_width = ''; $set_height = ''; }
 
-	// WP Post Thumbnail
-	if(!empty($img_link) ){
-			
-		if( $link == 'img' ) {  // Output the image without anchors
-			$output .= $before; 
-			$output .= $img_link;
-			$output .= $after;  
-			
-		} elseif( $link == 'url' ) {  // Output the large image
+    // WP Post Thumbnail
+    if(!empty($img_link) ){
+            
+        if( $link == 'img' ) {  // Output the image without anchors
+            $output .= $before; 
+            $output .= $img_link;
+            $output .= $after;  
+            
+        } elseif( $link == 'url' ) {  // Output the large image
 
-			$src = wp_get_attachment_image_src($thumb_id, 'large', true);
-			$custom_field = $src[0];
-			$output .= $custom_field;
+            $src = wp_get_attachment_image_src($thumb_id, 'large', true);
+            $custom_field = $src[0];
+            $output .= $custom_field;
 
-		} else {  // Default - output with link				
+        } else {  // Default - output with link             
 
-			if ( ( is_single() OR is_page() ) AND $single == false ) {
-				$rel = 'rel="lightbox"';
-				$href = false;  
-			} else { 
-				$href = get_permalink($id);
-				$rel = '';
-			}
-			
-			$title = 'title="' . get_the_title($id) .'"';
-		
-			$output .= $before; 
-			if($href == false){
-				$output .= $img_link;
-			} else {
-				$output .= '<a '.$title.' href="' . $href .'" '.$rel.'>' . $img_link . '</a>';
-			}
-			
-			$output .= $after;  
-		}	
-	}
-	
-	// Use thumb.php to resize. Skip if image has been natively resized with vt_resize.
-	elseif ( get_option('prime_resize') == 'true' && empty($vt_image['url']) ) { 
-		
-		foreach($src_arr as $key => $custom_field){
-	
-			// Clean the image URL
-			$href = $custom_field; 		
-			$custom_field = cleanSource( $custom_field );
+            if ( ( is_single() OR is_page() ) AND $single == false ) {
+                $rel = 'rel="lightbox"';
+                $href = false;  
+            } else { 
+                $href = get_permalink($id);
+                $rel = '';
+            }
+            
+            $title = 'title="' . get_the_title($id) .'"';
+        
+            $output .= $before; 
+            if($href == false){
+                $output .= $img_link;
+            } else {
+                $output .= '<a '.$title.' href="' . $href .'" '.$rel.'>' . $img_link . '</a>';
+            }
+            
+            $output .= $after;  
+        }   
+    }
+    
+    // Use thumb.php to resize. Skip if image has been natively resized with vt_resize.
+    elseif ( get_option('prime_resize') == 'true' && empty($vt_image['url']) ) { 
+        
+        foreach($src_arr as $key => $custom_field){
+    
+            // Clean the image URL
+            $href = $custom_field;      
+            $custom_field = cleanSource( $custom_field );
 
-			// Check if WPMU and set correct path AND that image isn't external
-			if ( function_exists('get_current_site') && strpos($custom_field,"http://") !== 0 ) {
-				get_current_site();
-				//global $blog_id; Breaks with WP3 MS
-				if ( !$blog_id ) {
-					global $current_blog;
-					$blog_id = $current_blog->blog_id;				
-				}
-				if ( isset($blog_id) && $blog_id > 0 ) {
-					$imageParts = explode( 'files/', $custom_field );
-					if ( isset($imageParts[1]) ) 
-						$custom_field = '/blogs.dir/' . $blog_id . '/files/' . $imageParts[1];
-				}
-			}
-			
-			//Set the ID to the Attachment's ID if it is an attachment
-			if($is_auto_image == true){	
-				$quick_id = $attachment_id[$key];
-			} else {
-			 	$quick_id = $id;
-			}
-			
-			//Set custom meta 
-			if ($meta) { 
-				$alt = $meta;
-				$title = 'title="'. $meta .'"';
-			} else { 
-				if ($alt == '' AND get_post_meta($thumb_id, '_wp_attachment_image_alt', true) ) 
-					$alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true);
-				else
-					$alt = get_the_title($quick_id);
-				$title = 'title="'. get_the_title($quick_id) .'"';
-			}
-			
-			// Set alignment parameter
-			if ($alignment <> '')
-				$alignment = '&amp;a='.$alignment;
-											
-			$img_link = '<img src="'. get_bloginfo('template_url'). '/thumb.php?src='. $custom_field .'&amp;w='. $width .'&amp;h='. $height .'&amp;zc=1&amp;q='. $quality . $alignment . '" alt="'.$alt.'" class="'. stripslashes($class) .'" '. $set_width . $set_height . ' />';
-			
-			if( $link == 'img' ) {  // Just output the image
-				$output .= $before; 
-				$output .= $img_link;
-				$output .= $after;  
-				
-			} elseif( $link == 'url' ) {  // Output the image without anchors
-	
-				if($is_auto_image == true){	
-					$src = wp_get_attachment_image_src($thumb_id, 'large', true);
-					$custom_field = $src[0];
-				}
-				$output .= $custom_field;
-				
-			} else {  // Default - output with link				
+            // Check if WPMU and set correct path AND that image isn't external
+            if ( function_exists('get_current_site') && strpos($custom_field,"http://") !== 0 ) {
+                get_current_site();
+                //global $blog_id; Breaks with WP3 MS
+                if ( !$blog_id ) {
+                    global $current_blog;
+                    $blog_id = $current_blog->blog_id;              
+                }
+                if ( isset($blog_id) && $blog_id > 0 ) {
+                    $imageParts = explode( 'files/', $custom_field );
+                    if ( isset($imageParts[1]) ) 
+                        $custom_field = '/blogs.dir/' . $blog_id . '/files/' . $imageParts[1];
+                }
+            }
+            
+            //Set the ID to the Attachment's ID if it is an attachment
+            if($is_auto_image == true){ 
+                $quick_id = $attachment_id[$key];
+            } else {
+                $quick_id = $id;
+            }
+            
+            //Set custom meta 
+            if ($meta) { 
+                $alt = $meta;
+                $title = 'title="'. $meta .'"';
+            } else { 
+                if ($alt == '' AND get_post_meta($thumb_id, '_wp_attachment_image_alt', true) ) 
+                    $alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true);
+                else
+                    $alt = get_the_title($quick_id);
+                $title = 'title="'. get_the_title($quick_id) .'"';
+            }
+            
+            // Set alignment parameter
+            if ($alignment <> '')
+                $alignment = '&amp;a='.$alignment;
+                                            
+            $img_link = '<img src="'. get_bloginfo('template_url'). '/thumb.php?src='. $custom_field .'&amp;w='. $width .'&amp;h='. $height .'&amp;zc=1&amp;q='. $quality . $alignment . '" alt="'.$alt.'" class="'. stripslashes($class) .'" '. $set_width . $set_height . ' />';
+            
+            if( $link == 'img' ) {  // Just output the image
+                $output .= $before; 
+                $output .= $img_link;
+                $output .= $after;  
+                
+            } elseif( $link == 'url' ) {  // Output the image without anchors
+    
+                if($is_auto_image == true){ 
+                    $src = wp_get_attachment_image_src($thumb_id, 'large', true);
+                    $custom_field = $src[0];
+                }
+                $output .= $custom_field;
+                
+            } else {  // Default - output with link             
 
-				if ( ( is_single() OR is_page() ) AND $single == false ) {
-					$rel = 'rel="lightbox"';
-				} else { 
-					$href = get_permalink($id);
-					$rel = '';
-				}
-			
-				$output .= $before; 
-				$output .= '<a '.$title.' href="' . $href .'" '.$rel.'>' . $img_link . '</a>';
-				$output .= $after;  
-			}
-		}
-		
-	// No dynamic resizing
-	} else {  
-		
-		foreach($src_arr as $key => $custom_field){
-				
-			//Set the ID to the Attachment's ID if it is an attachment
-			if($is_auto_image == true AND isset($attachment_id[$key])){	
-				$quick_id = $attachment_id[$key];
-			} else {
-			 	$quick_id = $id;
-			}
-			
-			//Set custom meta 
-			if ($meta) { 
-				$alt = $meta;
-				$title = 'title="'. $meta .'"';
-			} else { 
-				if ($alt == '') $alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true);
-				$title = 'title="'. get_the_title($quick_id) .'"';
-			}
-		
-			$img_link =  '<img src="'. $custom_field .'" alt="'. $alt .'" '. $set_width . $set_height . ' class="'. stripslashes($class) .'" />';
-		
-			if ( $link == 'img' ) {  // Just output the image 
-				$output .= $before;                   
-				$output .= $img_link; 
-				$output .= $after;  
-				
-			} elseif( $link == 'url' ) {  // Output the URL to original image
-				if ( $vt_image['url'] || $is_auto_image ) { 
-					$src = wp_get_attachment_image_src($thumb_id, 'full', true);
-					$custom_field = $src[0];
-				}
-				$output .= $custom_field;
+                if ( ( is_single() OR is_page() ) AND $single == false ) {
+                    $rel = 'rel="lightbox"';
+                } else { 
+                    $href = get_permalink($id);
+                    $rel = '';
+                }
+            
+                $output .= $before; 
+                $output .= '<a '.$title.' href="' . $href .'" '.$rel.'>' . $img_link . '</a>';
+                $output .= $after;  
+            }
+        }
+        
+    // No dynamic resizing
+    } else {  
+        
+        foreach($src_arr as $key => $custom_field){
+                
+            //Set the ID to the Attachment's ID if it is an attachment
+            if($is_auto_image == true AND isset($attachment_id[$key])){ 
+                $quick_id = $attachment_id[$key];
+            } else {
+                $quick_id = $id;
+            }
+            
+            //Set custom meta 
+            if ($meta) { 
+                $alt = $meta;
+                $title = 'title="'. $meta .'"';
+            } else { 
+                if ($alt == '') $alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true);
+                $title = 'title="'. get_the_title($quick_id) .'"';
+            }
+        
+            $img_link =  '<img src="'. $custom_field .'" alt="'. $alt .'" '. $set_width . $set_height . ' class="'. stripslashes($class) .'" />';
+        
+            if ( $link == 'img' ) {  // Just output the image 
+                $output .= $before;                   
+                $output .= $img_link; 
+                $output .= $after;  
+                
+            } elseif( $link == 'url' ) {  // Output the URL to original image
+                if ( $vt_image['url'] || $is_auto_image ) { 
+                    $src = wp_get_attachment_image_src($thumb_id, 'full', true);
+                    $custom_field = $src[0];
+                }
+                $output .= $custom_field;
 
-			} else {  // Default - output with link
-			
-				if ( ( is_single() OR is_page() ) AND $single == false ) { 
+            } else {  // Default - output with link
+            
+                if ( ( is_single() OR is_page() ) AND $single == false ) { 
 
-					// Link to the large image if single post
-					if ( $vt_image['url'] || $is_auto_image ) { 
-						$src = wp_get_attachment_image_src($thumb_id, 'full', true);
-						$custom_field = $src[0];
-					}
-					
-					$href = $custom_field;
-					$rel = 'rel="lightbox"';
-				} else { 
-					$href = get_permalink($id);
-					$rel = '';
-				}
-				 
-				$output .= $before;   
-				$output .= '<a href="' . $href .'" '. $rel . $title .'>' . $img_link . '</a>';
-				$output .= $after;   
-			}
-		}
-	}
-	
-	// Return or echo the output
-	if ( $return == TRUE )
-		return $output;
-	else 
-		echo $output; // Done  
+                    // Link to the large image if single post
+                    if ( $vt_image['url'] || $is_auto_image ) { 
+                        $src = wp_get_attachment_image_src($thumb_id, 'full', true);
+                        $custom_field = $src[0];
+                    }
+                    
+                    $href = $custom_field;
+                    $rel = 'rel="lightbox"';
+                } else { 
+                    $href = get_permalink($id);
+                    $rel = '';
+                }
+                 
+                $output .= $before;   
+                $output .= '<a href="' . $href .'" '. $rel . $title .'>' . $img_link . '</a>';
+                $output .= $after;   
+            }
+        }
+    }
+    
+    // Return or echo the output
+    if ( $return == TRUE )
+        return $output;
+    else 
+        echo $output; // Done  
 
 }
 
 /* Get thumbnail from Video Embed code */
 
 if (!function_exists('prime_get_video_image')) { 
-	function prime_get_video_image($embed) { 
-	
-		// YouTube - get the video code if this is an embed code (old embed)
-		preg_match('/youtube\.com\/v\/([\w\-]+)/', $embed, $match);
-	 
-		// YouTube - if old embed returned an empty ID, try capuring the ID from the new iframe embed
-		if($match[1] == '')
-			preg_match('/youtube\.com\/embed\/([\w\-]+)/', $embed, $match);
-	 
-		// YouTube - if it is not an embed code, get the video code from the youtube URL	
-		if($match[1] == '')
-			preg_match('/v\=(.+)&/',$embed ,$match);
-	 
-		// YouTube - get the corresponding thumbnail images	
-		if($match[1] != '')
-			$video_thumb = "http://img.youtube.com/vi/".$match[1]."/0.jpg";
-	 
-		// return whichever thumbnail image you would like to retrieve
-		return $video_thumb;		
-	}
+    function prime_get_video_image($embed) { 
+    
+        // YouTube - get the video code if this is an embed code (old embed)
+        preg_match('/youtube\.com\/v\/([\w\-]+)/', $embed, $match);
+     
+        // YouTube - if old embed returned an empty ID, try capuring the ID from the new iframe embed
+        if($match[1] == '')
+            preg_match('/youtube\.com\/embed\/([\w\-]+)/', $embed, $match);
+     
+        // YouTube - if it is not an embed code, get the video code from the youtube URL    
+        if($match[1] == '')
+            preg_match('/v\=(.+)&/',$embed ,$match);
+     
+        // YouTube - get the corresponding thumbnail images 
+        if($match[1] != '')
+            $video_thumb = "http://img.youtube.com/vi/".$match[1]."/0.jpg";
+     
+        // return whichever thumbnail image you would like to retrieve
+        return $video_thumb;        
+    }
 }
 
 
-/*===================================================================================*/
-/* vt_resize - Resize images dynamically using wp built in functions
-/*===================================================================================*/
-/*
+/**
+ *  vt_resize - Resize images dynamically using wp built in functions
+ */
+
+/**
  * Resize images dynamically using wp built in functions
  * Victor Teixeira
  *
@@ -532,158 +531,158 @@ if (!function_exists('prime_get_video_image')) {
  * @return array
  */
 if ( !function_exists('vt_resize') ) {
-	function vt_resize( $attach_id = null, $img_url = null, $width, $height, $crop = false ) {
-	
-		// this is an attachment, so we have the ID
-		if ( $attach_id ) {
-		
-			$image_src = wp_get_attachment_image_src( $attach_id, 'full' );
-			$file_path = get_attached_file( $attach_id );
-		
-		// this is not an attachment, let's use the image url
-		} else if ( $img_url ) {
-			
-			$file_path = parse_url( $img_url );
-			$file_path = $_SERVER['DOCUMENT_ROOT'] . $file_path['path'];
-			
-			//$file_path = ltrim( $file_path['path'], '/' );
-			//$file_path = rtrim( ABSPATH, '/' ).$file_path['path'];
-			
-			$orig_size = getimagesize( $file_path );
-			
-			$image_src[0] = $img_url;
-			$image_src[1] = $orig_size[0];
-			$image_src[2] = $orig_size[1];
-		}
-		
-		$file_info = pathinfo( $file_path );
-	
-		// check if file exists
-		$base_file = $file_info['dirname'].'/'.$file_info['filename'].'.'.$file_info['extension'];
-		if ( !file_exists($base_file) )
-		 return;
-		 
-		$extension = '.'. $file_info['extension'];
-	
-		// the image path without the extension
-		$no_ext_path = $file_info['dirname'].'/'.$file_info['filename'];
-		
-		
-		$cropped_img_path = $no_ext_path.'-'.$width.'x'.$height.$extension;
-	
-		// checking if the file size is larger than the target size
-		// if it is smaller or the same size, stop right here and return
-		if ( $image_src[1] > $width || $image_src[2] > $height ) {
-	
-			// the file is larger, check if the resized version already exists (for $crop = true but will also work for $crop = false if the sizes match)
-			if ( file_exists( $cropped_img_path ) ) {
-	
-				$cropped_img_url = str_replace( basename( $image_src[0] ), basename( $cropped_img_path ), $image_src[0] );
-				
-				$vt_image = array (
-					'url' => $cropped_img_url,
-					'width' => $width,
-					'height' => $height
-				);
-				
-				return $vt_image;
-			}
-	
-			// $crop = false
-			if ( $crop == false ) {
-			
-				// calculate the size proportionaly
-				$proportional_size = wp_constrain_dimensions( $image_src[1], $image_src[2], $width, $height );
-				$resized_img_path = $no_ext_path.'-'.$proportional_size[0].'x'.$proportional_size[1].$extension;			
-	
-				// checking if the file already exists
-				if ( file_exists( $resized_img_path ) ) {
-				
-					$resized_img_url = str_replace( basename( $image_src[0] ), basename( $resized_img_path ), $image_src[0] );
-	
-					$vt_image = array (
-						'url' => $resized_img_url,
-						'width' => $proportional_size[0],
-						'height' => $proportional_size[1]
-					);
-					
-					return $vt_image;
-				}
-			}
-	
-			// check if image width is smaller than set width
-			$img_size = getimagesize( $file_path );
-			if ( $img_size[0] <= $width ) $width = $img_size[0];		
-	
-			// no cache files - let's finally resize it
-			$new_img_path = image_resize( $file_path, $width, $height, $crop );
-			$new_img_size = getimagesize( $new_img_path );
-			$new_img = str_replace( basename( $image_src[0] ), basename( $new_img_path ), $image_src[0] );
-	
-			// resized output
-			$vt_image = array (
-				'url' => $new_img,
-				'width' => $new_img_size[0],
-				'height' => $new_img_size[1]
-			);
-			
-			return $vt_image;
-		}
-	
-		// default output - without resizing
-		$vt_image = array (
-			'url' => $image_src[0],
-			'width' => $image_src[1],
-			'height' => $image_src[2]
-		);
-		
-		return $vt_image;
-	}
+    function vt_resize( $attach_id = null, $img_url = null, $width, $height, $crop = false ) {
+    
+        // this is an attachment, so we have the ID
+        if ( $attach_id ) {
+        
+            $image_src = wp_get_attachment_image_src( $attach_id, 'full' );
+            $file_path = get_attached_file( $attach_id );
+        
+        // this is not an attachment, let's use the image url
+        } else if ( $img_url ) {
+            
+            $file_path = parse_url( $img_url );
+            $file_path = $_SERVER['DOCUMENT_ROOT'] . $file_path['path'];
+            
+            //$file_path = ltrim( $file_path['path'], '/' );
+            //$file_path = rtrim( ABSPATH, '/' ).$file_path['path'];
+            
+            $orig_size = getimagesize( $file_path );
+            
+            $image_src[0] = $img_url;
+            $image_src[1] = $orig_size[0];
+            $image_src[2] = $orig_size[1];
+        }
+        
+        $file_info = pathinfo( $file_path );
+    
+        // check if file exists
+        $base_file = $file_info['dirname'].'/'.$file_info['filename'].'.'.$file_info['extension'];
+        if ( !file_exists($base_file) )
+         return;
+         
+        $extension = '.'. $file_info['extension'];
+    
+        // the image path without the extension
+        $no_ext_path = $file_info['dirname'].'/'.$file_info['filename'];
+        
+        
+        $cropped_img_path = $no_ext_path.'-'.$width.'x'.$height.$extension;
+    
+        // checking if the file size is larger than the target size
+        // if it is smaller or the same size, stop right here and return
+        if ( $image_src[1] > $width || $image_src[2] > $height ) {
+    
+            // the file is larger, check if the resized version already exists (for $crop = true but will also work for $crop = false if the sizes match)
+            if ( file_exists( $cropped_img_path ) ) {
+    
+                $cropped_img_url = str_replace( basename( $image_src[0] ), basename( $cropped_img_path ), $image_src[0] );
+                
+                $vt_image = array (
+                    'url' => $cropped_img_url,
+                    'width' => $width,
+                    'height' => $height
+                );
+                
+                return $vt_image;
+            }
+    
+            // $crop = false
+            if ( $crop == false ) {
+            
+                // calculate the size proportionaly
+                $proportional_size = wp_constrain_dimensions( $image_src[1], $image_src[2], $width, $height );
+                $resized_img_path = $no_ext_path.'-'.$proportional_size[0].'x'.$proportional_size[1].$extension;            
+    
+                // checking if the file already exists
+                if ( file_exists( $resized_img_path ) ) {
+                
+                    $resized_img_url = str_replace( basename( $image_src[0] ), basename( $resized_img_path ), $image_src[0] );
+    
+                    $vt_image = array (
+                        'url' => $resized_img_url,
+                        'width' => $proportional_size[0],
+                        'height' => $proportional_size[1]
+                    );
+                    
+                    return $vt_image;
+                }
+            }
+    
+            // check if image width is smaller than set width
+            $img_size = getimagesize( $file_path );
+            if ( $img_size[0] <= $width ) $width = $img_size[0];        
+    
+            // no cache files - let's finally resize it
+            $new_img_path = image_resize( $file_path, $width, $height, $crop );
+            $new_img_size = getimagesize( $new_img_path );
+            $new_img = str_replace( basename( $image_src[0] ), basename( $new_img_path ), $image_src[0] );
+    
+            // resized output
+            $vt_image = array (
+                'url' => $new_img,
+                'width' => $new_img_size[0],
+                'height' => $new_img_size[1]
+            );
+            
+            return $vt_image;
+        }
+    
+        // default output - without resizing
+        $vt_image = array (
+            'url' => $image_src[0],
+            'width' => $image_src[1],
+            'height' => $image_src[2]
+        );
+        
+        return $vt_image;
+    }
 }
 
 
-/*===================================================================================*/
-/* Depreciated - prime_get_image - Get Image from custom field */
-/*===================================================================================*/
+/**
+ * Depreciated - prime_get_image - Get Image from custom field
+ */
 
 // Depreciated
 function prime_get_image($key = 'image', $width = null, $height = null, $class = "thumbnail", $quality = 90,$id = null,$link = 'src',$repeat = 1,$offset = 0,$before = '', $after = '',$single = false, $force = false, $return = false) {
-	// Run new function
-	prime_image( 'key='.$key.'&width='.$width.'&height='.$height.'&class='.$class.'&quality='.$quality.'&id='.$id.'&link='.$link.'&repeat='.$repeat.'&offset='.$offset.'&before='.$before.'&after='.$after.'&single='.$single.'&fore='.$force.'&return='.$return );
-	return;
+    // Run new function
+    prime_image( 'key='.$key.'&width='.$width.'&height='.$height.'&class='.$class.'&quality='.$quality.'&id='.$id.'&link='.$link.'&repeat='.$repeat.'&offset='.$offset.'&before='.$before.'&after='.$after.'&single='.$single.'&fore='.$force.'&return='.$return );
+    return;
 
 }
 
 
 
-/*===================================================================================*/
-/* prime_embed - Get Video embed code from custom field */
-/*===================================================================================*/
+/**
+ *  prime_embed - Get Video embed code from custom field
+ */
 
-/*
-Get Video
-This function gets the embed code from the custom field
-Parameters: 
-        $key = Custom field key eg. "embed"
-        $width = Set width manually without using $type
-        $height = Set height manually without using $type
-		$class = Custom class to apply to wrapping div
-		$id = ID from post to pull custom field from
-*/
+/**
+ * Get Video
+ * This function gets the embed code from the custom field
+ * Parameters: 
+ *         $key = Custom field key eg. "embed"
+ *         $width = Set width manually without using $type
+ *         $height = Set height manually without using $type
+ *         $class = Custom class to apply to wrapping div
+ *         $id = ID from post to pull custom field from
+ */
 
 function prime_embed($args) {
 
-	//Defaults
-	$key = 'embed';
-	$width = null;
-	$height = null;
-	$class = 'video';
-	$id = null;	
-	
-	if ( !is_array($args) ) 
-		parse_str( $args, $args );
-	
-	extract($args);
+    //Defaults
+    $key = 'embed';
+    $width = null;
+    $height = null;
+    $class = 'video';
+    $id = null; 
+    
+    if ( !is_array($args) ) 
+        parse_str( $args, $args );
+    
+    extract($args);
 
   if(empty($id))
     {
@@ -696,7 +695,7 @@ $custom_field = get_post_meta($id, $key, true);
 
 if ($custom_field) : 
 
-	$custom_field = html_entity_decode( $custom_field ); // Decode HTML entities.
+    $custom_field = html_entity_decode( $custom_field ); // Decode HTML entities.
 
     $org_width = $width;
     $org_height = $height;
@@ -708,22 +707,22 @@ if ($custom_field) :
     
     //Dynamic Height Calculation
     if ($org_height == '' && $org_width != '') {
-    	$raw_values = explode(" ", $custom_field);
+        $raw_values = explode(" ", $custom_field);
     
-    	foreach ($raw_values as $raw) {
-    		$embed_params = explode("=",$raw);
-    		if ($embed_params[0] == 'width') {
-   		 		$embed_width = ereg_replace("[^0-9]", "", $embed_params[1]);
-    		}
-    		elseif ($embed_params[0] == 'height') {
-    			$embed_height = ereg_replace("[^0-9]", "", $embed_params[1]);
-    		} 
-    	}
+        foreach ($raw_values as $raw) {
+            $embed_params = explode("=",$raw);
+            if ($embed_params[0] == 'width') {
+                $embed_width = ereg_replace("[^0-9]", "", $embed_params[1]);
+            }
+            elseif ($embed_params[0] == 'height') {
+                $embed_height = ereg_replace("[^0-9]", "", $embed_params[1]);
+            } 
+        }
     
-    	$float_width = floatval($embed_width);
-		$float_height = floatval($embed_height);
-		$float_ratio = $float_height / $float_width;
-		$calculated_height = intval($float_ratio * $width);
+        $float_width = floatval($embed_width);
+        $float_height = floatval($embed_height);
+        $float_ratio = $float_height / $float_width;
+        $calculated_height = intval($float_ratio * $width);
     }
     
     // Set values: width="XXX", height="XXX"
@@ -740,38 +739,38 @@ if ($custom_field) :
     $custom_field = preg_replace( '/width:([0-9]*)px/' , $width , $custom_field );
     $custom_field = preg_replace( '/height:([0-9]*)px/' , $height , $custom_field );     
 
-	// Suckerfish menu hack
-	$custom_field = str_replace('<embed ','<param name="wmode" value="transparent"></param><embed wmode="transparent" ',$custom_field);
+    // Suckerfish menu hack
+    $custom_field = str_replace('<embed ','<param name="wmode" value="transparent"></param><embed wmode="transparent" ',$custom_field);
 
-	$output = '';
+    $output = '';
     $output .= '<div class="'. $class .'">' . $custom_field . '</div>';
     
     return $output; 
-	
+    
 else :
 
-	return false;
+    return false;
     
 endif;
 
 }
 
-/*===================================================================================*/
-/* Depreciated - prime_get_embed - Get Video embed code from custom field */
-/*===================================================================================*/
+/**
+ *  Depreciated - prime_get_embed - Get Video embed code from custom field
+ */
 
 // Depreciated
 function prime_get_embed($key = 'embed', $width, $height, $class = 'video', $id = null) {
-	// Run new function
-	return prime_embed( 'key='.$key.'&width='.$width.'&height='.$height.'&class='.$class.'&id='.$id );
+    // Run new function
+    return prime_embed( 'key='.$key.'&width='.$width.'&height='.$height.'&class='.$class.'&id='.$id );
 
 }
 
 
 
-/*===================================================================================*/
-/* prime Show Page Menu */
-/*===================================================================================*/
+/**
+ *  prime Show Page Menu
+ */
 
 // Show menu in header.php
 // Exlude the pages from the slider
@@ -790,59 +789,59 @@ function prime_show_pagemenu( $exclude="" ) {
 
 
 
-/*===================================================================================*/
-/* Get the style path currently selected */
-/*===================================================================================*/
+/**
+ *  Get the style path currently selected
+ */
 
 function prime_style_path() {
-	
-	$return = '';
-	
-	$style = $_REQUEST['style'];
-	
-	// Sanitize request input.
-	$style = strtolower( trim( strip_tags( $style ) ) );
-	
-	if ( $style != '' ) {
-	
-		$style_path = $style;
-	
-	} else {
-	
-		$stylesheet = get_option( 'prime_alt_stylesheet' );
-		
-		// Prevent against an empty return to $stylesheet.
-		
-		if ( $stylesheet == '' ) {
-		
-			$stylesheet = 'default.css';
-		
-		} // End IF Statement
-		
-		$style_path = str_replace( '.css', '', $stylesheet );
-	
-	} // End IF Statement
-	
-	if ( $style_path == 'default' ) {
-	
-		$return = 'images';
-	
-	} else {
-	
-		$return = 'styles/' . $style_path;
-	
-	} // End IF Statement
-	
-	echo $return;
-	
+    
+    $return = '';
+    
+    $style = $_REQUEST['style'];
+    
+    // Sanitize request input.
+    $style = strtolower( trim( strip_tags( $style ) ) );
+    
+    if ( $style != '' ) {
+    
+        $style_path = $style;
+    
+    } else {
+    
+        $stylesheet = get_option( 'prime_alt_stylesheet' );
+        
+        // Prevent against an empty return to $stylesheet.
+        
+        if ( $stylesheet == '' ) {
+        
+            $stylesheet = 'default.css';
+        
+        } // End IF Statement
+        
+        $style_path = str_replace( '.css', '', $stylesheet );
+    
+    } // End IF Statement
+    
+    if ( $style_path == 'default' ) {
+    
+        $return = 'images';
+    
+    } else {
+    
+        $return = 'styles/' . $style_path;
+    
+    } // End IF Statement
+    
+    echo $return;
+    
 } // End prime_style_path()
 
 
-/*===================================================================================*/
-/* Get page ID */
-/*===================================================================================*/
+/**
+ *  Get page ID
+ */
 function get_page_id($page_slug){
-	$page_id = get_page_by_path($page_slug);
+    $page_id = get_page_by_path($page_slug);
     if ($page_id) {
         return $page_id->ID;
     } else {
@@ -851,197 +850,197 @@ function get_page_id($page_slug){
     
 }
 
-/*===================================================================================*/
-/* Tidy up the image source url */
-/*===================================================================================*/
+/**
+ *  Tidy up the image source url
+ */
 function cleanSource($src) {
 
-	// remove slash from start of string
-	if(strpos($src, "/") == 0) {
-		$src = substr($src, -(strlen($src) - 1));
-	}
+    // remove slash from start of string
+    if(strpos($src, "/") == 0) {
+        $src = substr($src, -(strlen($src) - 1));
+    }
 
-	// Check if same domain so it doesn't strip external sites
-	$host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-	if ( !strpos($src,$host) )
-		return $src;
+    // Check if same domain so it doesn't strip external sites
+    $host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+    if ( !strpos($src,$host) )
+        return $src;
 
 
-	$regex = "/^((ht|f)tp(s|):\/\/)(www\.|)" . $host . "/i";
-	$src = preg_replace ($regex, '', $src);
-	$src = htmlentities ($src);
+    $regex = "/^((ht|f)tp(s|):\/\/)(www\.|)" . $host . "/i";
+    $src = preg_replace ($regex, '', $src);
+    $src = htmlentities ($src);
     
     // remove slash from start of string
     if (strpos($src, '/') === 0) {
         $src = substr ($src, -(strlen($src) - 1));
     }
-	
-	return $src;
+    
+    return $src;
 }
 
 
 
-/*===================================================================================*/
-/* Show image in RSS feed */
-/* Original code by Justin Tadlock http://justintadlock.com */
-/*===================================================================================*/
+/**
+ * Show image in RSS feed
+ * Original code by Justin Tadlock http://justintadlock.com
+ */
 if (get_option('prime_rss_thumb') == "true")
-	add_filter('the_content', 'add_image_RSS');
-	
+    add_filter('the_content', 'add_image_RSS');
+    
 function add_image_RSS( $content ) {
-	
-	global $post, $id;
-	$blog_key = substr( md5( get_bloginfo('url') ), 0, 16 );
-	if ( ! is_feed() ) return $content;
+    
+    global $post, $id;
+    $blog_key = substr( md5( get_bloginfo('url') ), 0, 16 );
+    if ( ! is_feed() ) return $content;
 
-	// Get the "image" from custom field
-	$image = get_post_meta($post->ID, 'image', $single = true);
-	$image_width = '240';
+    // Get the "image" from custom field
+    $image = get_post_meta($post->ID, 'image', $single = true);
+    $image_width = '240';
 
-	// If there's an image, display the image with the content
-	if($image !== '') {
-		$content = '<p style="float:right; margin:0 0 10px 15px; width:'.$image_width.'px;">
-		<img src="'.$image.'" width="'.$image_width.'" />
-		</p>' . $content;
-		return $content;
-	} 
+    // If there's an image, display the image with the content
+    if($image !== '') {
+        $content = '<p style="float:right; margin:0 0 10px 15px; width:'.$image_width.'px;">
+        <img src="'.$image.'" width="'.$image_width.'" />
+        </p>' . $content;
+        return $content;
+    } 
 
-	// If there's not an image, just display the content
-	else {
-		$content = $content;
-		return $content;
-	}
+    // If there's not an image, just display the content
+    else {
+        $content = $content;
+        return $content;
+    }
 } 
 
 
 
-/*===================================================================================*/
-/* Show analytics code in footer */
-/*===================================================================================*/
+/**
+ *  Show analytics code in footer
+ */
 function prime_analytics(){
-	$output = get_option('prime_google_analytics');
-	if ( $output <> "" ) 
-		echo stripslashes($output) . "\n";
+    $output = get_option('prime_google_analytics');
+    if ( $output <> "" ) 
+        echo stripslashes($output) . "\n";
 }
 add_action('wp_footer','prime_analytics');
 
 
 
-/*===================================================================================*/
-/* Browser detection body_class() output */
-/*===================================================================================*/
+/**
+ *  Browser detection body_class() output
+ */
 add_filter('body_class','browser_body_class');
 function browser_body_class($classes) {
-	global $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone;
+    global $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone;
 
-	if($is_lynx) $classes[] = 'lynx';
-	elseif($is_gecko) $classes[] = 'gecko';
-	elseif($is_opera) $classes[] = 'opera';
-	elseif($is_NS4) $classes[] = 'ns4';
-	elseif($is_safari) $classes[] = 'safari';
-	elseif($is_chrome) $classes[] = 'chrome';
-	elseif($is_IE) {
-		$browser = $_SERVER['HTTP_USER_AGENT']; 
-		$browser = substr("$browser", 25, 8); 
-		if ($browser == "MSIE 7.0"  )
-			$classes[] = 'ie7';
-		elseif ($browser == "MSIE 6.0" )
-			$classes[] = 'ie6'; 
-		else	
-			$classes[] = 'ie';
-	}
-	else $classes[] = 'unknown';
+    if($is_lynx) $classes[] = 'lynx';
+    elseif($is_gecko) $classes[] = 'gecko';
+    elseif($is_opera) $classes[] = 'opera';
+    elseif($is_NS4) $classes[] = 'ns4';
+    elseif($is_safari) $classes[] = 'safari';
+    elseif($is_chrome) $classes[] = 'chrome';
+    elseif($is_IE) {
+        $browser = $_SERVER['HTTP_USER_AGENT']; 
+        $browser = substr("$browser", 25, 8); 
+        if ($browser == "MSIE 7.0"  )
+            $classes[] = 'ie7';
+        elseif ($browser == "MSIE 6.0" )
+            $classes[] = 'ie6'; 
+        else    
+            $classes[] = 'ie';
+    }
+    else $classes[] = 'unknown';
 
-	if($is_iphone) $classes[] = 'iphone';
-	return $classes;
+    if($is_iphone) $classes[] = 'iphone';
+    return $classes;
 }
 
-/*===================================================================================*/
-/* Twitter's Blogger.js output for Twitter widgets */
-/*===================================================================================*/
+/**
+ *  Twitter's Blogger.js output for Twitter widgets
+ */
 
 if ( !function_exists('prime_twitter_script') ) {
-	function prime_twitter_script($unique_id,$username,$limit) {
-	?>
-	<script type="text/javascript">
-	<!--//--><![CDATA[//><!--
-	
-	    function twitterCallback2(twitters) {
-	    
-	      var statusHTML = [];
-	      for (var i=0; i<twitters.length; i++){
-	        var username = twitters[i].user.screen_name;
-	        var status = twitters[i].text.replace(/((https?|s?ftp|ssh)\:\/\/[^"\s\<\>]*[^.,;'">\:\s\<\>\)\]\!])/g, function(url) {
-	          return '<a href="'+url+'">'+url+'</a>';
-	        }).replace(/\B@([_a-z0-9]+)/ig, function(reply) {
-	          return  reply.charAt(0)+'<a href="http://twitter.com/'+reply.substring(1)+'">'+reply.substring(1)+'</a>';
-	        });
-	        statusHTML.push('<li><span class="content">'+status+'</span> <a style="font-size:85%" class="time" href="http://twitter.com/'+username+'/statuses/'+twitters[i].id_str+'">'+relative_time(twitters[i].created_at)+'</a></li>');
-	      }
-	      document.getElementById('twitter_update_list_<?php echo $unique_id; ?>').innerHTML = statusHTML.join('');
-	    }
-	    
-	    function relative_time(time_value) {
-	      var values = time_value.split(" ");
-	      time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
-	      var parsed_date = Date.parse(time_value);
-	      var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
-	      var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
-	      delta = delta + (relative_to.getTimezoneOffset() * 60);
-	    
-	      if (delta < 60) {
-	        return 'less than a minute ago';
-	      } else if(delta < 120) {
-	        return 'about a minute ago';
-	      } else if(delta < (60*60)) {
-	        return (parseInt(delta / 60)).toString() + ' minutes ago';
-	      } else if(delta < (120*60)) {
-	        return 'about an hour ago';
-	      } else if(delta < (24*60*60)) {
-	        return 'about ' + (parseInt(delta / 3600)).toString() + ' hours ago';
-	      } else if(delta < (48*60*60)) {
-	        return '1 day ago';
-	      } else {
-	        return (parseInt(delta / 86400)).toString() + ' days ago';
-	      }
-	    }
-	//-->!]]>
-	</script>
-	<script type="text/javascript" src="http://api.twitter.com/1/statuses/user_timeline/<?php echo $username; ?>.json?callback=twitterCallback2&amp;count=<?php echo $limit; ?>&amp;include_rts=t"></script>
-	<?php
-	}
+    function prime_twitter_script($unique_id,$username,$limit) {
+    ?>
+    <script type="text/javascript">
+    <!--//--><![CDATA[//><!--
+    
+        function twitterCallback2(twitters) {
+        
+          var statusHTML = [];
+          for (var i=0; i<twitters.length; i++){
+            var username = twitters[i].user.screen_name;
+            var status = twitters[i].text.replace(/((https?|s?ftp|ssh)\:\/\/[^"\s\<\>]*[^.,;'">\:\s\<\>\)\]\!])/g, function(url) {
+              return '<a href="'+url+'">'+url+'</a>';
+            }).replace(/\B@([_a-z0-9]+)/ig, function(reply) {
+              return  reply.charAt(0)+'<a href="http://twitter.com/'+reply.substring(1)+'">'+reply.substring(1)+'</a>';
+            });
+            statusHTML.push('<li><span class="content">'+status+'</span> <a style="font-size:85%" class="time" href="http://twitter.com/'+username+'/statuses/'+twitters[i].id_str+'">'+relative_time(twitters[i].created_at)+'</a></li>');
+          }
+          document.getElementById('twitter_update_list_<?php echo $unique_id; ?>').innerHTML = statusHTML.join('');
+        }
+        
+        function relative_time(time_value) {
+          var values = time_value.split(" ");
+          time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
+          var parsed_date = Date.parse(time_value);
+          var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+          var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+          delta = delta + (relative_to.getTimezoneOffset() * 60);
+        
+          if (delta < 60) {
+            return 'less than a minute ago';
+          } else if(delta < 120) {
+            return 'about a minute ago';
+          } else if(delta < (60*60)) {
+            return (parseInt(delta / 60)).toString() + ' minutes ago';
+          } else if(delta < (120*60)) {
+            return 'about an hour ago';
+          } else if(delta < (24*60*60)) {
+            return 'about ' + (parseInt(delta / 3600)).toString() + ' hours ago';
+          } else if(delta < (48*60*60)) {
+            return '1 day ago';
+          } else {
+            return (parseInt(delta / 86400)).toString() + ' days ago';
+          }
+        }
+    //-->!]]>
+    </script>
+    <script type="text/javascript" src="http://api.twitter.com/1/statuses/user_timeline/<?php echo $username; ?>.json?callback=twitterCallback2&amp;count=<?php echo $limit; ?>&amp;include_rts=t"></script>
+    <?php
+    }
 }
 
-/*===================================================================================*/
-/* Template Detector */
-/*===================================================================================*/
+/**
+ *  Template Detector
+ */
 function prime_active_template($filename = null){
 
-	if(isset($filename)){
-		
-		global $wpdb;
-		$query = "SELECT *,count(*) AS used FROM $wpdb->postmeta WHERE meta_key = '_wp_page_template' AND meta_value = '$filename' GROUP BY meta_value";
-		$results = $wpdb->get_row($wpdb->prepare($query),'ARRAY_A'); // Select thrid coloumn accross
-				
-		if(empty($results))
-			return false;
-			
-		$post_id = $results['post_id'];
-		$trash = get_post_status($post_id); // Check for trash
-		
-		if($trash != 'trash')
-			return true;
-		else
-	 		return false;
-	
-	} else {
-		return false; // No $filename argument was set
-	}
+    if(isset($filename)){
+        
+        global $wpdb;
+        $query = "SELECT *,count(*) AS used FROM $wpdb->postmeta WHERE meta_key = '_wp_page_template' AND meta_value = '$filename' GROUP BY meta_value";
+        $results = $wpdb->get_row($wpdb->prepare($query),'ARRAY_A'); // Select thrid coloumn accross
+                
+        if(empty($results))
+            return false;
+            
+        $post_id = $results['post_id'];
+        $trash = get_post_status($post_id); // Check for trash
+        
+        if($trash != 'trash')
+            return true;
+        else
+            return false;
+    
+    } else {
+        return false; // No $filename argument was set
+    }
 
 }
-/*===================================================================================*/
-/* primeFramework Update Page */
-/*===================================================================================*/
+/**
+ *  primeFramework Update Page
+ */
 
 function primethemes_framework_update_page(){
         $method = get_filesystem_method();
@@ -1079,15 +1078,15 @@ function primethemes_framework_update_page(){
             $remoteversion = prime_get_fw_version();
             // Test if new version
             $upd = false;
-			$loc = explode('.',$local_version);				
-			$rem = explode('.',$remoteversion);	                
-			
+            $loc = explode('.',$local_version);             
+            $rem = explode('.',$remoteversion);                 
+            
             if( $loc[0] < $rem[0] )  
-            	$upd = true;
+                $upd = true;
             elseif ( $loc[1] < $rem[1] )
-            	$upd = true;
+                $upd = true;
             elseif( $loc[2] < $rem[2] )
-            	$upd = true;
+                $upd = true;
 
             ?>
             <div class="icon32" id="icon-tools"><br></div>
@@ -1118,145 +1117,145 @@ function primethemes_framework_update_page(){
             <?php
 };
 
-/*===================================================================================*/
-/* primeFramework Update Head */
-/*===================================================================================*/
+/**
+ *  primeFramework Update Head
+ */
 
 function primethemes_framework_update_head(){
 
   if(isset($_REQUEST['page'])){
-	
-	// Sanitize page being requested.
-	$_page = strtolower( strip_tags( trim( $_REQUEST['page'] ) ) );
-	
-	if( $_page == 'primethemes_framework_update'){
+    
+    // Sanitize page being requested.
+    $_page = strtolower( strip_tags( trim( $_REQUEST['page'] ) ) );
+    
+    if( $_page == 'primethemes_framework_update'){
               
-		//Setup Filesystem 
-		$method = get_filesystem_method(); 
-		
-		if(isset($_POST['prime_ftp_cred'])){ 
-			 
-			$cred = unserialize(base64_decode($_POST['prime_ftp_cred']));
-			$filesystem = WP_Filesystem($cred);
-			
-		} else {
-			
-		   $filesystem = WP_Filesystem(); 
-			
-		};     
-	
-		if($filesystem == false && $_POST['upgrade'] != 'Proceed'){
-			
-			function primethemes_framework_update_filesystem_warning() {
-					$method = get_filesystem_method();
-					echo "<div id='filesystem-warning' class='updated fade'><p>Failed: Filesystem preventing downloads. (". $method .")</p></div>";
-				}
-				add_action('admin_notices', 'primethemes_framework_update_filesystem_warning');
-				return;
-		}
-		if(isset($_REQUEST['prime_update_save'])){
-		
-			// Sanitize action being requested.
-			$_action = strtolower( trim( strip_tags( $_REQUEST['prime_update_save'] ) ) );
-		
-		if( $_action == 'save' ){
-		
-		$temp_file_addr = download_url('http://www.primethemes.com/updates/framework.zip');
-		
-		if ( is_wp_error($temp_file_addr) ) {
-			
-			$error = $temp_file_addr->get_error_code();
-		
-			if($error == 'http_no_url') {
-			//The source file was not found or is invalid
-				function primethemes_framework_update_missing_source_warning() {
-					echo "<div id='source-warning' class='updated fade'><p>Failed: Invalid URL Provided</p></div>";
-				}
-				add_action('admin_notices', 'primethemes_framework_update_missing_source_warning');
-			} else {
-				function primethemes_framework_update_other_upload_warning() {
-					echo "<div id='source-warning' class='updated fade'><p>Failed: Upload - $error</p></div>";
-				}
-				add_action('admin_notices', 'primethemes_framework_update_other_upload_warning');
-				
-			}
-			
-			return;
-	
-		  } 
-		//Unzipp it
-		global $wp_filesystem;
-		$to = $wp_filesystem->wp_content_dir() . "/themes/" . get_option('template') . "/functions/";
-		
-		$dounzip = unzip_file($temp_file_addr, $to);
-		
-		unlink($temp_file_addr); // Delete Temp File
-		
-		if ( is_wp_error($dounzip) ) {
-			
-			//DEBUG
-			$error = $dounzip->get_error_code();
-			$data = $dounzip->get_error_data($error);
-			//echo $error. ' - ';
-			//print_r($data);
-							
-			if($error == 'incompatible_archive') {
-				//The source file was not found or is invalid
-				function primethemes_framework_update_no_archive_warning() {
-					echo "<div id='prime-no-archive-warning' class='updated fade'><p>Failed: Incompatible archive</p></div>";
-				}
-				add_action('admin_notices', 'primethemes_framework_update_no_archive_warning');
-			} 
-			if($error == 'empty_archive') {
-				function primethemes_framework_update_empty_archive_warning() {
-					echo "<div id='prime-empty-archive-warning' class='updated fade'><p>Failed: Empty Archive</p></div>";
-				}
-				add_action('admin_notices', 'primethemes_framework_update_empty_archive_warning');
-			}
-			if($error == 'mkdir_failed') {
-				function primethemes_framework_update_mkdir_warning() {
-					echo "<div id='prime-mkdir-warning' class='updated fade'><p>Failed: mkdir Failure</p></div>";
-				}
-				add_action('admin_notices', 'primethemes_framework_update_mkdir_warning');
-			}  
-			if($error == 'copy_failed') {
-				function primethemes_framework_update_copy_fail_warning() {
-					echo "<div id='prime-copy-fail-warning' class='updated fade'><p>Failed: Copy Failed</p></div>";
-				}
-				add_action('admin_notices', 'primethemes_framework_update_copy_fail_warning');
-			}
-				
-			return;
-	
-		} 
-		
-		function primethemes_framework_updated_success() {
-			echo "<div id='framework-upgraded' class='updated fade'><p>New framework successfully downloaded, extracted and updated.</p></div>";
-		}
-		add_action('admin_notices', 'primethemes_framework_updated_success');
-		
-		}
-	}
-	} //End user input save part of the update
+        //Setup Filesystem 
+        $method = get_filesystem_method(); 
+        
+        if(isset($_POST['prime_ftp_cred'])){ 
+             
+            $cred = unserialize(base64_decode($_POST['prime_ftp_cred']));
+            $filesystem = WP_Filesystem($cred);
+            
+        } else {
+            
+           $filesystem = WP_Filesystem(); 
+            
+        };     
+    
+        if($filesystem == false && $_POST['upgrade'] != 'Proceed'){
+            
+            function primethemes_framework_update_filesystem_warning() {
+                    $method = get_filesystem_method();
+                    echo "<div id='filesystem-warning' class='updated fade'><p>Failed: Filesystem preventing downloads. (". $method .")</p></div>";
+                }
+                add_action('admin_notices', 'primethemes_framework_update_filesystem_warning');
+                return;
+        }
+        if(isset($_REQUEST['prime_update_save'])){
+        
+            // Sanitize action being requested.
+            $_action = strtolower( trim( strip_tags( $_REQUEST['prime_update_save'] ) ) );
+        
+        if( $_action == 'save' ){
+        
+        $temp_file_addr = download_url('http://www.primethemes.com/updates/framework.zip');
+        
+        if ( is_wp_error($temp_file_addr) ) {
+            
+            $error = $temp_file_addr->get_error_code();
+        
+            if($error == 'http_no_url') {
+            //The source file was not found or is invalid
+                function primethemes_framework_update_missing_source_warning() {
+                    echo "<div id='source-warning' class='updated fade'><p>Failed: Invalid URL Provided</p></div>";
+                }
+                add_action('admin_notices', 'primethemes_framework_update_missing_source_warning');
+            } else {
+                function primethemes_framework_update_other_upload_warning() {
+                    echo "<div id='source-warning' class='updated fade'><p>Failed: Upload - $error</p></div>";
+                }
+                add_action('admin_notices', 'primethemes_framework_update_other_upload_warning');
+                
+            }
+            
+            return;
+    
+          } 
+        //Unzipp it
+        global $wp_filesystem;
+        $to = $wp_filesystem->wp_content_dir() . "/themes/" . get_option('template') . "/functions/";
+        
+        $dounzip = unzip_file($temp_file_addr, $to);
+        
+        unlink($temp_file_addr); // Delete Temp File
+        
+        if ( is_wp_error($dounzip) ) {
+            
+            //DEBUG
+            $error = $dounzip->get_error_code();
+            $data = $dounzip->get_error_data($error);
+            //echo $error. ' - ';
+            //print_r($data);
+                            
+            if($error == 'incompatible_archive') {
+                //The source file was not found or is invalid
+                function primethemes_framework_update_no_archive_warning() {
+                    echo "<div id='prime-no-archive-warning' class='updated fade'><p>Failed: Incompatible archive</p></div>";
+                }
+                add_action('admin_notices', 'primethemes_framework_update_no_archive_warning');
+            } 
+            if($error == 'empty_archive') {
+                function primethemes_framework_update_empty_archive_warning() {
+                    echo "<div id='prime-empty-archive-warning' class='updated fade'><p>Failed: Empty Archive</p></div>";
+                }
+                add_action('admin_notices', 'primethemes_framework_update_empty_archive_warning');
+            }
+            if($error == 'mkdir_failed') {
+                function primethemes_framework_update_mkdir_warning() {
+                    echo "<div id='prime-mkdir-warning' class='updated fade'><p>Failed: mkdir Failure</p></div>";
+                }
+                add_action('admin_notices', 'primethemes_framework_update_mkdir_warning');
+            }  
+            if($error == 'copy_failed') {
+                function primethemes_framework_update_copy_fail_warning() {
+                    echo "<div id='prime-copy-fail-warning' class='updated fade'><p>Failed: Copy Failed</p></div>";
+                }
+                add_action('admin_notices', 'primethemes_framework_update_copy_fail_warning');
+            }
+                
+            return;
+    
+        } 
+        
+        function primethemes_framework_updated_success() {
+            echo "<div id='framework-upgraded' class='updated fade'><p>New framework successfully downloaded, extracted and updated.</p></div>";
+        }
+        add_action('admin_notices', 'primethemes_framework_updated_success');
+        
+        }
+    }
+    } //End user input save part of the update
  }
 }
                              
 add_action('admin_head','primethemes_framework_update_head');
 
-/*===================================================================================*/
-/* PrimeFramework Version Getter */
-/*===================================================================================*/
+/**
+ *  PrimeFramework Version Getter
+ */
 
 function prime_get_fw_version($url = ''){
-	
-	if(!empty($url)){
-		$fw_url = $url;
-	} else {
-    	$fw_url = 'http://www.primethemes.com/updates/functions-changelog.txt';
+    
+    if(!empty($url)){
+        $fw_url = $url;
+    } else {
+        $fw_url = 'http://www.primethemes.com/updates/functions-changelog.txt';
     }
     
-	$temp_file_addr = download_url($fw_url);
-	if(!is_wp_error($temp_file_addr) && $file_contents = file($temp_file_addr)) {
+    $temp_file_addr = download_url($fw_url);
+    if(!is_wp_error($temp_file_addr) && $file_contents = file($temp_file_addr)) {
         foreach ($file_contents as $line_num => $line) {
                             
                 $current_line =  $line;
@@ -1282,917 +1281,919 @@ function prime_get_fw_version($url = ''){
 
 }
 
-/*===================================================================================*/
-/* prime URL shortener */
-/*===================================================================================*/
+/**
+ *  prime URL shortener
+ */
 
 function prime_short_url($url) {
-	$service = get_option('prime_url_shorten');
-	$bitlyapilogin = get_option('prime_bitly_api_login');;
-	$bitlyapikey = get_option('prime_bitly_api_key');;
-	if (isset($service)) {
-		switch ($service) 
-		{
-    		case 'TinyURL':
-    			$shorturl = getTinyUrl($url);
-    			break;
-    		case 'Bit.ly':
-    			if (isset($bitlyapilogin) && isset($bitlyapikey) && ($bitlyapilogin != '') && ($bitlyapikey != '')) {
-    				$shorturl = make_bitly_url($url,$bitlyapilogin,$bitlyapikey,'json');
-    			}
-    			else {
-    				$shorturl = getTinyUrl($url);
-    			}
-    			break;
-    		case 'Off':
-    			$shorturl = $url;
-    			break;
-    		default:
-    			$shorturl = $url;
-    			break;
-    	}
-	}
-	else {
-		$shorturl = $url;
-	}
-	return $shorturl;
+    $service = get_option('prime_url_shorten');
+    $bitlyapilogin = get_option('prime_bitly_api_login');;
+    $bitlyapikey = get_option('prime_bitly_api_key');;
+    if (isset($service)) {
+        switch ($service) 
+        {
+            case 'TinyURL':
+                $shorturl = getTinyUrl($url);
+                break;
+            case 'Bit.ly':
+                if (isset($bitlyapilogin) && isset($bitlyapikey) && ($bitlyapilogin != '') && ($bitlyapikey != '')) {
+                    $shorturl = make_bitly_url($url,$bitlyapilogin,$bitlyapikey,'json');
+                }
+                else {
+                    $shorturl = getTinyUrl($url);
+                }
+                break;
+            case 'Off':
+                $shorturl = $url;
+                break;
+            default:
+                $shorturl = $url;
+                break;
+        }
+    }
+    else {
+        $shorturl = $url;
+    }
+    return $shorturl;
 }
 
 //TinyURL
 function getTinyUrl($url) {
-	$tinyurl = file_get_contents_curl("http://tinyurl.com/api-create.php?url=".$url);
-	return $tinyurl;
+    $tinyurl = file_get_contents_curl("http://tinyurl.com/api-create.php?url=".$url);
+    return $tinyurl;
 }
 
 //Bit.ly
 function make_bitly_url($url,$login,$appkey,$format = 'xml',$version = '2.0.1')
 {
-	//create the URL
-	$bitly = 'http://api.bit.ly/shorten?version='.$version.'&longUrl='.urlencode($url).'&login='.$login.'&apiKey='.$appkey.'&format='.$format;
-	
-	//get the url
-	//could also use cURL here
-	$response = file_get_contents_curl($bitly);
-	
-	//parse depending on desired format
-	if(strtolower($format) == 'json')
-	{
-		$json = @json_decode($response,true);
-		return $json['results'][$url]['shortUrl'];
-	}
-	else //xml
-	{
-		$xml = simplexml_load_string($response);
-		return 'http://bit.ly/'.$xml->results->nodeKeyVal->hash;
-	}
+    //create the URL
+    $bitly = 'http://api.bit.ly/shorten?version='.$version.'&longUrl='.urlencode($url).'&login='.$login.'&apiKey='.$appkey.'&format='.$format;
+    
+    //get the url
+    //could also use cURL here
+    $response = file_get_contents_curl($bitly);
+    
+    //parse depending on desired format
+    if(strtolower($format) == 'json')
+    {
+        $json = @json_decode($response,true);
+        return $json['results'][$url]['shortUrl'];
+    }
+    else //xml
+    {
+        $xml = simplexml_load_string($response);
+        return 'http://bit.ly/'.$xml->results->nodeKeyVal->hash;
+    }
 }
 
 //Alternative CURL function
 function file_get_contents_curl($url) {
-	if (_iscurlinstalled()) {
-		$ch = curl_init();
-	
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
-		curl_setopt($ch, CURLOPT_URL, $url);
-	
-		$data = curl_exec($ch);
-		
-		if ($data === FALSE) {
-			$data =  "cURL Error: " . curl_error($ch);
-		}
-	
-		curl_close($ch);
-	} else {
-		$data = $url;
-	}
-	return $data;
+    if (_iscurlinstalled()) {
+        $ch = curl_init();
+    
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
+        curl_setopt($ch, CURLOPT_URL, $url);
+    
+        $data = curl_exec($ch);
+        
+        if ($data === FALSE) {
+            $data =  "cURL Error: " . curl_error($ch);
+        }
+    
+        curl_close($ch);
+    } else {
+        $data = $url;
+    }
+    return $data;
 }
 
 // Checks for presence of the cURL extension.
 function _iscurlinstalled() {
-	if  (in_array  ('curl', get_loaded_extensions())) {
-		if (function_exists('curl_init')) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	else{
-		if (function_exists('curl_init')) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    if  (in_array  ('curl', get_loaded_extensions())) {
+        if (function_exists('curl_init')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    else{
+        if (function_exists('curl_init')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
-/*===================================================================================*/
-/* prime_title() */
-/*===================================================================================*/
+/**
+ *  prime_title()
+ */
 
 function prime_title(){
 
-	global $post;
-	$layout = ''; 
-	
-	//Taxonomy Details WP 3.0 only
-	if ( function_exists('get_taxonomies') ) :
-		global $wp_query; 
-		$taxonomy_obj = $wp_query->get_queried_object();
-		if(!empty($taxonomy_obj->name)) :
-			$taxonomy_nice_name = $taxonomy_obj->name;
-			$term_id = $taxonomy_obj->term_taxonomy_id;
-			$taxonomy_short_name = $taxonomy_obj->taxonomy;
-			$taxonomy_top_level_items = get_taxonomies(array('name' => $taxonomy_short_name), 'objects');
-			$taxonomy_top_level_item = $taxonomy_top_level_items[$taxonomy_short_name]->label;
-		endif;
-	endif;
-	
-	//3rd Party Plugins
-	$use_third_party_data = false;
-	if(get_option('seo_prime_use_third_party_data') == 'true'){
-		$use_third_party_data = true;
-	}
-		
-	if(	(class_exists('All_in_One_SEO_Pack') OR class_exists('Headspace_Plugin')) AND 
-		( $use_third_party_data != true )) { wp_title(); return; }
+    global $post;
+    $layout = ''; 
+    
+    //Taxonomy Details WP 3.0 only
+    if ( function_exists('get_taxonomies') ) :
+        global $wp_query; 
+        $taxonomy_obj = $wp_query->get_queried_object();
+        if(!empty($taxonomy_obj->name)) :
+            $taxonomy_nice_name = $taxonomy_obj->name;
+            $term_id = $taxonomy_obj->term_taxonomy_id;
+            $taxonomy_short_name = $taxonomy_obj->taxonomy;
+            $taxonomy_top_level_items = get_taxonomies(array('name' => $taxonomy_short_name), 'objects');
+            $taxonomy_top_level_item = $taxonomy_top_level_items[$taxonomy_short_name]->label;
+        endif;
+    endif;
+    
+    //3rd Party Plugins
+    $use_third_party_data = false;
+    if(get_option('seo_prime_use_third_party_data') == 'true'){
+        $use_third_party_data = true;
+    }
+        
+    if( (class_exists('All_in_One_SEO_Pack') OR class_exists('Headspace_Plugin')) AND 
+        ( $use_third_party_data != true )) { wp_title(); return; }
 
-	$sep = get_option('seo_prime_seperator');	
-	if(empty($sep)) { $sep = " | ";} else { $sep = ' ' . $sep . ' ';}
-	$use_wp_title = get_option('seo_prime_wp_title');
-	$home_layout = get_option('seo_prime_home_layout');
-	$single_layout = get_option('seo_prime_single_layout');
-	$page_layout = get_option('seo_prime_page_layout');
-	$archive_layout = get_option('seo_prime_archive_layout');
-	
-	
-	$output = '';
-	if($use_wp_title == 'true'){
-		
-		if(is_home() OR is_front_page()){
-			switch ($home_layout){
-				case 'a': $output = get_bloginfo('name') . $sep . get_bloginfo('description'); 
-				break;
-				case 'b': $output = get_bloginfo('name'); 
-				break;
-				case 'c': $output = get_bloginfo('description'); 
-				break;
-				}
-			if(is_paged()){
-				$paged_var = get_query_var('paged');
-				if(get_option('seo_prime_paged_var_pos') == 'after'){
-				
-					$output .= $sep . get_option('seo_prime_paged_var') . ' ' . $paged_var;
+    $sep = get_option('seo_prime_seperator');   
+    if(empty($sep)) { $sep = " | ";} else { $sep = ' ' . $sep . ' ';}
+    $use_wp_title = get_option('seo_prime_wp_title');
+    $home_layout = get_option('seo_prime_home_layout');
+    $single_layout = get_option('seo_prime_single_layout');
+    $page_layout = get_option('seo_prime_page_layout');
+    $archive_layout = get_option('seo_prime_archive_layout');
+    
+    
+    $output = '';
+    if($use_wp_title == 'true'){
+        
+        if(is_home() OR is_front_page()){
+            switch ($home_layout){
+                case 'a': $output = get_bloginfo('name') . $sep . get_bloginfo('description'); 
+                break;
+                case 'b': $output = get_bloginfo('name'); 
+                break;
+                case 'c': $output = get_bloginfo('description'); 
+                break;
+                }
+            if(is_paged()){
+                $paged_var = get_query_var('paged');
+                if(get_option('seo_prime_paged_var_pos') == 'after'){
+                
+                    $output .= $sep . get_option('seo_prime_paged_var') . ' ' . $paged_var;
 
-				} else {
-									
-					$output = get_option('seo_prime_paged_var') . ' ' . $paged_var . $sep . $output;
+                } else {
+                                    
+                    $output = get_option('seo_prime_paged_var') . ' ' . $paged_var . $sep . $output;
 
-				}
-				
-			}
-			$output = stripslashes($output);
-			echo $output;
-		}
-		else {
-		if (is_single()) { $layout = $single_layout; }
-		elseif  (is_page()) { $layout = $page_layout; }
-		elseif  (is_archive()) { $layout = $archive_layout; }
-		elseif  (is_tax()) { $layout = $archive_layout; }
-		elseif  (is_search()) { $layout = 'search'; }
-		elseif  (is_404()) { $layout = $single_layout; }
-		
-		
-		
-		//Check if there is a custom value added to post meta
-		$primeseo_title = get_post_meta($post->ID,'seo_title',true); //primeSEO
-		$aio_title = get_post_meta($post->ID,'_aioseop_title',true); //All-in-One SEO
-		$headspace_title = get_post_meta($post->ID,'_headspace_page_title',true); //Headspace SEO
-		
-		if(get_option('seo_prime_wp_custom_field_title') != 'true' && is_singular()){
-			if(!empty($primeseo_title)){
-				$layout = 'primeseo';
-			} elseif(!empty($aio_title) AND $use_third_party_data) {
-				$layout = 'aioseo';
-			} elseif(!empty($headspace_title) AND $use_third_party_data) {
-				$layout = 'headspace';
-			}
-		}
-			switch ($layout){
-				case 'a': $output = wp_title($sep,false,true) . get_bloginfo('name');
-				break;
-				case 'b': $output = wp_title('',false,false);
-				break;
-				case 'c': $output = get_bloginfo('name') . wp_title($sep,false,false);
-				break;
-				case 'd': $output = wp_title($sep,false,true) . get_bloginfo('description');
-				break;
-				case 'e': $output = get_bloginfo('name') . $sep . wp_title($sep,false,true) . get_bloginfo('description');
-				break;
-				case 'search':  $output = get_bloginfo('name') . wp_title($sep,false,false); // Search is hardcoded
-				break;
-				case 'primeseo':  $output = $primeseo_title; // primeSEO Title
-				break;
-				case 'aioseo':  $output = $aio_title; // All-in-One Title
-				break;
-				case 'headspace':  $output = $headspace_title; // Headspace Title
-				break;
-			}
-			if(is_paged()){
-				$paged_var = get_query_var('paged');
-				if(get_option('seo_prime_paged_var_pos') == 'after'){
-					$output .= $sep . get_option('seo_prime_paged_var') . ' ' . $paged_var;
-				} else {
-					$output = get_option('seo_prime_paged_var') . ' ' . $paged_var . $sep . $output;
-				}
-			}
-			$output = stripslashes($output);
-			
-			if(empty($output)) { wp_title(); }
-			else { echo $output; }
-			
-		}
-	}
-	else {
+                }
+                
+            }
+            $output = stripslashes($output);
+            echo $output;
+        }
+        else {
+        if (is_single()) { $layout = $single_layout; }
+        elseif  (is_page()) { $layout = $page_layout; }
+        elseif  (is_archive()) { $layout = $archive_layout; }
+        elseif  (is_tax()) { $layout = $archive_layout; }
+        elseif  (is_search()) { $layout = 'search'; }
+        elseif  (is_404()) { $layout = $single_layout; }
+        
+        
+        
+        //Check if there is a custom value added to post meta
+        $primeseo_title = get_post_meta($post->ID,'seo_title',true); //primeSEO
+        $aio_title = get_post_meta($post->ID,'_aioseop_title',true); //All-in-One SEO
+        $headspace_title = get_post_meta($post->ID,'_headspace_page_title',true); //Headspace SEO
+        
+        if(get_option('seo_prime_wp_custom_field_title') != 'true' && is_singular()){
+            if(!empty($primeseo_title)){
+                $layout = 'primeseo';
+            } elseif(!empty($aio_title) AND $use_third_party_data) {
+                $layout = 'aioseo';
+            } elseif(!empty($headspace_title) AND $use_third_party_data) {
+                $layout = 'headspace';
+            }
+        }
+            switch ($layout){
+                case 'a': $output = wp_title($sep,false,true) . get_bloginfo('name');
+                break;
+                case 'b': $output = wp_title('',false,false);
+                break;
+                case 'c': $output = get_bloginfo('name') . wp_title($sep,false,false);
+                break;
+                case 'd': $output = wp_title($sep,false,true) . get_bloginfo('description');
+                break;
+                case 'e': $output = get_bloginfo('name') . $sep . wp_title($sep,false,true) . get_bloginfo('description');
+                break;
+                case 'search':  $output = get_bloginfo('name') . wp_title($sep,false,false); // Search is hardcoded
+                break;
+                case 'primeseo':  $output = $primeseo_title; // primeSEO Title
+                break;
+                case 'aioseo':  $output = $aio_title; // All-in-One Title
+                break;
+                case 'headspace':  $output = $headspace_title; // Headspace Title
+                break;
+            }
+            if(is_paged()){
+                $paged_var = get_query_var('paged');
+                if(get_option('seo_prime_paged_var_pos') == 'after'){
+                    $output .= $sep . get_option('seo_prime_paged_var') . ' ' . $paged_var;
+                } else {
+                    $output = get_option('seo_prime_paged_var') . ' ' . $paged_var . $sep . $output;
+                }
+            }
+            $output = stripslashes($output);
+            
+            if(empty($output)) { wp_title(); }
+            else { echo $output; }
+            
+        }
+    }
+    else {
 
-		if ( is_home() ) { echo get_bloginfo('name') . $sep . get_bloginfo('description'); } 
-		elseif ( is_search() ) { echo get_bloginfo('name') . $sep . __('Search Results', 'primethemes');  }  
-		elseif ( is_author() ) { echo get_bloginfo('name') . $sep . __('Author Archives', 'primethemes');  }  
-		elseif ( is_single() ) { echo wp_title($sep,true,true) . get_bloginfo('name');  }
-		elseif ( is_page() ) {  echo get_bloginfo('name'); wp_title($sep,true,false);  }
-		elseif ( is_category() ) { echo get_bloginfo('name') . $sep . __('Category Archive', 'primethemes') . $sep . single_cat_title('',false);  }
-		elseif ( is_tax() ) { echo get_bloginfo('name') . $sep . __($taxonomy_top_level_item.' Archive', 'primethemes') . $sep . $taxonomy_nice_name;  }   
-		elseif ( is_day() ) { echo get_bloginfo('name') . $sep . __('Daily Archive', 'primethemes') . $sep . get_the_time('jS F, Y');  }
-		elseif ( is_month() ) { echo get_bloginfo('name') . $sep . __('Monthly Archive', 'primethemes') . $sep . get_the_time('F');  }
-		elseif ( is_year() ) { echo get_bloginfo('name') . $sep . __('Yearly Archive', 'primethemes') . $sep . get_the_time('Y');  }
-		elseif ( is_tag() ) {  echo get_bloginfo('name') . $sep . __('Tag Archive', 'primethemes') . $sep . single_tag_title('',false); }
-	
-	}
+        if ( is_home() ) { echo get_bloginfo('name') . $sep . get_bloginfo('description'); } 
+        elseif ( is_search() ) { echo get_bloginfo('name') . $sep . __('Search Results', 'primethemes');  }  
+        elseif ( is_author() ) { echo get_bloginfo('name') . $sep . __('Author Archives', 'primethemes');  }  
+        elseif ( is_single() ) { echo wp_title($sep,true,true) . get_bloginfo('name');  }
+        elseif ( is_page() ) {  echo get_bloginfo('name'); wp_title($sep,true,false);  }
+        elseif ( is_category() ) { echo get_bloginfo('name') . $sep . __('Category Archive', 'primethemes') . $sep . single_cat_title('',false);  }
+        elseif ( is_tax() ) { echo get_bloginfo('name') . $sep . __($taxonomy_top_level_item.' Archive', 'primethemes') . $sep . $taxonomy_nice_name;  }   
+        elseif ( is_day() ) { echo get_bloginfo('name') . $sep . __('Daily Archive', 'primethemes') . $sep . get_the_time('jS F, Y');  }
+        elseif ( is_month() ) { echo get_bloginfo('name') . $sep . __('Monthly Archive', 'primethemes') . $sep . get_the_time('F');  }
+        elseif ( is_year() ) { echo get_bloginfo('name') . $sep . __('Yearly Archive', 'primethemes') . $sep . get_the_time('Y');  }
+        elseif ( is_tag() ) {  echo get_bloginfo('name') . $sep . __('Tag Archive', 'primethemes') . $sep . single_tag_title('',false); }
+    
+    }
 }
 
-/*===================================================================================*/
-/* prime_meta() */
-/*===================================================================================*/
+/**
+ *  prime_meta()
+ */
 
 
 function prime_meta(){
-		global $post;
-		global $wpdb;
-		if(!empty($post)){
-			$post_id = $post->ID;
-		}
-		
-		// Basic Output
-		echo '<meta http-equiv="Content-Type" content="'. get_bloginfo('html_type') .'; charset='. get_bloginfo('charset') .'" />' . "\n";
-		
-		// Under SETTIGNS > PRIVACY in the WordPress backend
-		if ( get_option('blog_public') == 0 ) { return; }
-		
-		//3rd Party Plugins
-		$use_third_party_data = false;
-		if(get_option('seo_prime_use_third_party_data') == 'true'){
-			$use_third_party_data = true;
-		}
-		
-		if(	(class_exists('All_in_One_SEO_Pack') OR class_exists('Headspace_Plugin')) AND 
-		( $use_third_party_data == true )) { return; }
-		
-		// Robots
-		if(!class_exists('All_in_One_SEO_Pack') AND !class_exists('Headspace_Plugin'))
-		{
-			$index = 'index';
-			$follow = 'nofollow';
-			
-			if ( is_category() && get_option('seo_prime_meta_indexing_category') != 'true' ) { $index = 'noindex'; }  
-			elseif ( is_tag() && get_option('seo_prime_meta_indexing_tag') != 'true') { $index = 'noindex'; }
-			elseif ( is_search() && get_option('seo_prime_meta_indexing_search') != 'true' ) { $index = 'noindex'; }  
-			elseif ( is_author() && get_option('seo_prime_meta_indexing_author') != 'true') { $index = 'noindex'; }  
-			elseif ( is_date() && get_option('seo_prime_meta_indexing_date') != 'true') { $index = 'noindex'; }
-			
-			// Set default to follow			
-			if ( get_option('seo_prime_meta_single_follow') == 'true' )
-				$follow = 'follow';  
-	
-			// Set individual post/page to follow/unfollow
-			if ( is_singular() ) {
-				if ( $follow == 'follow' AND get_post_meta($post->ID,'seo_follow',true) == 'true') 
-					$follow = 'nofollow';  
-				elseif ( $follow == 'nofollow' AND get_post_meta($post->ID,'seo_follow',true) == 'true') 
-					$follow = 'follow';  
-			}							
-						
-			if(is_singular() && get_post_meta($post->ID,'seo_noindex',true) == 'true') { $index = 'noindex';  }
-			
-			echo '<meta name="robots" content="'. $index .', '. $follow .'" />' . "\n";
-		}
-		
-		/* Description */
-		$description = '';
-		
-		$home_desc_option = get_option('seo_prime_meta_home_desc');
-		$singular_desc_option = get_option('seo_prime_meta_single_desc');
-		
-		//Check if there is a custom value added to post meta
-		$primeseo_desc = get_post_meta($post->ID,'seo_description',true); //primeSEO
-		$aio_desc = get_post_meta($post->ID,'_aioseop_description',true); //All-in-One SEO
-		$headspace_desc = get_post_meta($post->ID,'_headspace_description',true); //Headspace SEO
-	
-		//Singular setup
-		if(!empty($aio_desc) AND $use_third_party_data) {
-			$singular_desc_option = 'aioseo';
-		} elseif(!empty($headspace_desc) AND $use_third_party_data) {
-			$singular_desc_option = 'headspace';
-		}
+        global $post;
+        global $wpdb;
+        if(!empty($post)){
+            $post_id = $post->ID;
+        }
+        
+        // Basic Output
+        echo '<meta http-equiv="Content-Type" content="'. get_bloginfo('html_type') .'; charset='. get_bloginfo('charset') .'" />' . "\n";
+        
+        // Under SETTIGNS > PRIVACY in the WordPress backend
+        if ( get_option('blog_public') == 0 ) { return; }
+        
+        //3rd Party Plugins
+        $use_third_party_data = false;
+        if(get_option('seo_prime_use_third_party_data') == 'true'){
+            $use_third_party_data = true;
+        }
+        
+        if( (class_exists('All_in_One_SEO_Pack') OR class_exists('Headspace_Plugin')) AND 
+        ( $use_third_party_data == true )) { return; }
+        
+        // Robots
+        if(!class_exists('All_in_One_SEO_Pack') AND !class_exists('Headspace_Plugin'))
+        {
+            $index = 'index';
+            $follow = 'nofollow';
+            
+            if ( is_category() && get_option('seo_prime_meta_indexing_category') != 'true' ) { $index = 'noindex'; }  
+            elseif ( is_tag() && get_option('seo_prime_meta_indexing_tag') != 'true') { $index = 'noindex'; }
+            elseif ( is_search() && get_option('seo_prime_meta_indexing_search') != 'true' ) { $index = 'noindex'; }  
+            elseif ( is_author() && get_option('seo_prime_meta_indexing_author') != 'true') { $index = 'noindex'; }  
+            elseif ( is_date() && get_option('seo_prime_meta_indexing_date') != 'true') { $index = 'noindex'; }
+            
+            // Set default to follow            
+            if ( get_option('seo_prime_meta_single_follow') == 'true' )
+                $follow = 'follow';  
+    
+            // Set individual post/page to follow/unfollow
+            if ( is_singular() ) {
+                if ( $follow == 'follow' AND get_post_meta($post->ID,'seo_follow',true) == 'true') 
+                    $follow = 'nofollow';  
+                elseif ( $follow == 'nofollow' AND get_post_meta($post->ID,'seo_follow',true) == 'true') 
+                    $follow = 'follow';  
+            }                           
+                        
+            if(is_singular() && get_post_meta($post->ID,'seo_noindex',true) == 'true') { $index = 'noindex';  }
+            
+            echo '<meta name="robots" content="'. $index .', '. $follow .'" />' . "\n";
+        }
+        
+        /* Description */
+        $description = '';
+        
+        $home_desc_option = get_option('seo_prime_meta_home_desc');
+        $singular_desc_option = get_option('seo_prime_meta_single_desc');
+        
+        //Check if there is a custom value added to post meta
+        $primeseo_desc = get_post_meta($post->ID,'seo_description',true); //primeSEO
+        $aio_desc = get_post_meta($post->ID,'_aioseop_description',true); //All-in-One SEO
+        $headspace_desc = get_post_meta($post->ID,'_headspace_description',true); //Headspace SEO
+    
+        //Singular setup
+        if(!empty($aio_desc) AND $use_third_party_data) {
+            $singular_desc_option = 'aioseo';
+        } elseif(!empty($headspace_desc) AND $use_third_party_data) {
+            $singular_desc_option = 'headspace';
+        }
 
-		
-		if(is_home() OR is_front_page()){
-			switch($home_desc_option){
-				case 'a': $description = '';
-				break;
-				case 'b': $description = get_bloginfo('description');
-				break;
-				case 'c': $description = get_option('seo_prime_meta_home_desc_custom');
-				break;
-			}
-		}
-		elseif(is_singular()){
-			
-			switch($singular_desc_option){
-				case 'a': $description = '';
-				break;
-				case 'b': $description = trim(strip_tags($primeseo_desc));
-				break; 
-				case 'c': 
-	
-    				if(is_single()){
-    					 $posts = get_posts("p=$post_id");
-    				}
-    				if(is_page()){
-    					 $posts = get_posts("page_id=$post_id&post_type=page");
-    				}
-					foreach($posts as $post){
-   						setup_postdata($post);	
-						$post_content =  function_two();
-						if(empty($post_content)){
-							$post_content = get_the_content();
-						}
-					}
-					// $post_content = htmlentities(trim(strip_tags(strip_shortcodes($post_content))), ENT_QUOTES, 'UTF-8'); // Replaced with line below to accommodate special characters. // 2010-11-15.
-					// $post_content = html_entity_decode(trim(strip_tags(strip_shortcodes($post_content))), ENT_QUOTES, 'UTF-8'); // Replaced to fix PHP4 compatibility issue. // 2010-12-09.
-					// $post_content = utf8_decode( trim( strip_tags( strip_shortcodes( $post_content ) ) ) );
-					// $post_content = html_entity_decode( trim( strip_tags( strip_shortcodes( $post_content ) ) ) );
-					// $post_content = esc_html( htmlspecialchars ( strip_shortcodes( $post_content ) ) );
-					
-					$post_content = esc_attr( strip_tags( strip_shortcodes( $post_content ) ) );
-					
-					$description = prime_text_trim($post_content,30);
-					
-				break;
-				case 'aioseo':  $description = $aio_desc; // All-in-One Title
-				break;
-				case 'headspace':  $description = $headspace_desc; // Headspace Title
-				break;
-				
-			}			
-		}
-		
-		if(empty($description) AND get_option('seo_prime_meta_single_desc_sitewide') == 'true'){
-			$description = get_option('seo_prime_meta_single_desc_custom');
-		}
-		
-		
-		// $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8'); // Replaced with line below to accommodate special characters. // 2010-11-15.
-		$description = esc_attr( $description );
-		$description = stripslashes($description);
-		
-		// Faux-htmlentities using an array of key => value pairs.
-		// TO DO: Clean-up and move to a re-usable function.
-		$faux_htmlentities = array(
-								'& ' => '&amp; ', 
-								'<' => '&lt;', 
-								'>' => '&gt;'
-							 );
-		
-		foreach ( $faux_htmlentities as $old => $new ) {
-		
-			$description = str_replace( $old, $new, $description );
-		
-		} // End FOREACH Loop
-		
-		if(!empty($description)){
-			echo '<meta name="description" content="'.$description.'" />' . "\n";
-		}
-		
-		/* Keywords */
-		$keywords = '';
-		
-		$home_key_option = get_option('seo_prime_meta_home_key');
-		$singular_key_option = get_option('seo_prime_meta_single_key');
-		
-		//Check if there is a custom value added to post meta
-		$primeseo_keywords = get_post_meta($post->ID,'seo_keywords',true); //primeSEO
-		$aio_keywords = get_post_meta($post->ID,'_aioseop_keywords',true); //All-in-One SEO
-		$headspace_keywords = get_post_meta($post->ID,'_headspace_keywords',true); //Headspace SEO
-		
-		//Singular setup
-		
-		if(!empty($aio_keywords) AND $use_third_party_data) {
-			$singular_key_option = 'aioseo';
-		} elseif(!empty($headspace_keywords) AND $use_third_party_data) {
-			$singular_key_option = 'headspace';
-		}	
-			
-		if(is_home() OR is_front_page()){
-			switch($home_key_option){
-				case 'a': $keywords = '';
-				break;
-				case 'c': $keywords = get_option('seo_prime_meta_home_key_custom');
-				break;
-			}
-		}
-		elseif(is_singular()){
-			
-			switch($singular_key_option){
-				case 'a': $keywords = '';
-				break;
-				case 'b': $keywords = $primeseo_keywords;
-				break;
-				case 'c': 
-					
-					$the_keywords = array(); 
-					//Tags
-					if(get_the_tags($post->ID)){ 
-						foreach(get_the_tags($post->ID) as $tag) {
-							$tag_name = $tag->name; 
-							$the_keywords[] = strtolower($tag_name);
-						}
-					}
-					//Cats
-					if(get_the_category($post->ID)){ 
-						foreach(get_the_category($post->ID) as $cat) {
-							$cat_name = $cat->name; 
-							$the_keywords[] = strtolower($cat_name);
-						}
-					}
-					//Other Taxonomies
-					$all_taxonomies = get_taxonomies();
-					$addon_taxonomies = array();
-					if(!empty($all_taxonomies)){
-						foreach($all_taxonomies as $key => $taxonomies){
-							if(	$taxonomies != 'category' AND 
-								$taxonomies != 'post_tag' AND 
-								$taxonomies != 'nav_menu' AND
-								$taxonomies != 'link_category'){
-								$addon_taxonomies[] = $taxonomies;
-							}
-						}
-					}
-					$addon_terms = array();
-					if(!empty($addon_taxonomies)){
-						foreach($addon_taxonomies as $taxonomies){
-							$addon_terms[] = get_the_terms($post->ID, $taxonomies);
-						}
-					}
-					if(!empty($addon_terms)){
-						 foreach($addon_terms as $addon){
-						 	if(!empty($addon)){
-						 		foreach($addon as $term){
-						 			$the_keywords[] = strtolower($term->name);
-						 		}
-						 	}
-						 }
-					}
-					$keywords = implode(",",$the_keywords);
-				break;
-				case 'aioseo':  $keywords = $aio_keywords; // All-in-One Title
-				break;
-				case 'headspace':  $keywords = $headspace_keywords; // Headspace Title
-				break;
-				}
-		}
-		
-		if(empty($keywords) AND get_option('seo_prime_meta_single_key_sitewide') == 'true'){
-			$keywords = get_option('seo_prime_meta_single_key_custom');
-		}
-		
-		$keywords = htmlspecialchars($keywords, ENT_QUOTES, 'UTF-8');
-		$keywords = stripslashes($keywords);
+        
+        if(is_home() OR is_front_page()){
+            switch($home_desc_option){
+                case 'a': $description = '';
+                break;
+                case 'b': $description = get_bloginfo('description');
+                break;
+                case 'c': $description = get_option('seo_prime_meta_home_desc_custom');
+                break;
+            }
+        }
+        elseif(is_singular()){
+            
+            switch($singular_desc_option){
+                case 'a': $description = '';
+                break;
+                case 'b': $description = trim(strip_tags($primeseo_desc));
+                break; 
+                case 'c': 
+    
+                    if(is_single()){
+                         $posts = get_posts("p=$post_id");
+                    }
+                    if(is_page()){
+                         $posts = get_posts("page_id=$post_id&post_type=page");
+                    }
+                    foreach($posts as $post){
+                        setup_postdata($post);  
+                        $post_content =  function_two();
+                        if(empty($post_content)){
+                            $post_content = get_the_content();
+                        }
+                    }
+                    // $post_content = htmlentities(trim(strip_tags(strip_shortcodes($post_content))), ENT_QUOTES, 'UTF-8'); // Replaced with line below to accommodate special characters. // 2010-11-15.
+                    // $post_content = html_entity_decode(trim(strip_tags(strip_shortcodes($post_content))), ENT_QUOTES, 'UTF-8'); // Replaced to fix PHP4 compatibility issue. // 2010-12-09.
+                    // $post_content = utf8_decode( trim( strip_tags( strip_shortcodes( $post_content ) ) ) );
+                    // $post_content = html_entity_decode( trim( strip_tags( strip_shortcodes( $post_content ) ) ) );
+                    // $post_content = esc_html( htmlspecialchars ( strip_shortcodes( $post_content ) ) );
+                    
+                    $post_content = esc_attr( strip_tags( strip_shortcodes( $post_content ) ) );
+                    
+                    $description = prime_text_trim($post_content,30);
+                    
+                break;
+                case 'aioseo':  $description = $aio_desc; // All-in-One Title
+                break;
+                case 'headspace':  $description = $headspace_desc; // Headspace Title
+                break;
+                
+            }           
+        }
+        
+        if(empty($description) AND get_option('seo_prime_meta_single_desc_sitewide') == 'true'){
+            $description = get_option('seo_prime_meta_single_desc_custom');
+        }
+        
+        
+        // $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8'); // Replaced with line below to accommodate special characters. // 2010-11-15.
+        $description = esc_attr( $description );
+        $description = stripslashes($description);
+        
+        // Faux-htmlentities using an array of key => value pairs.
+        // TO DO: Clean-up and move to a re-usable function.
+        $faux_htmlentities = array(
+                                '& ' => '&amp; ', 
+                                '<' => '&lt;', 
+                                '>' => '&gt;'
+                             );
+        
+        foreach ( $faux_htmlentities as $old => $new ) {
+        
+            $description = str_replace( $old, $new, $description );
+        
+        } // End FOREACH Loop
+        
+        if(!empty($description)){
+            echo '<meta name="description" content="'.$description.'" />' . "\n";
+        }
+        
+        /* Keywords */
+        $keywords = '';
+        
+        $home_key_option = get_option('seo_prime_meta_home_key');
+        $singular_key_option = get_option('seo_prime_meta_single_key');
+        
+        //Check if there is a custom value added to post meta
+        $primeseo_keywords = get_post_meta($post->ID,'seo_keywords',true); //primeSEO
+        $aio_keywords = get_post_meta($post->ID,'_aioseop_keywords',true); //All-in-One SEO
+        $headspace_keywords = get_post_meta($post->ID,'_headspace_keywords',true); //Headspace SEO
+        
+        //Singular setup
+        
+        if(!empty($aio_keywords) AND $use_third_party_data) {
+            $singular_key_option = 'aioseo';
+        } elseif(!empty($headspace_keywords) AND $use_third_party_data) {
+            $singular_key_option = 'headspace';
+        }   
+            
+        if(is_home() OR is_front_page()){
+            switch($home_key_option){
+                case 'a': $keywords = '';
+                break;
+                case 'c': $keywords = get_option('seo_prime_meta_home_key_custom');
+                break;
+            }
+        }
+        elseif(is_singular()){
+            
+            switch($singular_key_option){
+                case 'a': $keywords = '';
+                break;
+                case 'b': $keywords = $primeseo_keywords;
+                break;
+                case 'c': 
+                    
+                    $the_keywords = array(); 
+                    //Tags
+                    if(get_the_tags($post->ID)){ 
+                        foreach(get_the_tags($post->ID) as $tag) {
+                            $tag_name = $tag->name; 
+                            $the_keywords[] = strtolower($tag_name);
+                        }
+                    }
+                    //Cats
+                    if(get_the_category($post->ID)){ 
+                        foreach(get_the_category($post->ID) as $cat) {
+                            $cat_name = $cat->name; 
+                            $the_keywords[] = strtolower($cat_name);
+                        }
+                    }
+                    //Other Taxonomies
+                    $all_taxonomies = get_taxonomies();
+                    $addon_taxonomies = array();
+                    if(!empty($all_taxonomies)){
+                        foreach($all_taxonomies as $key => $taxonomies){
+                            if( $taxonomies != 'category' AND 
+                                $taxonomies != 'post_tag' AND 
+                                $taxonomies != 'nav_menu' AND
+                                $taxonomies != 'link_category'){
+                                $addon_taxonomies[] = $taxonomies;
+                            }
+                        }
+                    }
+                    $addon_terms = array();
+                    if(!empty($addon_taxonomies)){
+                        foreach($addon_taxonomies as $taxonomies){
+                            $addon_terms[] = get_the_terms($post->ID, $taxonomies);
+                        }
+                    }
+                    if(!empty($addon_terms)){
+                         foreach($addon_terms as $addon){
+                            if(!empty($addon)){
+                                foreach($addon as $term){
+                                    $the_keywords[] = strtolower($term->name);
+                                }
+                            }
+                         }
+                    }
+                    $keywords = implode(",",$the_keywords);
+                break;
+                case 'aioseo':  $keywords = $aio_keywords; // All-in-One Title
+                break;
+                case 'headspace':  $keywords = $headspace_keywords; // Headspace Title
+                break;
+                }
+        }
+        
+        if(empty($keywords) AND get_option('seo_prime_meta_single_key_sitewide') == 'true'){
+            $keywords = get_option('seo_prime_meta_single_key_custom');
+        }
+        
+        $keywords = htmlspecialchars($keywords, ENT_QUOTES, 'UTF-8');
+        $keywords = stripslashes($keywords);
 
-		
-		if(!empty($keywords)){
-			echo '<meta name="keywords" content="'.$keywords.'" />' . "\n";
-		}
-		
+        
+        if(!empty($keywords)){
+            echo '<meta name="keywords" content="'.$keywords.'" />' . "\n";
+        }
+        
 }
 
 
 //Add Post Custom Settings
 add_action('admin_head','seo_add_custom');
-		
+        
 function seo_add_custom() {
 
-		$seo_template = array();
-		
-		$seo_prime_wp_title = get_option('seo_prime_wp_title');
-		$seo_prime_meta_single_desc = get_option('seo_prime_meta_single_desc');
-		$seo_prime_meta_single_key = get_option('seo_prime_meta_single_key');
-		
-		// a = off
-		if( $seo_prime_wp_title != 'true' OR $seo_prime_meta_single_desc == 'a' OR $seo_prime_meta_single_key == 'a') {
-			
-			$output = "";
-			if ( $seo_prime_wp_title != 'true' )
-				$output .= "Custom Page Titles, ";
-			if ( $seo_prime_meta_single_desc == 'a' )
-				$output .= "Custom Descriptions, ";
-			if ( $seo_prime_meta_single_key == 'a' )
-				$output .= "Custom Keywords";			
-				
-			$output = rtrim($output, ", ");
-			
-			$desc = 'Additional SEO custom fields available: <strong>'.$output.'</strong>. Go to <a href="'.admin_url('admin.php?page=primethemes_seo').'">SEO Settings</a> page to activate.';
-			
-		} else {
-			$desc = 'Go to <a href="'.admin_url('admin.php?page=primethemes_seo').'">SEO Settings</a> page for more SEO options.';
-		}
-		
-		$seo_template[] = array (	"name"  => "seo_info_1",
-										"std" => "",
-										"label" => "SEO ",
-										"type" => "info",
-										"desc" => $desc);
+        $seo_template = array();
+        
+        $seo_prime_wp_title = get_option('seo_prime_wp_title');
+        $seo_prime_meta_single_desc = get_option('seo_prime_meta_single_desc');
+        $seo_prime_meta_single_key = get_option('seo_prime_meta_single_key');
+        
+        // a = off
+        if( $seo_prime_wp_title != 'true' OR $seo_prime_meta_single_desc == 'a' OR $seo_prime_meta_single_key == 'a') {
+            
+            $output = "";
+            if ( $seo_prime_wp_title != 'true' )
+                $output .= "Custom Page Titles, ";
+            if ( $seo_prime_meta_single_desc == 'a' )
+                $output .= "Custom Descriptions, ";
+            if ( $seo_prime_meta_single_key == 'a' )
+                $output .= "Custom Keywords";           
+                
+            $output = rtrim($output, ", ");
+            
+            $desc = 'Additional SEO custom fields available: <strong>'.$output.'</strong>. Go to <a href="'.admin_url('admin.php?page=primethemes_seo').'">SEO Settings</a> page to activate.';
+            
+        } else {
+            $desc = 'Go to <a href="'.admin_url('admin.php?page=primethemes_seo').'">SEO Settings</a> page for more SEO options.';
+        }
+        
+        $seo_template[] = array (   "name"  => "seo_info_1",
+                                        "std" => "",
+                                        "label" => "SEO ",
+                                        "type" => "info",
+                                        "desc" => $desc);
 
-		// Change checkbox depending on "Add meta for Posts & Pages to 'follow' by default" checkbox value.
-		
-		$followstatus = get_option( 'seo_prime_meta_single_follow' );
+        // Change checkbox depending on "Add meta for Posts & Pages to 'follow' by default" checkbox value.
+        
+        $followstatus = get_option( 'seo_prime_meta_single_follow' );
 
-		if ( $followstatus != "true" ) { 
+        if ( $followstatus != "true" ) { 
 
-			$seo_template[] = array (	"name"  => "seo_follow", 
-											"std" => 'false', 
-											"label" => "SEO - Set follow",
-											"type" => "checkbox",
-											"desc" => "Make links from this post/page <strong>followable</strong> by search engines.");
-										
-		} else {
-		
-			$seo_template[] = array (	"name"  => "seo_follow", 
-											"std" => 'false', 
-											"label" => "SEO - Set nofollow",
-											"type" => "checkbox",
-											"desc" => "Make links from this post/page <strong>not followable</strong> by search engines.");
-		
-		} // End IF Statement
-		
-		$seo_template[] = array (	"name"  => "seo_noindex",
-										"std" => "false",
-										"label" => "SEO - Noindex",
-										"type" => "checkbox",
-										"desc" => "Set the Page/Post to not be indexed by a search engines.");
+            $seo_template[] = array (   "name"  => "seo_follow", 
+                                            "std" => 'false', 
+                                            "label" => "SEO - Set follow",
+                                            "type" => "checkbox",
+                                            "desc" => "Make links from this post/page <strong>followable</strong> by search engines.");
+                                        
+        } else {
+        
+            $seo_template[] = array (   "name"  => "seo_follow", 
+                                            "std" => 'false', 
+                                            "label" => "SEO - Set nofollow",
+                                            "type" => "checkbox",
+                                            "desc" => "Make links from this post/page <strong>not followable</strong> by search engines.");
+        
+        } // End IF Statement
+        
+        $seo_template[] = array (   "name"  => "seo_noindex",
+                                        "std" => "false",
+                                        "label" => "SEO - Noindex",
+                                        "type" => "checkbox",
+                                        "desc" => "Set the Page/Post to not be indexed by a search engines.");
 
-		if( get_option('seo_prime_wp_title') == 'true'){
-		$seo_template[] = array (	"name"  => "seo_title",
-										"std" => "",
-										"label" => "SEO - Custom Page Title",
-										"type" => "text",
-										"desc" => "Add a custom title for this post/page.");
-		}
-		
-		if( get_option('seo_prime_meta_single_desc') == 'b'){								
-		$seo_template[] = array (	"name"  => "seo_description",
-										"std" => "",
-										"label" => "SEO - Custom Description",
-										"type" => "textarea",
-										"desc" => "Add a custom meta description for this post/page.");
-		}
-		
-		if( get_option('seo_prime_meta_single_key') == 'b'){			
-		$seo_template[] = array (	"name"  => "seo_keywords",
-										"std" => "",
-										"label" => "SEO - Custom Keywords",
-										"type" => "text",
-										"desc" => "Add a custom meta keywords for this post/page. (comma seperated)");	
-		}
-		
-		//3rd Party Plugins
-		if(get_option('seo_prime_use_third_party_data') == 'true'){
-			$use_third_party_data = true;
-		} else {
-			$use_third_party_data = false;
-		}
-		
-		if(	(class_exists('All_in_One_SEO_Pack') OR class_exists('Headspace_Plugin')) AND 
-		( $use_third_party_data == true )) { 
-			delete_option('prime_custom_seo_template'); 
-		}
-		else {
+        if( get_option('seo_prime_wp_title') == 'true'){
+        $seo_template[] = array (   "name"  => "seo_title",
+                                        "std" => "",
+                                        "label" => "SEO - Custom Page Title",
+                                        "type" => "text",
+                                        "desc" => "Add a custom title for this post/page.");
+        }
+        
+        if( get_option('seo_prime_meta_single_desc') == 'b'){                               
+        $seo_template[] = array (   "name"  => "seo_description",
+                                        "std" => "",
+                                        "label" => "SEO - Custom Description",
+                                        "type" => "textarea",
+                                        "desc" => "Add a custom meta description for this post/page.");
+        }
+        
+        if( get_option('seo_prime_meta_single_key') == 'b'){            
+        $seo_template[] = array (   "name"  => "seo_keywords",
+                                        "std" => "",
+                                        "label" => "SEO - Custom Keywords",
+                                        "type" => "text",
+                                        "desc" => "Add a custom meta keywords for this post/page. (comma seperated)");  
+        }
+        
+        //3rd Party Plugins
+        if(get_option('seo_prime_use_third_party_data') == 'true'){
+            $use_third_party_data = true;
+        } else {
+            $use_third_party_data = false;
+        }
+        
+        if( (class_exists('All_in_One_SEO_Pack') OR class_exists('Headspace_Plugin')) AND 
+        ( $use_third_party_data == true )) { 
+            delete_option('prime_custom_seo_template'); 
+        }
+        else {
 
-			update_option('prime_custom_seo_template',$seo_template);
-			
-		}	
+            update_option('prime_custom_seo_template',$seo_template);
+            
+        }   
 
 }
 
-/*===================================================================================*/
-/* prime Text Trimmer */
-/*===================================================================================*/
+/**
+ *  prime Text Trimmer
+ */
 
 if ( !function_exists('prime_text_trim') ) {
-	function prime_text_trim($text, $words = 50)
-	{ 
-		$matches = preg_split("/\s+/", $text, $words + 1);
-		$sz = count($matches);
-		if ($sz > $words) 
-		{
-			unset($matches[$sz-1]);
-			return implode(' ',$matches)." ...";
-		}
-		return $text;
-	}
+    function prime_text_trim($text, $words = 50)
+    { 
+        $matches = preg_split("/\s+/", $text, $words + 1);
+        $sz = count($matches);
+        if ($sz > $words) 
+        {
+            unset($matches[$sz-1]);
+            return implode(' ',$matches)." ...";
+        }
+        return $text;
+    }
 }
 
-/*===================================================================================*/
-/* Google Webfonts Array */
-/* Documentation:
-/*
-/* name: The name of the Google Font.
-/* variant: The Google Font API variants available for the font.
-/*===================================================================================*/
+/**
+ * Google Webfonts Array
+ * Documentation:
+ *
+ * name: The name of the Google Font.
+ * variant: The Google Font API variants available for the font.
+ */
 
 // Available Google webfont names
-$google_fonts = array(	array('name' => "Cantarell", 'variant' => ':r,b,i,bi'),
-						array('name' => "Cardo", 'variant' => ''),
-						array('name' => "Crimson Text", 'variant' => ''),
-						array('name' => "Droid Sans", 'variant' => ':r,b'),
-						array('name' => "Droid Sans Mono", 'variant' => ''),
-						array('name' => "Droid Serif", 'variant' => ':r,b,i,bi'),
-						array('name' => "IM Fell DW Pica", 'variant' => ':r,i'),
-						array('name' => "Inconsolata", 'variant' => ''),
-						array('name' => "Josefin Sans Std Light", 'variant' => ''),
-						array('name' => "Josefin Slab", 'variant' => ':r,b,i,bi'),
-						array('name' => "Lobster", 'variant' => ''),
-						array('name' => "Molengo", 'variant' => ''),
-						array('name' => "Nobile", 'variant' => ':r,b,i,bi'),
-						array('name' => "OFL Sorts Mill Goudy TT", 'variant' => ':r,i'),
-						array('name' => "Old Standard TT", 'variant' => ':r,b,i'),
-						array('name' => "Reenie Beanie", 'variant' => ''),
-						array('name' => "Tangerine", 'variant' => ':r,b'),
-						array('name' => "Vollkorn", 'variant' => ':r,b'),
-						array('name' => "Yanone Kaffeesatz", 'variant' => ':r,b'),
-						array('name' => "Cuprum", 'variant' => ''),
-						array('name' => "Neucha", 'variant' => ''),
-						array('name' => "Neuton", 'variant' => ''),
-						array('name' => "PT Sans", 'variant' => ':r,b,i,bi'),
-						array('name' => "Philosopher", 'variant' => ''),
-						array('name' => "Allerta", 'variant' => ''),	
-						array('name' => "Allerta Stencil", 'variant' => ''),	
-						array('name' => "Arimo", 'variant' => ':r,b,i,bi'),	
-						array('name' => "Arvo", 'variant' => ':r,b,i,bi'),	
-						array('name' => "Bentham", 'variant' => ''),	
-						array('name' => "Coda", 'variant' => ':800'),	
-						array('name' => "Cousine", 'variant' => ''),	
-						array('name' => "Covered By Your Grace", 'variant' => ''),	
-			 			array('name' => "Geo", 'variant' => ''),	 
-						array('name' => "Just Me Again Down Here", 'variant' => ''),	
-						array('name' => "Puritan", 'variant' => ':r,b,i,bi'),	
-						array('name' => "Raleway", 'variant' => ':100'),	
-						array('name' => "Tinos", 'variant' => ':r,b,i,bi'),	
-						array('name' => "UnifrakturCook", 'variant' => ':bold'),	
-						array('name' => "UnifrakturMaguntia", 'variant' => ''),
-						array('name' => "Mountains of Christmas", 'variant' => ''),
-						array('name' => "Lato", 'variant' => ''),
-						array('name' => "Orbitron", 'variant' => ':r,b,i,bi'),
-						array('name' => "Allan", 'variant' => ':bold'),
-						array('name' => "Anonymous Pro", 'variant' => ':r,b,i,bi'),
-						array('name' => "Copse", 'variant' => ''),
-						array('name' => "Kenia", 'variant' => ''),
-						array('name' => "Ubuntu", 'variant' => ':r,b,i,bi'),						
-						array('name' => "Vibur", 'variant' => ''),
-						array('name' => "Sniglet", 'variant' => ':800'),
-						array('name' => "Syncopate", 'variant' => ''),
-						array('name' => "Cabin", 'variant' => ':b'),						
-						array('name' => "Merriweather", 'variant' => ''),						
-						array('name' => "Just Another Hand", 'variant' => ''),
-						array('name' => "Kristi", 'variant' => ''),						
-						array('name' => "Corben", 'variant' => ':b'),						
-						array('name' => "Gruppo", 'variant' => ''),						
-						array('name' => "Buda", 'variant' => ':light'),						
-						array('name' => "Lekton", 'variant' => ''),						
-						array('name' => "Luckiest Guy", 'variant' => ''),						
-						array('name' => "Crushed", 'variant' => ''),						
-						array('name' => "Chewy", 'variant' => ''),						
-						array('name' => "Coming Soon", 'variant' => ''),						
-						array('name' => "Crafty Girls", 'variant' => ''),						
-						array('name' => "Fontdiner Swanky", 'variant' => ''),						
-						array('name' => "Permanent Marker", 'variant' => ''),						
-						array('name' => "Rock Salt", 'variant' => ''),						
-						array('name' => "Sunshiney", 'variant' => ''),						
-						array('name' => "Unkempt", 'variant' => ''),						
-						array('name' => "Calligraffitti", 'variant' => ''),						
-						array('name' => "Cherry Cream Soda", 'variant' => ''),						
-						array('name' => "Homemade Apple", 'variant' => ''),						
-						array('name' => "Irish Growler", 'variant' => ''),						
-						array('name' => "Kranky", 'variant' => ''),						
-						array('name' => "Schoolbell", 'variant' => ''),						
-						array('name' => "Slackey", 'variant' => ''),						
-						array('name' => "Walter Turncoat", 'variant' => ''),				
-						array('name' => "Radley", 'variant' => ''),					
-						array('name' => "Meddon", 'variant' => ''),					
-						array('name' => "Kreon", 'variant' => ':r,b'),					
-						array('name' => "Dancing Script", 'variant' => ''),
-						array('name' => "Goudy Bookletter 1911", 'variant' => ''),
-						array('name' => "PT Serif Caption", 'variant' => ':r,i'),
-						array('name' => "PT Serif", 'variant' => ':r,b,i,bi'),
-						array('name' => "Astloch", 'variant' => ':b')
+$google_fonts = array(  array('name' => "Cantarell", 'variant' => ':r,b,i,bi'),
+                        array('name' => "Cardo", 'variant' => ''),
+                        array('name' => "Crimson Text", 'variant' => ''),
+                        array('name' => "Droid Sans", 'variant' => ':r,b'),
+                        array('name' => "Droid Sans Mono", 'variant' => ''),
+                        array('name' => "Droid Serif", 'variant' => ':r,b,i,bi'),
+                        array('name' => "IM Fell DW Pica", 'variant' => ':r,i'),
+                        array('name' => "Inconsolata", 'variant' => ''),
+                        array('name' => "Josefin Sans Std Light", 'variant' => ''),
+                        array('name' => "Josefin Slab", 'variant' => ':r,b,i,bi'),
+                        array('name' => "Lobster", 'variant' => ''),
+                        array('name' => "Molengo", 'variant' => ''),
+                        array('name' => "Nobile", 'variant' => ':r,b,i,bi'),
+                        array('name' => "OFL Sorts Mill Goudy TT", 'variant' => ':r,i'),
+                        array('name' => "Old Standard TT", 'variant' => ':r,b,i'),
+                        array('name' => "Reenie Beanie", 'variant' => ''),
+                        array('name' => "Tangerine", 'variant' => ':r,b'),
+                        array('name' => "Vollkorn", 'variant' => ':r,b'),
+                        array('name' => "Yanone Kaffeesatz", 'variant' => ':r,b'),
+                        array('name' => "Cuprum", 'variant' => ''),
+                        array('name' => "Neucha", 'variant' => ''),
+                        array('name' => "Neuton", 'variant' => ''),
+                        array('name' => "PT Sans", 'variant' => ':r,b,i,bi'),
+                        array('name' => "Philosopher", 'variant' => ''),
+                        array('name' => "Allerta", 'variant' => ''),    
+                        array('name' => "Allerta Stencil", 'variant' => ''),    
+                        array('name' => "Arimo", 'variant' => ':r,b,i,bi'), 
+                        array('name' => "Arvo", 'variant' => ':r,b,i,bi'),  
+                        array('name' => "Bentham", 'variant' => ''),    
+                        array('name' => "Coda", 'variant' => ':800'),   
+                        array('name' => "Cousine", 'variant' => ''),    
+                        array('name' => "Covered By Your Grace", 'variant' => ''),  
+                        array('name' => "Geo", 'variant' => ''),     
+                        array('name' => "Just Me Again Down Here", 'variant' => ''),    
+                        array('name' => "Puritan", 'variant' => ':r,b,i,bi'),   
+                        array('name' => "Raleway", 'variant' => ':100'),    
+                        array('name' => "Tinos", 'variant' => ':r,b,i,bi'), 
+                        array('name' => "UnifrakturCook", 'variant' => ':bold'),    
+                        array('name' => "UnifrakturMaguntia", 'variant' => ''),
+                        array('name' => "Mountains of Christmas", 'variant' => ''),
+                        array('name' => "Lato", 'variant' => ''),
+                        array('name' => "Orbitron", 'variant' => ':r,b,i,bi'),
+                        array('name' => "Allan", 'variant' => ':bold'),
+                        array('name' => "Anonymous Pro", 'variant' => ':r,b,i,bi'),
+                        array('name' => "Copse", 'variant' => ''),
+                        array('name' => "Kenia", 'variant' => ''),
+                        array('name' => "Ubuntu", 'variant' => ':r,b,i,bi'),                        
+                        array('name' => "Vibur", 'variant' => ''),
+                        array('name' => "Sniglet", 'variant' => ':800'),
+                        array('name' => "Syncopate", 'variant' => ''),
+                        array('name' => "Cabin", 'variant' => ':b'),                        
+                        array('name' => "Merriweather", 'variant' => ''),                       
+                        array('name' => "Just Another Hand", 'variant' => ''),
+                        array('name' => "Kristi", 'variant' => ''),                     
+                        array('name' => "Corben", 'variant' => ':b'),                       
+                        array('name' => "Gruppo", 'variant' => ''),                     
+                        array('name' => "Buda", 'variant' => ':light'),                     
+                        array('name' => "Lekton", 'variant' => ''),                     
+                        array('name' => "Luckiest Guy", 'variant' => ''),                       
+                        array('name' => "Crushed", 'variant' => ''),                        
+                        array('name' => "Chewy", 'variant' => ''),                      
+                        array('name' => "Coming Soon", 'variant' => ''),                        
+                        array('name' => "Crafty Girls", 'variant' => ''),                       
+                        array('name' => "Fontdiner Swanky", 'variant' => ''),                       
+                        array('name' => "Permanent Marker", 'variant' => ''),                       
+                        array('name' => "Rock Salt", 'variant' => ''),                      
+                        array('name' => "Sunshiney", 'variant' => ''),                      
+                        array('name' => "Unkempt", 'variant' => ''),                        
+                        array('name' => "Calligraffitti", 'variant' => ''),                     
+                        array('name' => "Cherry Cream Soda", 'variant' => ''),                      
+                        array('name' => "Homemade Apple", 'variant' => ''),                     
+                        array('name' => "Irish Growler", 'variant' => ''),                      
+                        array('name' => "Kranky", 'variant' => ''),                     
+                        array('name' => "Schoolbell", 'variant' => ''),                     
+                        array('name' => "Slackey", 'variant' => ''),                        
+                        array('name' => "Walter Turncoat", 'variant' => ''),                
+                        array('name' => "Radley", 'variant' => ''),                 
+                        array('name' => "Meddon", 'variant' => ''),                 
+                        array('name' => "Kreon", 'variant' => ':r,b'),                  
+                        array('name' => "Dancing Script", 'variant' => ''),
+                        array('name' => "Goudy Bookletter 1911", 'variant' => ''),
+                        array('name' => "PT Serif Caption", 'variant' => ':r,i'),
+                        array('name' => "PT Serif", 'variant' => ':r,b,i,bi'),
+                        array('name' => "Astloch", 'variant' => ':b')
 );
 
 
-/*===================================================================================*/
-/* Google Webfonts Stylesheet Generator */
-/*===================================================================================*/
-/* 
-INSTRUCTIONS: Needs to be loaded for the Google Fonts options to work for font options. Add this to
-the specific themes includes/theme-actions.php or functions.php:
+/**
+ *  Google Webfonts Stylesheet Generator
+ */
 
-add_action('wp_head', 'prime_google_webfonts');				
-*/
+/**
+ * INSTRUCTIONS: Needs to be loaded for the Google Fonts options to work for font options. Add this to
+ * the specific themes includes/theme-actions.php or functions.php:
+ * 
+ * add_action('wp_head', 'prime_google_webfonts');
+ */
 
 if (!function_exists("prime_google_webfonts")) {
-	function prime_google_webfonts() { 
+    function prime_google_webfonts() { 
 
-		global $google_fonts;				
-		$fonts = '';
-		$output = ''; 
+        global $google_fonts;               
+        $fonts = '';
+        $output = ''; 
 
-		// Setup prime Options array
-		global $prime_options; 
-		
-		// Go through the options
-		if ( !empty($prime_options) ) {
-		
-			foreach ( $prime_options as $option ) {
-			
-				// Check if option has "face" in array
-				if ( is_array($option) && isset($option['face']) ) {
-									
-					// Go through the google font array
-					foreach ($google_fonts as $font) {
-						
-						// Check if the google font name exists in the current "face" option
-						if ( $option['face'] == $font['name'] AND !strstr($fonts, $font['name']))
-							
-							// Add google font to output
-							$fonts .= $font['name'].$font['variant']."|";			
-					}
-				}
-			
-			}
-			
-			// Output google font css in header			
-			if ( $fonts ) {
-				$fonts = str_replace(" ","+",$fonts);	
-				$output .= "\n<!-- Google Webfonts -->\n";
-				$output .= '<link href="http://fonts.googleapis.com/css?family=' . $fonts .'" rel="stylesheet" type="text/css" />'."\n\n";
-				$output = str_replace('|"','"',$output);
-				
-				echo $output;
-			}
-		}
-				
-	}
+        // Setup prime Options array
+        global $prime_options; 
+        
+        // Go through the options
+        if ( !empty($prime_options) ) {
+        
+            foreach ( $prime_options as $option ) {
+            
+                // Check if option has "face" in array
+                if ( is_array($option) && isset($option['face']) ) {
+                                    
+                    // Go through the google font array
+                    foreach ($google_fonts as $font) {
+                        
+                        // Check if the google font name exists in the current "face" option
+                        if ( $option['face'] == $font['name'] AND !strstr($fonts, $font['name']))
+                            
+                            // Add google font to output
+                            $fonts .= $font['name'].$font['variant']."|";           
+                    }
+                }
+            
+            }
+            
+            // Output google font css in header         
+            if ( $fonts ) {
+                $fonts = str_replace(" ","+",$fonts);   
+                $output .= "\n<!-- Google Webfonts -->\n";
+                $output .= '<link href="http://fonts.googleapis.com/css?family=' . $fonts .'" rel="stylesheet" type="text/css" />'."\n\n";
+                $output = str_replace('|"','"',$output);
+                
+                echo $output;
+            }
+        }
+                
+    }
 }
 
 
-/*===================================================================================*/
-/* Enable Home link in WP Menus
-/*===================================================================================*/
+/**
+ *  Enable Home link in WP Menus
+ */
 if ( !function_exists('prime_home_page_menu_args') ) {
-	function prime_home_page_menu_args( $args ) {
-		$args['show_home'] = true;
-		return $args;
-	}
-	add_filter( 'wp_page_menu_args', 'prime_home_page_menu_args' );
+    function prime_home_page_menu_args( $args ) {
+        $args['show_home'] = true;
+        return $args;
+    }
+    add_filter( 'wp_page_menu_args', 'prime_home_page_menu_args' );
 }
 
-/*===================================================================================*/
-/* Buy Themes page
-/*===================================================================================*/
+/**
+ *  Buy Themes page
+ */
 if ( !function_exists('primethemes_more_themes_page') ) {
-	function primethemes_more_themes_page(){
+    function primethemes_more_themes_page(){
         ?>
         <div class="wrap themes-page">
-	        <h2>More primeThemes</h2>
-	        
-			<?php // Get RSS Feed(s)
-	        include_once(ABSPATH . WPINC . '/feed.php');
-	        $rss = fetch_feed('http://www.primethemes.com/?feed=more_themes');			
-	        // If the RSS is failed somehow.
-	        if ( is_wp_error($rss) ) {
-	            $error = $rss->get_error_code();
-	            if($error == 'simplepie-error') {
-	                //Simplepie Error
-	                echo "<div class='updated fade'><p>An error has occured with the RSS feed. (<code>". $error ."</code>)</p></div>";
-	            }
-	            return;
-	         } 
-	        ?>
-	        <div class="info">
-		        <a href="http://www.primethemes.com/pricing/">Join the primeThemes Club</a>
-		        <a href="http://www.primethemes.com/themes/">Themes Gallery</a>
-		        <a href="http://showcase.primethemes.com/">Theme Showcase</a>
-	        </div>
-	        
-	        <?php
-	        
-	        $maxitems = $rss->get_item_quantity(30); 
-	        $items = $rss->get_items(0, 30);
-	        
-	        ?>
-	        <ul class="themes">
-	        <?php if (empty($items)) echo '<li>No items</li>';
-	        else
-	        foreach ( $items as $item ) : ?>
-	            <li class="theme">
-	                <?php echo $item->get_description();?>
-	            </li>
-	        <?php 
-	        endforeach; ?>
-	        </ul>
+            <h2>More primeThemes</h2>
+            
+            <?php // Get RSS Feed(s)
+            include_once(ABSPATH . WPINC . '/feed.php');
+            $rss = fetch_feed('http://www.primethemes.com/?feed=more_themes');          
+            // If the RSS is failed somehow.
+            if ( is_wp_error($rss) ) {
+                $error = $rss->get_error_code();
+                if($error == 'simplepie-error') {
+                    //Simplepie Error
+                    echo "<div class='updated fade'><p>An error has occured with the RSS feed. (<code>". $error ."</code>)</p></div>";
+                }
+                return;
+             } 
+            ?>
+            <div class="info">
+                <a href="http://www.primethemes.com/pricing/">Join the primeThemes Club</a>
+                <a href="http://www.primethemes.com/themes/">Themes Gallery</a>
+                <a href="http://showcase.primethemes.com/">Theme Showcase</a>
+            </div>
+            
+            <?php
+            
+            $maxitems = $rss->get_item_quantity(30); 
+            $items = $rss->get_items(0, 30);
+            
+            ?>
+            <ul class="themes">
+            <?php if (empty($items)) echo '<li>No items</li>';
+            else
+            foreach ( $items as $item ) : ?>
+                <li class="theme">
+                    <?php echo $item->get_description();?>
+                </li>
+            <?php 
+            endforeach; ?>
+            </ul>
         </div>
         
         <?php
-	}
+    }
 }
 
-/*=================================================================================*/
-/* Detects the Charset of String and Converts it to UTF-8 */
-/*=================================================================================*/
+/**
+ *  Detects the Charset of String and Converts it to UTF-8
+ */
 if ( !function_exists('prime_encoding_convert') ) {
-	function prime_encoding_convert($str_to_convert) {
-		if ( function_exists('mb_detect_encoding') ) {
-			$str_lang_encoding = mb_detect_encoding($str_to_convert);
-			//if no encoding detected, assume UTF-8
-			if (!$str_lang_encoding) {
-				//UTF-8 assumed
-				$str_lang_converted_utf = $str_to_convert;
-			} else {
-				//Convert to UTF-8
-				$str_lang_converted_utf = mb_convert_encoding($str_to_convert, 'UTF-8', $str_lang_encoding);
-			}
-		} else {
-			$str_lang_converted_utf = $str_to_convert;
-		}
-	
-		return $str_lang_converted_utf;
-	}
+    function prime_encoding_convert($str_to_convert) {
+        if ( function_exists('mb_detect_encoding') ) {
+            $str_lang_encoding = mb_detect_encoding($str_to_convert);
+            //if no encoding detected, assume UTF-8
+            if (!$str_lang_encoding) {
+                //UTF-8 assumed
+                $str_lang_converted_utf = $str_to_convert;
+            } else {
+                //Convert to UTF-8
+                $str_lang_converted_utf = mb_convert_encoding($str_to_convert, 'UTF-8', $str_lang_encoding);
+            }
+        } else {
+            $str_lang_converted_utf = $str_to_convert;
+        }
+    
+        return $str_lang_converted_utf;
+    }
 }
 
-/*=================================================================================*/
-/* WP Login logo */
-/*=================================================================================*/
+/**
+ * WP Login logo
+ */
 if ( !function_exists('prime_custom_login_logo') ) {
-	function prime_custom_login_logo() {
-		$logo = get_option('framework_prime_custom_login_logo');
-	    $dimensions = getimagesize( $logo );
-		echo '<style type="text/css">h1 a { background-image:url('.$logo.'); height: '.$dimensions[1].'px ; }</style>';
-	}
-	if ( get_option('framework_prime_custom_login_logo') ) 
-		add_action('login_head', 'prime_custom_login_logo');
+    function prime_custom_login_logo() {
+        $logo = get_option('framework_prime_custom_login_logo');
+        $dimensions = getimagesize( $logo );
+        echo '<style type="text/css">h1 a { background-image:url('.$logo.'); height: '.$dimensions[1].'px ; }</style>';
+    }
+    if ( get_option('framework_prime_custom_login_logo') ) 
+        add_action('login_head', 'prime_custom_login_logo');
 }
 
-/*===================================================================================*/
-/* prime_pagination() - Custom loop pagination function  */
-/*===================================================================================*/
-/*
-/* Additional documentation: http://codex.wordpress.org/Function_Reference/paginate_links
-/*
-/* Params:
-/*
-/* Arguments Array:
-/*
-/* 'base' (optional) 				- The query argument on which to determine the pagination (for advanced users)
-/* 'format' (optional) 				- The format in which the query argument is formatted in it's raw format (for advanced users)
-/* 'total' (optional) 				- The total amount of pages
-/* 'current' (optional) 			- The current page number
-/* 'prev_next' (optional) 			- Whether to include the previous and next links in the list or not.
-/* 'prev_text' (optional) 			- The previous page text. Works only if 'prev_next' argument is set to true.
-/* 'next_text' (optional) 			- The next page text. Works only if 'prev_next' argument is set to true.
-/* 'show_all' (optional) 			- If set to True, then it will show all of the pages instead of a short list of the pages near the current page. By default, the 'show_all' is set to false and controlled by the 'end_size' and 'mid_size' arguments.
-/* 'end_size' (optional) 			- How many numbers on either the start and the end list edges.
-/* 'mid_size' (optional) 			- How many numbers to either side of current page, but not including current page.
-/* 'add_fragment' (optional) 		- An array of query args to add using add_query_arg().
-/* 'type' (optional) 				- Controls format of the returned value. Possible values are:
-									  'plain' - A string with the links separated by a newline character.
-									  'array' - An array of the paginated link list to offer full control of display.
-									  'list' - Unordered HTML list.
-/* 'before' (optional) 				- The HTML to display before the paginated links.
-/* 'after' (optional) 				- The HTML to display after the paginated links.
-/* 'echo' (optional) 				- Whether or not to display the paginated links (alternative is to "return").
-/*
-/* Query Parameter (optional) 		- Specify a custom query which you'd like to paginate.
-/*
-/*===================================================================================*/
+/**
+ * prime_pagination() - Custom loop pagination function
+ *
+ *
+ * Additional documentation: http://codex.wordpress.org/Function_Reference/paginate_links
+ *
+ * Params:
+ *
+ * Arguments Array:
+ *
+ * 'base' (optional)                - The query argument on which to determine the pagination (for advanced users)
+ * 'format' (optional)              - The format in which the query argument is formatted in it's raw format (for advanced users)
+ * 'total' (optional)               - The total amount of pages
+ * 'current' (optional)             - The current page number
+ * 'prev_next' (optional)           - Whether to include the previous and next links in the list or not.
+ * 'prev_text' (optional)           - The previous page text. Works only if 'prev_next' argument is set to true.
+ * 'next_text' (optional)           - The next page text. Works only if 'prev_next' argument is set to true.
+ * 'show_all' (optional)            - If set to True, then it will show all of the pages instead of a short list of the pages near the current page. By default, the 'show_all' is set to false and controlled by the 'end_size' and 'mid_size' arguments.
+ * 'end_size' (optional)            - How many numbers on either the start and the end list edges.
+ * 'mid_size' (optional)            - How many numbers to either side of current page, but not including current page.
+ * 'add_fragment' (optional)        - An array of query args to add using add_query_arg().
+ * 'type' (optional)                - Controls format of the returned value. Possible values are:
+ *                                    'plain' - A string with the links separated by a newline character.
+ *                                    'array' - An array of the paginated link list to offer full control of display.
+ *                                    'list' - Unordered HTML list.
+ * 'before' (optional)              - The HTML to display before the paginated links.
+ * 'after' (optional)               - The HTML to display after the paginated links.
+ * 'echo' (optional)                - Whether or not to display the paginated links (alternative is to "return").
+ *
+ * Query Parameter (optional)       - Specify a custom query which you'd like to paginate.
+ *
+ */
+
 /**
  * prime_pagination() is used for paginating the various archive pages created by WordPress. This is not
  * to be used on single.php or other single view pages.
@@ -2205,106 +2206,107 @@ if ( !function_exists('prime_custom_login_logo') ) {
 
 if ( ! function_exists( 'prime_pagination' ) ) {
 
-	function prime_pagination( $args = array(), $query = '' ) {
-		global $wp_rewrite, $wp_query;
-		
-		do_action( 'prime_pagination_start' );
-		
-		if ( $query ) {
-		
-			$wp_query = $query;
-		
-		} // End IF Statement
-	
-		/* If there's not more than one page, return nothing. */
-		if ( 1 >= $wp_query->max_num_pages )
-			return;
-	
-		/* Get the current page. */
-		$current = ( get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1 );
-	
-		/* Get the max number of pages. */
-		$max_num_pages = intval( $wp_query->max_num_pages );
-	
-		/* Set up some default arguments for the paginate_links() function. */
-		$defaults = array(
-			'base' => add_query_arg( 'paged', '%#%' ),
-			'format' => '',
-			'total' => $max_num_pages,
-			'current' => $current,
-			'prev_next' => true,
-			'prev_text' => __( '&laquo; Previous', 'primethemes' ), // Translate in WordPress. This is the default.
-			'next_text' => __( 'Next &raquo;', 'primethemes' ), // Translate in WordPress. This is the default.
-			'show_all' => false,
-			'end_size' => 1,
-			'mid_size' => 1,
-			'add_fragment' => '',
-			'type' => 'plain',
-			'before' => '<div class="pagination prime-pagination">', // Begin prime_pagination() arguments.
-			'after' => '</div>',
-			'echo' => true,
-		);
-	
-		/* Add the $base argument to the array if the user is using permalinks. */
-		if( $wp_rewrite->using_permalinks() )
-			$defaults['base'] = user_trailingslashit( trailingslashit( get_pagenum_link() ) . 'page/%#%' );
-	
-		/* If we're on a search results page, we need to change this up a bit. */
-		if ( is_search() ) {
-			$search_permastruct = $wp_rewrite->get_search_permastruct();
-			if ( !empty( $search_permastruct ) )
-				$defaults['base'] = user_trailingslashit( trailingslashit( get_search_link() ) . 'page/%#%' );
-		}
-	
-		/* Merge the arguments input with the defaults. */
-		$args = wp_parse_args( $args, $defaults );
-	
-		/* Allow developers to overwrite the arguments with a filter. */
-		$args = apply_filters( 'prime_pagination_args', $args );
-	
-		/* Don't allow the user to set this to an array. */
-		if ( 'array' == $args['type'] )
-			$args['type'] = 'plain';
-	
-		/* Get the paginated links. */
-		$page_links = paginate_links( $args );
-	
-		/* Remove 'page/1' from the entire output since it's not needed. */
-		$page_links = str_replace( array( '&#038;paged=1\'', '/page/1\'' ), '\'', $page_links );
-	
-		/* Wrap the paginated links with the $before and $after elements. */
-		$page_links = $args['before'] . $page_links . $args['after'];
-	
-		/* Allow devs to completely overwrite the output. */
-		$page_links = apply_filters( 'prime_pagination', $page_links );
-	
-		do_action( 'prime_pagination_end' );
-		
-		/* Return the paginated links for use in themes. */
-		if ( $args['echo'] )
-			echo $page_links;
-		else
-			return $page_links;
-			
-	} // End prime_pagination()
+    function prime_pagination( $args = array(), $query = '' ) {
+        global $wp_rewrite, $wp_query;
+        
+        do_action( 'prime_pagination_start' );
+        
+        if ( $query ) {
+        
+            $wp_query = $query;
+        
+        } // End IF Statement
+    
+        /* If there's not more than one page, return nothing. */
+        if ( 1 >= $wp_query->max_num_pages )
+            return;
+    
+        /* Get the current page. */
+        $current = ( get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1 );
+    
+        /* Get the max number of pages. */
+        $max_num_pages = intval( $wp_query->max_num_pages );
+    
+        /* Set up some default arguments for the paginate_links() function. */
+        $defaults = array(
+            'base' => add_query_arg( 'paged', '%#%' ),
+            'format' => '',
+            'total' => $max_num_pages,
+            'current' => $current,
+            'prev_next' => true,
+            'prev_text' => __( '&laquo; Previous', 'primethemes' ), // Translate in WordPress. This is the default.
+            'next_text' => __( 'Next &raquo;', 'primethemes' ), // Translate in WordPress. This is the default.
+            'show_all' => false,
+            'end_size' => 1,
+            'mid_size' => 1,
+            'add_fragment' => '',
+            'type' => 'plain',
+            'before' => '<div class="pagination prime-pagination">', // Begin prime_pagination() arguments.
+            'after' => '</div>',
+            'echo' => true,
+        );
+    
+        /* Add the $base argument to the array if the user is using permalinks. */
+        if( $wp_rewrite->using_permalinks() )
+            $defaults['base'] = user_trailingslashit( trailingslashit( get_pagenum_link() ) . 'page/%#%' );
+    
+        /* If we're on a search results page, we need to change this up a bit. */
+        if ( is_search() ) {
+            $search_permastruct = $wp_rewrite->get_search_permastruct();
+            if ( !empty( $search_permastruct ) )
+                $defaults['base'] = user_trailingslashit( trailingslashit( get_search_link() ) . 'page/%#%' );
+        }
+    
+        /* Merge the arguments input with the defaults. */
+        $args = wp_parse_args( $args, $defaults );
+    
+        /* Allow developers to overwrite the arguments with a filter. */
+        $args = apply_filters( 'prime_pagination_args', $args );
+    
+        /* Don't allow the user to set this to an array. */
+        if ( 'array' == $args['type'] )
+            $args['type'] = 'plain';
+    
+        /* Get the paginated links. */
+        $page_links = paginate_links( $args );
+    
+        /* Remove 'page/1' from the entire output since it's not needed. */
+        $page_links = str_replace( array( '&#038;paged=1\'', '/page/1\'' ), '\'', $page_links );
+    
+        /* Wrap the paginated links with the $before and $after elements. */
+        $page_links = $args['before'] . $page_links . $args['after'];
+    
+        /* Allow devs to completely overwrite the output. */
+        $page_links = apply_filters( 'prime_pagination', $page_links );
+    
+        do_action( 'prime_pagination_end' );
+        
+        /* Return the paginated links for use in themes. */
+        if ( $args['echo'] )
+            echo $page_links;
+        else
+            return $page_links;
+            
+    } // End prime_pagination()
 
 } // End IF Statement
 
-/*===================================================================================*/
-/* prime_breadcrumbs() - Custom breadcrumb generator function  */
-/*
-/* Params:
-/*
-/* Arguments Array:
-/*
-/* 'separator' 			- The character to display between the breadcrumbs.
-/* 'before' 			- HTML to display before the breadcrumbs.
-/* 'after' 				- HTML to display after the breadcrumbs.
-/* 'front_page' 		- Include the front page at the beginning of the breadcrumbs.
-/* 'show_home' 			- If $show_home is set and we're not on the front page of the site, link to the home page.
-/* 'echo' 				- Specify whether or not to echo the breadcrumbs. Alternative is "return".
-/*
-/*===================================================================================*/
+/**
+ * prime_breadcrumbs() - Custom breadcrumb generator function
+ *
+ * Params:
+ *
+ * Arguments Array:
+ *
+ * 'separator'          - The character to display between the breadcrumbs.
+ * 'before'             - HTML to display before the breadcrumbs.
+ * 'after'              - HTML to display after the breadcrumbs.
+ * 'front_page'         - Include the front page at the beginning of the breadcrumbs.
+ * 'show_home'          - If $show_home is set and we're not on the front page of the site, link to the home page.
+ * 'echo'               - Specify whether or not to echo the breadcrumbs. Alternative is "return".
+ *
+ */
+
 /**
  * The code below is inspired by Justin Tadlock's Hybrid Core.
  *
@@ -2316,269 +2318,270 @@ if ( ! function_exists( 'prime_pagination' ) ) {
  * @return string Output of the breadcrumb menu.
  */
 function prime_breadcrumbs( $args = array() ) {
-	global $wp_query, $wp_rewrite;
+    global $wp_query, $wp_rewrite;
 
-	/* Get the textdomain. */
-	$textdomain = 'primethemes';
+    /* Get the textdomain. */
+    $textdomain = 'primethemes';
 
-	/* Create an empty variable for the breadcrumb. */
-	$breadcrumb = '';
+    /* Create an empty variable for the breadcrumb. */
+    $breadcrumb = '';
 
-	/* Create an empty array for the trail. */
-	$trail = array();
-	$path = '';
+    /* Create an empty array for the trail. */
+    $trail = array();
+    $path = '';
 
-	/* Set up the default arguments for the breadcrumb. */
-	$defaults = array(
-		'separator' => '&raquo;',
-		'before' => '<span class="breadcrumb-title">' . __( 'You are here:', $textdomain ) . '</span>',
-		'after' => false,
-		'front_page' => true,
-		'show_home' => __( 'Home', $textdomain ),
-		'echo' => true
-	);
+    /* Set up the default arguments for the breadcrumb. */
+    $defaults = array(
+        'separator' => '&raquo;',
+        'before' => '<span class="breadcrumb-title">' . __( 'You are here:', $textdomain ) . '</span>',
+        'after' => false,
+        'front_page' => true,
+        'show_home' => __( 'Home', $textdomain ),
+        'echo' => true
+    );
 
-	/* Allow singular post views to have a taxonomy's terms prefixing the trail. */
-	if ( is_singular() )
-		$defaults["singular_{$wp_query->post->post_type}_taxonomy"] = false;
+    /* Allow singular post views to have a taxonomy's terms prefixing the trail. */
+    if ( is_singular() )
+        $defaults["singular_{$wp_query->post->post_type}_taxonomy"] = false;
 
-	/* Apply filters to the arguments. */
-	$args = apply_filters( 'prime_breadcrumbs_args', $args );
+    /* Apply filters to the arguments. */
+    $args = apply_filters( 'prime_breadcrumbs_args', $args );
 
-	/* Parse the arguments and extract them for easy variable naming. */
-	extract( wp_parse_args( $args, $defaults ) );
+    /* Parse the arguments and extract them for easy variable naming. */
+    extract( wp_parse_args( $args, $defaults ) );
 
-	/* If $show_home is set and we're not on the front page of the site, link to the home page. */
-	if ( !is_front_page() && $show_home )
-		$trail[] = '<a href="' . home_url() . '" title="' . esc_attr( get_bloginfo( 'name' ) ) . '" rel="home" class="trail-begin">' . $show_home . '</a>';
+    /* If $show_home is set and we're not on the front page of the site, link to the home page. */
+    if ( !is_front_page() && $show_home )
+        $trail[] = '<a href="' . home_url() . '" title="' . esc_attr( get_bloginfo( 'name' ) ) . '" rel="home" class="trail-begin">' . $show_home . '</a>';
 
-	/* If viewing the front page of the site. */
-	if ( is_front_page() ) {
-		if ( !$front_page )
-			$trail = false;
-		elseif ( $show_home )
-			$trail['trail_end'] = "{$show_home}";
-	}
+    /* If viewing the front page of the site. */
+    if ( is_front_page() ) {
+        if ( !$front_page )
+            $trail = false;
+        elseif ( $show_home )
+            $trail['trail_end'] = "{$show_home}";
+    }
 
-	/* If viewing the "home"/posts page. */
-	elseif ( is_home() ) {
-		$home_page = get_page( $wp_query->get_queried_object_id() );
-		$trail = array_merge( $trail, prime_breadcrumbs_get_parents( $home_page->post_parent, '' ) );
-		$trail['trail_end'] = get_the_title( $home_page->ID );
-	}
+    /* If viewing the "home"/posts page. */
+    elseif ( is_home() ) {
+        $home_page = get_page( $wp_query->get_queried_object_id() );
+        $trail = array_merge( $trail, prime_breadcrumbs_get_parents( $home_page->post_parent, '' ) );
+        $trail['trail_end'] = get_the_title( $home_page->ID );
+    }
 
-	/* If viewing a singular post (page, attachment, etc.). */
-	elseif ( is_singular() ) {
+    /* If viewing a singular post (page, attachment, etc.). */
+    elseif ( is_singular() ) {
 
-		/* Get singular post variables needed. */
-		$post = $wp_query->get_queried_object();
-		$post_id = absint( $wp_query->get_queried_object_id() );
-		$post_type = $post->post_type;
-		$parent = $post->post_parent;
+        /* Get singular post variables needed. */
+        $post = $wp_query->get_queried_object();
+        $post_id = absint( $wp_query->get_queried_object_id() );
+        $post_type = $post->post_type;
+        $parent = $post->post_parent;
 
-		/* If a custom post type, check if there are any pages in its hierarchy based on the slug. */
-		if ( 'page' !== $post_type ) {
+        /* If a custom post type, check if there are any pages in its hierarchy based on the slug. */
+        if ( 'page' !== $post_type ) {
 
-			$post_type_object = get_post_type_object( $post_type );
+            $post_type_object = get_post_type_object( $post_type );
 
-			/* If $front has been set, add it to the $path. */
-			if ( 'post' == $post_type || 'attachment' == $post_type || ( $post_type_object->rewrite['with_front'] && $wp_rewrite->front ) )
-				$path .= trailingslashit( $wp_rewrite->front );
+            /* If $front has been set, add it to the $path. */
+            if ( 'post' == $post_type || 'attachment' == $post_type || ( $post_type_object->rewrite['with_front'] && $wp_rewrite->front ) )
+                $path .= trailingslashit( $wp_rewrite->front );
 
-			/* If there's a slug, add it to the $path. */
-			if ( !empty( $post_type_object->rewrite['slug'] ) )
-				$path .= $post_type_object->rewrite['slug'];
+            /* If there's a slug, add it to the $path. */
+            if ( !empty( $post_type_object->rewrite['slug'] ) )
+                $path .= $post_type_object->rewrite['slug'];
 
-			/* If there's a path, check for parents. */
-			if ( !empty( $path ) )
-				$trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $path ) );
+            /* If there's a path, check for parents. */
+            if ( !empty( $path ) )
+                $trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $path ) );
 
-			/* If there's an archive page, add it to the trail. */
-			if ( !empty( $post_type_object->rewrite['archive'] ) && function_exists( 'get_post_type_archive_link' ) )
-				$trail[] = '<a href="' . get_post_type_archive_link( $post_type ) . '" title="' . esc_attr( $post_type_object->labels->name ) . '">' . $post_type_object->labels->name . '</a>';
-		}
+            /* If there's an archive page, add it to the trail. */
+            if ( !empty( $post_type_object->rewrite['archive'] ) && function_exists( 'get_post_type_archive_link' ) )
+                $trail[] = '<a href="' . get_post_type_archive_link( $post_type ) . '" title="' . esc_attr( $post_type_object->labels->name ) . '">' . $post_type_object->labels->name . '</a>';
+        }
 
-		/* If the post type path returns nothing and there is a parent, get its parents. */
-		if ( empty( $path ) && 0 !== $parent || 'attachment' == $post_type )
-			$trail = array_merge( $trail, prime_breadcrumbs_get_parents( $parent, '' ) );
+        /* If the post type path returns nothing and there is a parent, get its parents. */
+        if ( empty( $path ) && 0 !== $parent || 'attachment' == $post_type )
+            $trail = array_merge( $trail, prime_breadcrumbs_get_parents( $parent, '' ) );
 
-		/* Display terms for specific post type taxonomy if requested. */
-		if ( isset( $args["singular_{$post_type}_taxonomy"] ) && $terms = get_the_term_list( $post_id, $args["singular_{$post_type}_taxonomy"], '', ', ', '' ) )
-			$trail[] = $terms;
+        /* Display terms for specific post type taxonomy if requested. */
+        if ( isset( $args["singular_{$post_type}_taxonomy"] ) && $terms = get_the_term_list( $post_id, $args["singular_{$post_type}_taxonomy"], '', ', ', '' ) )
+            $trail[] = $terms;
 
-		/* End with the post title. */
-		$post_title = get_the_title();
-		if ( !empty( $post_title ) )
-			$trail['trail_end'] = $post_title;
-	}
+        /* End with the post title. */
+        $post_title = get_the_title();
+        if ( !empty( $post_title ) )
+            $trail['trail_end'] = $post_title;
+    }
 
-	/* If we're viewing any type of archive. */
-	elseif ( is_archive() ) {
+    /* If we're viewing any type of archive. */
+    elseif ( is_archive() ) {
 
-		/* If viewing a taxonomy term archive. */
-		if ( is_tax() || is_category() || is_tag() ) {
+        /* If viewing a taxonomy term archive. */
+        if ( is_tax() || is_category() || is_tag() ) {
 
-			/* Get some taxonomy and term variables. */
-			$term = $wp_query->get_queried_object();
-			$taxonomy = get_taxonomy( $term->taxonomy );
+            /* Get some taxonomy and term variables. */
+            $term = $wp_query->get_queried_object();
+            $taxonomy = get_taxonomy( $term->taxonomy );
 
-			/* Get the path to the term archive. Use this to determine if a page is present with it. */
-			if ( is_category() )
-				$path = get_option( 'category_base' );
-			elseif ( is_tag() )
-				$path = get_option( 'tag_base' );
-			else {
-				if ( $taxonomy->rewrite['with_front'] && $wp_rewrite->front )
-					$path = trailingslashit( $wp_rewrite->front );
-				$path .= $taxonomy->rewrite['slug'];
-			}
+            /* Get the path to the term archive. Use this to determine if a page is present with it. */
+            if ( is_category() )
+                $path = get_option( 'category_base' );
+            elseif ( is_tag() )
+                $path = get_option( 'tag_base' );
+            else {
+                if ( $taxonomy->rewrite['with_front'] && $wp_rewrite->front )
+                    $path = trailingslashit( $wp_rewrite->front );
+                $path .= $taxonomy->rewrite['slug'];
+            }
 
-			/* Get parent pages by path if they exist. */
-			if ( $path )
-				$trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $path ) );
+            /* Get parent pages by path if they exist. */
+            if ( $path )
+                $trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $path ) );
 
-			/* If the taxonomy is hierarchical, list its parent terms. */
-			if ( is_taxonomy_hierarchical( $term->taxonomy ) && $term->parent )
-				$trail = array_merge( $trail, prime_breadcrumbs_get_term_parents( $term->parent, $term->taxonomy ) );
+            /* If the taxonomy is hierarchical, list its parent terms. */
+            if ( is_taxonomy_hierarchical( $term->taxonomy ) && $term->parent )
+                $trail = array_merge( $trail, prime_breadcrumbs_get_term_parents( $term->parent, $term->taxonomy ) );
 
-			/* Add the term name to the trail end. */
-			$trail['trail_end'] = $term->name;
-		}
+            /* Add the term name to the trail end. */
+            $trail['trail_end'] = $term->name;
+        }
 
-		/* If viewing a post type archive. */
-		elseif ( function_exists( 'is_post_type_archive' ) && is_post_type_archive() ) {
+        /* If viewing a post type archive. */
+        elseif ( function_exists( 'is_post_type_archive' ) && is_post_type_archive() ) {
 
-			/* Get the post type object. */
-			$post_type_object = get_post_type_object( get_query_var( 'post_type' ) );
+            /* Get the post type object. */
+            $post_type_object = get_post_type_object( get_query_var( 'post_type' ) );
 
-			/* If $front has been set, add it to the $path. */
-			if ( $post_type_object->rewrite['with_front'] && $wp_rewrite->front )
-				$path .= trailingslashit( $wp_rewrite->front );
+            /* If $front has been set, add it to the $path. */
+            if ( $post_type_object->rewrite['with_front'] && $wp_rewrite->front )
+                $path .= trailingslashit( $wp_rewrite->front );
 
-			/* If there's a slug, add it to the $path. */
-			if ( !empty( $post_type_object->rewrite['archive'] ) )
-				$path .= $post_type_object->rewrite['archive'];
+            /* If there's a slug, add it to the $path. */
+            if ( !empty( $post_type_object->rewrite['archive'] ) )
+                $path .= $post_type_object->rewrite['archive'];
 
-			/* If there's a path, check for parents. */
-			if ( !empty( $path ) )
-				$trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $path ) );
+            /* If there's a path, check for parents. */
+            if ( !empty( $path ) )
+                $trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $path ) );
 
-			/* Add the post type [plural] name to the trail end. */
-			$trail['trail_end'] = $post_type_object->labels->name;
-		}
+            /* Add the post type [plural] name to the trail end. */
+            $trail['trail_end'] = $post_type_object->labels->name;
+        }
 
-		/* If viewing an author archive. */
-		elseif ( is_author() ) {
+        /* If viewing an author archive. */
+        elseif ( is_author() ) {
 
-			/* If $front has been set, add it to $path. */
-			if ( !empty( $wp_rewrite->front ) )
-				$path .= trailingslashit( $wp_rewrite->front );
+            /* If $front has been set, add it to $path. */
+            if ( !empty( $wp_rewrite->front ) )
+                $path .= trailingslashit( $wp_rewrite->front );
 
-			/* If an $author_base exists, add it to $path. */
-			if ( !empty( $wp_rewrite->author_base ) )
-				$path .= $wp_rewrite->author_base;
+            /* If an $author_base exists, add it to $path. */
+            if ( !empty( $wp_rewrite->author_base ) )
+                $path .= $wp_rewrite->author_base;
 
-			/* If $path exists, check for parent pages. */
-			if ( !empty( $path ) )
-				$trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $path ) );
+            /* If $path exists, check for parent pages. */
+            if ( !empty( $path ) )
+                $trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $path ) );
 
-			/* Add the author's display name to the trail end. */
-			$trail['trail_end'] = get_the_author_meta( 'display_name', get_query_var( 'author' ) );
-		}
+            /* Add the author's display name to the trail end. */
+            $trail['trail_end'] = get_the_author_meta( 'display_name', get_query_var( 'author' ) );
+        }
 
-		/* If viewing a time-based archive. */
-		elseif ( is_time() ) {
+        /* If viewing a time-based archive. */
+        elseif ( is_time() ) {
 
-			if ( get_query_var( 'minute' ) && get_query_var( 'hour' ) )
-				$trail['trail_end'] = get_the_time( __( 'g:i a', $textdomain ) );
+            if ( get_query_var( 'minute' ) && get_query_var( 'hour' ) )
+                $trail['trail_end'] = get_the_time( __( 'g:i a', $textdomain ) );
 
-			elseif ( get_query_var( 'minute' ) )
-				$trail['trail_end'] = sprintf( __( 'Minute %1$s', $textdomain ), get_the_time( __( 'i', $textdomain ) ) );
+            elseif ( get_query_var( 'minute' ) )
+                $trail['trail_end'] = sprintf( __( 'Minute %1$s', $textdomain ), get_the_time( __( 'i', $textdomain ) ) );
 
-			elseif ( get_query_var( 'hour' ) )
-				$trail['trail_end'] = get_the_time( __( 'g a', $textdomain ) );
-		}
+            elseif ( get_query_var( 'hour' ) )
+                $trail['trail_end'] = get_the_time( __( 'g a', $textdomain ) );
+        }
 
-		/* If viewing a date-based archive. */
-		elseif ( is_date() ) {
+        /* If viewing a date-based archive. */
+        elseif ( is_date() ) {
 
-			/* If $front has been set, check for parent pages. */
-			if ( $wp_rewrite->front )
-				$trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $wp_rewrite->front ) );
+            /* If $front has been set, check for parent pages. */
+            if ( $wp_rewrite->front )
+                $trail = array_merge( $trail, prime_breadcrumbs_get_parents( '', $wp_rewrite->front ) );
 
-			if ( is_day() ) {
-				$trail[] = '<a href="' . get_year_link( get_the_time( 'Y' ) ) . '" title="' . get_the_time( esc_attr__( 'Y', $textdomain ) ) . '">' . get_the_time( __( 'Y', $textdomain ) ) . '</a>';
-				$trail[] = '<a href="' . get_month_link( get_the_time( 'Y' ), get_the_time( 'm' ) ) . '" title="' . get_the_time( esc_attr__( 'F', $textdomain ) ) . '">' . get_the_time( __( 'F', $textdomain ) ) . '</a>';
-				$trail['trail_end'] = get_the_time( __( 'j', $textdomain ) );
-			}
+            if ( is_day() ) {
+                $trail[] = '<a href="' . get_year_link( get_the_time( 'Y' ) ) . '" title="' . get_the_time( esc_attr__( 'Y', $textdomain ) ) . '">' . get_the_time( __( 'Y', $textdomain ) ) . '</a>';
+                $trail[] = '<a href="' . get_month_link( get_the_time( 'Y' ), get_the_time( 'm' ) ) . '" title="' . get_the_time( esc_attr__( 'F', $textdomain ) ) . '">' . get_the_time( __( 'F', $textdomain ) ) . '</a>';
+                $trail['trail_end'] = get_the_time( __( 'j', $textdomain ) );
+            }
 
-			elseif ( get_query_var( 'w' ) ) {
-				$trail[] = '<a href="' . get_year_link( get_the_time( 'Y' ) ) . '" title="' . get_the_time( esc_attr__( 'Y', $textdomain ) ) . '">' . get_the_time( __( 'Y', $textdomain ) ) . '</a>';
-				$trail['trail_end'] = sprintf( __( 'Week %1$s', $textdomain ), get_the_time( esc_attr__( 'W', $textdomain ) ) );
-			}
+            elseif ( get_query_var( 'w' ) ) {
+                $trail[] = '<a href="' . get_year_link( get_the_time( 'Y' ) ) . '" title="' . get_the_time( esc_attr__( 'Y', $textdomain ) ) . '">' . get_the_time( __( 'Y', $textdomain ) ) . '</a>';
+                $trail['trail_end'] = sprintf( __( 'Week %1$s', $textdomain ), get_the_time( esc_attr__( 'W', $textdomain ) ) );
+            }
 
-			elseif ( is_month() ) {
-				$trail[] = '<a href="' . get_year_link( get_the_time( 'Y' ) ) . '" title="' . get_the_time( esc_attr__( 'Y', $textdomain ) ) . '">' . get_the_time( __( 'Y', $textdomain ) ) . '</a>';
-				$trail['trail_end'] = get_the_time( __( 'F', $textdomain ) );
-			}
+            elseif ( is_month() ) {
+                $trail[] = '<a href="' . get_year_link( get_the_time( 'Y' ) ) . '" title="' . get_the_time( esc_attr__( 'Y', $textdomain ) ) . '">' . get_the_time( __( 'Y', $textdomain ) ) . '</a>';
+                $trail['trail_end'] = get_the_time( __( 'F', $textdomain ) );
+            }
 
-			elseif ( is_year() ) {
-				$trail['trail_end'] = get_the_time( __( 'Y', $textdomain ) );
-			}
-		}
-	}
+            elseif ( is_year() ) {
+                $trail['trail_end'] = get_the_time( __( 'Y', $textdomain ) );
+            }
+        }
+    }
 
-	/* If viewing search results. */
-	elseif ( is_search() )
-		$trail['trail_end'] = sprintf( __( 'Search results for &quot;%1$s&quot;', $textdomain ), esc_attr( get_search_query() ) );
+    /* If viewing search results. */
+    elseif ( is_search() )
+        $trail['trail_end'] = sprintf( __( 'Search results for &quot;%1$s&quot;', $textdomain ), esc_attr( get_search_query() ) );
 
-	/* If viewing a 404 error page. */
-	elseif ( is_404() )
-		$trail['trail_end'] = __( '404 Not Found', $textdomain );
+    /* If viewing a 404 error page. */
+    elseif ( is_404() )
+        $trail['trail_end'] = __( '404 Not Found', $textdomain );
 
-	/* Connect the breadcrumb trail if there are items in the trail. */
-	if ( is_array( $trail ) ) {
+    /* Connect the breadcrumb trail if there are items in the trail. */
+    if ( is_array( $trail ) ) {
 
-		/* Open the breadcrumb trail containers. */
-		$breadcrumb = '<div class="breadcrumb breadcrumbs prime-breadcrumbs"><div class="breadcrumb-trail">';
+        /* Open the breadcrumb trail containers. */
+        $breadcrumb = '<div class="breadcrumb breadcrumbs prime-breadcrumbs"><div class="breadcrumb-trail">';
 
-		/* If $before was set, wrap it in a container. */
-		if ( !empty( $before ) )
-			$breadcrumb .= '<span class="trail-before">' . $before . '</span> ';
+        /* If $before was set, wrap it in a container. */
+        if ( !empty( $before ) )
+            $breadcrumb .= '<span class="trail-before">' . $before . '</span> ';
 
-		/* Wrap the $trail['trail_end'] value in a container. */
-		if ( !empty( $trail['trail_end'] ) )
-			$trail['trail_end'] = '<span class="trail-end">' . $trail['trail_end'] . '</span>';
+        /* Wrap the $trail['trail_end'] value in a container. */
+        if ( !empty( $trail['trail_end'] ) )
+            $trail['trail_end'] = '<span class="trail-end">' . $trail['trail_end'] . '</span>';
 
-		/* Format the separator. */
-		if ( !empty( $separator ) )
-			$separator = '<span class="sep">' . $separator . '</span>';
+        /* Format the separator. */
+        if ( !empty( $separator ) )
+            $separator = '<span class="sep">' . $separator . '</span>';
 
-		/* Join the individual trail items into a single string. */
-		$breadcrumb .= join( " {$separator} ", $trail );
+        /* Join the individual trail items into a single string. */
+        $breadcrumb .= join( " {$separator} ", $trail );
 
-		/* If $after was set, wrap it in a container. */
-		if ( !empty( $after ) )
-			$breadcrumb .= ' <span class="trail-after">' . $after . '</span>';
+        /* If $after was set, wrap it in a container. */
+        if ( !empty( $after ) )
+            $breadcrumb .= ' <span class="trail-after">' . $after . '</span>';
 
-		/* Close the breadcrumb trail containers. */
-		$breadcrumb .= '</div></div>';
-	}
+        /* Close the breadcrumb trail containers. */
+        $breadcrumb .= '</div></div>';
+    }
 
-	/* Allow developers to filter the breadcrumb trail HTML. */
-	$breadcrumb = apply_filters( 'prime_breadcrumbs', $breadcrumb );
+    /* Allow developers to filter the breadcrumb trail HTML. */
+    $breadcrumb = apply_filters( 'prime_breadcrumbs', $breadcrumb );
 
-	/* Output the breadcrumb. */
-	if ( $echo )
-		echo $breadcrumb;
-	else
-		return $breadcrumb;
+    /* Output the breadcrumb. */
+    if ( $echo )
+        echo $breadcrumb;
+    else
+        return $breadcrumb;
 
 } // End prime_breadcrumbs()
 
-/*===================================================================================*/
-/* prime_breadcrumbs_get_parents() - Retrieve the parents of the current page/post */
-/*===================================================================================*/
+/**
+ *  prime_breadcrumbs_get_parents() - Retrieve the parents of the current page/post
+ */
+
 /**
  * Gets parent pages of any post type or taxonomy by the ID or Path.  The goal of this function is to create 
  * a clear path back to home given what would normally be a "ghost" directory.  If any page matches the given 
@@ -2591,82 +2594,83 @@ function prime_breadcrumbs( $args = array() ) {
  */
 function prime_breadcrumbs_get_parents( $post_id = '', $path = '' ) {
 
-	/* Set up an empty trail array. */
-	$trail = array();
+    /* Set up an empty trail array. */
+    $trail = array();
 
-	/* If neither a post ID nor path set, return an empty array. */
-	if ( empty( $post_id ) && empty( $path ) )
-		return $trail;
+    /* If neither a post ID nor path set, return an empty array. */
+    if ( empty( $post_id ) && empty( $path ) )
+        return $trail;
 
-	/* If the post ID is empty, use the path to get the ID. */
-	if ( empty( $post_id ) ) {
+    /* If the post ID is empty, use the path to get the ID. */
+    if ( empty( $post_id ) ) {
 
-		/* Get parent post by the path. */
-		$parent_page = get_page_by_path( $path );
+        /* Get parent post by the path. */
+        $parent_page = get_page_by_path( $path );
 
-		/* If a parent post is found, set the $post_id variable to it. */
-		if ( !empty( $parent_page ) )
-			$post_id = $parent_page->ID;
-	}
+        /* If a parent post is found, set the $post_id variable to it. */
+        if ( !empty( $parent_page ) )
+            $post_id = $parent_page->ID;
+    }
 
-	/* If a post ID and path is set, search for a post by the given path. */
-	if ( $post_id == 0 && !empty( $path ) ) {
+    /* If a post ID and path is set, search for a post by the given path. */
+    if ( $post_id == 0 && !empty( $path ) ) {
 
-		/* Separate post names into separate paths by '/'. */
-		$path = trim( $path, '/' );
-		preg_match_all( "/\/.*?\z/", $path, $matches );
+        /* Separate post names into separate paths by '/'. */
+        $path = trim( $path, '/' );
+        preg_match_all( "/\/.*?\z/", $path, $matches );
 
-		/* If matches are found for the path. */
-		if ( isset( $matches ) ) {
+        /* If matches are found for the path. */
+        if ( isset( $matches ) ) {
 
-			/* Reverse the array of matches to search for posts in the proper order. */
-			$matches = array_reverse( $matches );
+            /* Reverse the array of matches to search for posts in the proper order. */
+            $matches = array_reverse( $matches );
 
-			/* Loop through each of the path matches. */
-			foreach ( $matches as $match ) {
+            /* Loop through each of the path matches. */
+            foreach ( $matches as $match ) {
 
-				/* If a match is found. */
-				if ( isset( $match[0] ) ) {
+                /* If a match is found. */
+                if ( isset( $match[0] ) ) {
 
-					/* Get the parent post by the given path. */
-					$path = str_replace( $match[0], '', $path );
-					$parent_page = get_page_by_path( trim( $path, '/' ) );
+                    /* Get the parent post by the given path. */
+                    $path = str_replace( $match[0], '', $path );
+                    $parent_page = get_page_by_path( trim( $path, '/' ) );
 
-					/* If a parent post is found, set the $post_id and break out of the loop. */
-					if ( !empty( $parent_page ) && $parent_page->ID > 0 ) {
-						$post_id = $parent_page->ID;
-						break;
-					}
-				}
-			}
-		}
-	}
+                    /* If a parent post is found, set the $post_id and break out of the loop. */
+                    if ( !empty( $parent_page ) && $parent_page->ID > 0 ) {
+                        $post_id = $parent_page->ID;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
-	/* While there's a post ID, add the post link to the $parents array. */
-	while ( $post_id ) {
+    /* While there's a post ID, add the post link to the $parents array. */
+    while ( $post_id ) {
 
-		/* Get the post by ID. */
-		$page = get_page( $post_id );
+        /* Get the post by ID. */
+        $page = get_page( $post_id );
 
-		/* Add the formatted post link to the array of parents. */
-		$parents[]  = '<a href="' . get_permalink( $post_id ) . '" title="' . esc_attr( get_the_title( $post_id ) ) . '">' . get_the_title( $post_id ) . '</a>';
+        /* Add the formatted post link to the array of parents. */
+        $parents[]  = '<a href="' . get_permalink( $post_id ) . '" title="' . esc_attr( get_the_title( $post_id ) ) . '">' . get_the_title( $post_id ) . '</a>';
 
-		/* Set the parent post's parent to the post ID. */
-		$post_id = $page->post_parent;
-	}
+        /* Set the parent post's parent to the post ID. */
+        $post_id = $page->post_parent;
+    }
 
-	/* If we have parent posts, reverse the array to put them in the proper order for the trail. */
-	if ( isset( $parents ) )
-		$trail = array_reverse( $parents );
+    /* If we have parent posts, reverse the array to put them in the proper order for the trail. */
+    if ( isset( $parents ) )
+        $trail = array_reverse( $parents );
 
-	/* Return the trail of parent posts. */
-	return $trail;
+    /* Return the trail of parent posts. */
+    return $trail;
 
 } // End prime_breadcrumbs_get_parents()
 
-/*===================================================================================*/
-/* prime_breadcrumbs_get_term_parents() - Retrieve the parents of the current term */
-/*===================================================================================*/
+/**
+ *  prime_breadcrumbs_get_term_parents() - Retrieve the parents of the current term
+ */
+
 /**
  * Searches for term parents of hierarchical taxonomies.  This function is similar to the WordPress 
  * function get_category_parents() but handles any type of taxonomy.
@@ -2678,37 +2682,37 @@ function prime_breadcrumbs_get_parents( $post_id = '', $path = '' ) {
  */
 function prime_breadcrumbs_get_term_parents( $parent_id = '', $taxonomy = '' ) {
 
-	/* Set up some default arrays. */
-	$trail = array();
-	$parents = array();
+    /* Set up some default arrays. */
+    $trail = array();
+    $parents = array();
 
-	/* If no term parent ID or taxonomy is given, return an empty array. */
-	if ( empty( $parent_id ) || empty( $taxonomy ) )
-		return $trail;
+    /* If no term parent ID or taxonomy is given, return an empty array. */
+    if ( empty( $parent_id ) || empty( $taxonomy ) )
+        return $trail;
 
-	/* While there is a parent ID, add the parent term link to the $parents array. */
-	while ( $parent_id ) {
+    /* While there is a parent ID, add the parent term link to the $parents array. */
+    while ( $parent_id ) {
 
-		/* Get the parent term. */
-		$parent = get_term( $parent_id, $taxonomy );
+        /* Get the parent term. */
+        $parent = get_term( $parent_id, $taxonomy );
 
-		/* Add the formatted term link to the array of parent terms. */
-		$parents[] = '<a href="' . get_term_link( $parent, $taxonomy ) . '" title="' . esc_attr( $parent->name ) . '">' . $parent->name . '</a>';
+        /* Add the formatted term link to the array of parent terms. */
+        $parents[] = '<a href="' . get_term_link( $parent, $taxonomy ) . '" title="' . esc_attr( $parent->name ) . '">' . $parent->name . '</a>';
 
-		/* Set the parent term's parent as the parent ID. */
-		$parent_id = $parent->parent;
-	}
+        /* Set the parent term's parent as the parent ID. */
+        $parent_id = $parent->parent;
+    }
 
-	/* If we have parent terms, reverse the array to put them in the proper order for the trail. */
-	if ( !empty( $parents ) )
-		$trail = array_reverse( $parents );
+    /* If we have parent terms, reverse the array to put them in the proper order for the trail. */
+    if ( !empty( $parents ) )
+        $trail = array_reverse( $parents );
 
-	/* Return the trail of parent terms. */
-	return $trail;
-	
+    /* Return the trail of parent terms. */
+    return $trail;
+    
 } // End prime_breadcrumbs_get_term_parents()
 
-/*===================================================================================*/
-/* THE END */
-/*===================================================================================*/
+/**
+ *  THE END
+ */
 ?>
