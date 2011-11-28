@@ -301,11 +301,11 @@ function prime_custom_nav_scripts() {
 
 
 
-/*===================================================================================*/
-/* primethemes Custom Navigation Menu Interface
-/* prime_custom_navigation() is the main function for the Custom Navigation
-/* See functions in admin-functions.php
-/*===================================================================================*/
+/**
+ * primethemes Custom Navigation Menu Interface
+ * prime_custom_navigation() is the main function for the Custom Navigation
+ * See functions in admin-functions.php
+ */
 
 function prime_custom_navigation() {
 	global $wpdb;
@@ -985,25 +985,25 @@ function prime_custom_navigation() {
 
 
 
-/*===================================================================================*/
-/* primeThemes Custom Navigation Functions */
-/* prime_custom_navigation_output() displays the menu in the back/frontend
-/* prime_custom_navigation_sub_items() is a recursive sub menu item function
-/* prime_get_pages()
-/* prime_get_categories()
-/* prime_custom_navigation_default_sub_items() is a recursive sub menu item function
-/*===================================================================================*/
+/**
+ * primeThemes Custom Navigation Functions
+ * prime_custom_navigation_output() displays the menu in the back/frontend
+ * prime_custom_navigation_sub_items() is a recursive sub menu item function
+ * prime_get_pages()
+ * prime_get_categories()
+ * prime_custom_navigation_default_sub_items() is a recursive sub menu item function
+ */
 
-/*===================================================================================*/
-/* Main Output Function
-/* args list
-/* type - frontend or backend
-/* name - name of your menu
-/* id - id of menu in db
-/* desc - 1 = show descriptions, 2 = dont show descriptions
-/* before_title - html before title is outputted in <a> tag
-/* after_title - html after title is outputted in <a> tag
-/*===================================================================================*/
+/**
+ * Main Output Function
+ * args list
+ * type - frontend or backend
+ * name - name of your menu
+ * id - id of menu in db
+ * desc - 1 = show descriptions, 2 = dont show descriptions
+ * before_title - html before title is outputted in <a> tag
+ * after_title - html after title is outputted in <a> tag
+ */
 function prime_custom_navigation_output($args = array()) {
 		
 		//DEFAULT ARGS
@@ -1995,10 +1995,8 @@ function prime_custom_navigation_default_sub_items($childof, $intCounter, $paren
 }
 
 /**
- *
- *
- *
-/* Recursive get children */
+ * Recursive get children
+ */
 
 
 function get_children_menu_elements($childof, $intCounter, $parentli, $type, $menu_id, $table_name) {
@@ -2114,10 +2112,8 @@ function get_children_menu_elements($childof, $intCounter, $parentli, $type, $me
 }
 
 /**
- *
- *
- *
-/* primethemes Custom Navigation Menu Widget */
+ * primethemes Custom Navigation Menu Widget
+ */
 
 
 class prime_NavWidget extends WP_Widget {
