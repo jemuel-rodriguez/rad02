@@ -1,9 +1,10 @@
-/*
-* Tumblog CSS
-*/
+/**
+ * Tumblog CSS
+ */
 
-/* Editor Styling
-================================--*/
+/**
+ * Editor Styling
+ */ 
 
 #tumblog-menu  { margin: 10px 0 0; padding: 0 0 0 0; }
 #tumblog-menu a  { margin: 0 5px 5px 0; background-color: #f1f1f1!important; border:1px solid #dcdcdc; line-height: 40px; padding: 6px 10px 6px 0; -moz-border-radius-bottomleft:4px; -moz-border-radius-bottomright:4px; -moz-border-radius-topleft:4px; -moz-border-radius-topright:4px; }
