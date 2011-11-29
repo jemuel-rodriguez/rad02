@@ -1,18 +1,18 @@
-/*===================================================================================*/
-/* PrimeThemes Media Library-driven AJAX File Uploader Module - JavaScript Functions */
-/* 2010-11-05. */
-/*
-/* The code below is designed to work as a part of the PrimeThemes Media Library-driven
-/* AJAX File Uploader Module. It is included only on screens where this module is used.
-/*===================================================================================*/
+/**
+ * PrimeThemes Media Library-driven AJAX File Uploader Module - JavaScript Functions
+ * 2010-11-05.
+ *
+ * The code below is designed to work as a part of the PrimeThemes Media Library-driven
+ * AJAX File Uploader Module. It is included only on screens where this module is used.
+ */
 
 (function ($) {
 
   primethemesMLU = {
   
-/*===================================================================================*/
-/* Remove file when the "remove" button is clicked.
-/*===================================================================================*/
+/**
+ * Remove file when the "remove" button is clicked.
+ */
   
     removeFile: function () {
      
@@ -29,9 +29,9 @@
       
     }, // End removeFile
     
-/*===================================================================================*/
-/* Replace the default file upload field with a customised version.
-/*===================================================================================*/
+/**
+ * Replace the default file upload field with a customised version.
+ */
 
     recreateFileField: function () {
     
@@ -51,17 +51,17 @@
       
     }, // End recreateFileField
 
-/*===================================================================================*/
-/* Use a custom function when working with the Media Uploads popup.
-/* Requires jQuery, Media Upload and Thickbox JavaScripts.
-/*===================================================================================*/
+/**
+ * Use a custom function when working with the Media Uploads popup.
+ * Requires jQuery, Media Upload and Thickbox JavaScripts.
+ */
 
-	mediaUpload: function () {
-	
-	jQuery.noConflict();
-	
-	$( 'input.upload_button' ).removeAttr('style');
-	
+    mediaUpload: function () {
+    
+    jQuery.noConflict();
+    
+    $( 'input.upload_button' ).removeAttr('style');
+    
       var formfield,
           formID,
           btnContent = true;
@@ -87,25 +87,25 @@
       window.send_to_editor = function(html) {
         
         if (formfield) {
-        	
+            
           // itemurl = $(html).attr('href'); // Use the URL to the main image.
           
           if ( $(html).html(html).find('img').length > 0 ) {
           
-          	itemurl = $(html).html(html).find('img').attr('src'); // Use the URL to the size selected.
-          	
+            itemurl = $(html).html(html).find('img').attr('src'); // Use the URL to the size selected.
+            
           } else {
           
           // It's not an image. Get the URL to the file instead.
-          	
-          	var htmlBits = html.split("'"); // jQuery seems to strip out XHTML when assigning the string to an object. Use alternate method.
+            
+            var htmlBits = html.split("'"); // jQuery seems to strip out XHTML when assigning the string to an object. Use alternate method.
           
-          	itemurl = htmlBits[1]; // Use the URL to the file.
-          	
-          	var itemtitle = htmlBits[2];
-          	
-          	itemtitle = itemtitle.replace( '>', '' );
-          	itemtitle = itemtitle.replace( '</a>', '' );
+            itemurl = htmlBits[1]; // Use the URL to the file.
+            
+            var itemtitle = htmlBits[2];
+            
+            itemtitle = itemtitle.replace( '>', '' );
+            itemtitle = itemtitle.replace( '</a>', '' );
           
           } // End IF Statement
                    
@@ -117,8 +117,8 @@
           if (itemurl.match(image)) {
             btnContent = '<img src="'+itemurl+'" alt="" /><a href="#" class="mlu_remove button">Remove Image</a>';
           } else {
-          	
-          	// No output preview if it's not an image.
+            
+            // No output preview if it's not an image.
           
             // btnContent = '';
             
@@ -147,16 +147,16 @@
    
   }; // End primethemesMLU Object // Don't remove this, or the sky will fall on your head.
 
-/*===================================================================================*/
-/* Execute the above methods in the primethemesMLU object.
-/*===================================================================================*/
+/**
+ * Execute the above methods in the primethemesMLU object.
+ */
   
-	$(document).ready(function () {
+    $(document).ready(function () {
 
-		primethemesMLU.removeFile();
-		primethemesMLU.recreateFileField();
-		primethemesMLU.mediaUpload();
-	
-	});
+        primethemesMLU.removeFile();
+        primethemesMLU.recreateFileField();
+        primethemesMLU.mediaUpload();
+    
+    });
   
 })(jQuery);
