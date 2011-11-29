@@ -54,9 +54,10 @@ if (!function_exists("prime_remove_wpautop")) {
 	}
 }
 
-/*===================================================================================*/
-/* 1.1 Output shortcode JS in footer */
-/*===================================================================================*/
+/**
+  * 1.1 Output shortcode JS in footer
+  */
+
 
 // Enqueue shortcode JS file.
 
@@ -128,16 +129,16 @@ add_action('wp_footer', 'prime_output_shortcode_js');
 /*===================================================================================*/
 /* 2. Boxes - box
 /*===================================================================================*/
-/*
 
-Optional arguments:
- - type: info, alert, tick, download, note
- - size: medium, large
- - style: rounded
- - border: none, full
- - icon: none OR full URL to a custom icon 
-
+/**
+ * Optional arguments:
+ 	- type: info, alert, tick, download, note
+	- size: medium, large
+  	- style: rounded
+ 	- border: none, full
+ 	- icon: none OR full URL to a custom icon 
 */
+
 function prime_shortcode_box($atts, $content = null) {
    extract(shortcode_atts(array(	'type' => 'normal',
    									'size' => '',
@@ -159,19 +160,19 @@ add_shortcode('box', 'prime_shortcode_box');
 /*===================================================================================*/
 /* 3. Buttons - button
 /*===================================================================================*/
-/*
 
-Optional arguments:
- - size: small, large
- - style: info, alert, tick, download, note
- - color: red, green, black, grey OR custom hex color (e.g #000000)
- - border: border color (e.g. red or #000000)
- - text: black (for light color background on button) 
- - class: custom class
- - link: button link (e.g http://www.primethemes.com)
- - window: true/false
- 
+/**
+ * Optional arguments:
+	- size: small, large
+ 	- style: info, alert, tick, download, note
+ 	- color: red, green, black, grey OR custom hex color (e.g #000000)
+ 	- border: border color (e.g. red or #000000)
+ 	- text: black (for light color background on button) 
+ 	- class: custom class
+ 	- link: button link (e.g http://www.primethemes.com)
+ 	- window: true/false
 */
+
 function prime_shortcode_button($atts, $content = null) {
    	extract(shortcode_atts(array(	'size' => '',
    									'style' => '',
@@ -252,11 +253,12 @@ add_shortcode('button', 'prime_shortcode_button');
 /*====================================================================================*/
 /* 4. Related Posts - related_posts
 /*===================================================================================*/
-/*
 
-Optional arguments:
- - limit: number of posts to show (default: 5)
- - image: thumbnail size, 0 = off (default: 0)
+/**
+
+ * Optional arguments:
+	- limit: number of posts to show (default: 5)
+	- image: thumbnail size, 0 = off (default: 0)
 */
 
 function prime_shortcode_related_posts( $atts ) {
@@ -327,17 +329,18 @@ add_shortcode('related_posts', 'prime_shortcode_related_posts');
 /*===================================================================================*/
 /* 5. Tweetmeme button - tweetmeme
 /*===================================================================================*/
-/*
 
-Source: http://help.tweetmeme.com/2009/04/06/tweetmeme-button/
+/**
+ * Source: http://help.tweetmeme.com/2009/04/06/tweetmeme-button/
+ *
+ * Optional arguments:
+	- link: specify URL directly 
+ 	- style: compact
+ 	- source: username
+ 	- float: none, left, right (default: left)
+ *
+ */
 
-Optional arguments:
- - link: specify URL directly 
- - style: compact
- - source: username
- - float: none, left, right (default: left)
- 
-*/
 function prime_shortcode_tweetmeme($atts, $content = null) {
    	extract(shortcode_atts(array(	'link' => '',
    									'style' => '',
@@ -366,19 +369,20 @@ add_shortcode('tweetmeme', 'prime_shortcode_tweetmeme');
 /*===================================================================================*/
 /* 6. Twitter button - twitter
 /*===================================================================================*/
-/*
 
-Source: http://twitter.com/goodies/tweetbutton
+/**
+ * Source: http://twitter.com/goodies/tweetbutton
+ *
+ * Optional arguments:
+ 	- style: vertical, horizontal, none ( default: vertical )
+ 	- url: specify URL directly 
+ 	- source: username to mention in tweet
+ 	- related: related account 
+ 	- text: optional tweet text (default: title of page)
+ 	- float: none, left, right (default: left)
+ 	- lang: fr, de, es, js (default: english)
+ */
 
-Optional arguments:
- - style: vertical, horizontal, none ( default: vertical )
- - url: specify URL directly 
- - source: username to mention in tweet
- - related: related account 
- - text: optional tweet text (default: title of page)
- - float: none, left, right (default: left)
- - lang: fr, de, es, js (default: english)
-*/
 function prime_shortcode_twitter($atts, $content = null) {
    	extract(shortcode_atts(array(	'url' => '',
    									'style' => 'vertical',
@@ -413,17 +417,17 @@ add_shortcode('twitter', 'prime_shortcode_twitter');
 /*===================================================================================*/
 /* 7. Digg Button - digg
 /*===================================================================================*/
-/*
 
-Source: http://about.digg.com/button
+/**
+ * Source: http://about.digg.com/button
+ *
+ * Optional arguments:
+ 	- link: specify URL directly 
+ 	- title: specify a title (must add link also)
+ 	- style: medium, large, compact, icon (default: medium)
+ 	- float: none, left, right (default: left)
+ */
 
-Optional arguments:
- - link: specify URL directly 
- - title: specify a title (must add link also)
- - style: medium, large, compact, icon (default: medium)
- - float: none, left, right (default: left)
- 
-*/
 function prime_shortcode_digg($atts, $content = null) {
    	extract(shortcode_atts(array(	'link' => '',
    									'title' => '',
@@ -469,21 +473,21 @@ add_shortcode('digg', 'prime_shortcode_digg');
 /*===================================================================================*/
 /* 8. Facebook Like Button - fblike
 /*===================================================================================*/
-/*
 
-Source: http://developers.facebook.com/docs/reference/plugins/like
-
-Optional arguments:
- - float: none (default), left, right 
- - url: link you want to share (default: current post ID)
- - style: standard (default), button
- - showfaces: true or false (default)
- - width: 450
- - verb: like (default) or recommend
- - colorscheme: light (default), dark
- - font: arial (default), lucida grande, segoe ui, tahoma, trebuchet ms, verdana 
- 
+/**
+ * Source: http://developers.facebook.com/docs/reference/plugins/like
+ *
+ * Optional arguments:
+ 	- float: none (default), left, right 
+ 	- url: link you want to share (default: current post ID)
+ 	- style: standard (default), button
+ 	- showfaces: true or false (default)
+ 	- width: 450
+ 	- verb: like (default) or recommend
+ 	- colorscheme: light (default), dark
+ 	- font: arial (default), lucida grande, segoe ui, tahoma, trebuchet ms, verdana 
 */
+
 function prime_shortcode_fblike($atts, $content = null) {
    	extract(shortcode_atts(array(	'float' => 'none',
    									'url' => '',
@@ -549,15 +553,14 @@ add_shortcode('fblike', 'prime_shortcode_fblike');
 /*===================================================================================*/
 /* 9. Columns
 /*===================================================================================*/
-/*
 
-Description:
-
-Columns are named with this convention Xcol_Y where X is the total number of columns and Y is 
-the number of columns you want this column to span. Add _last behind the shortcode if it is the
-last column.
-
-*/
+/**
+ * Description:
+  	-Columns are named with this convention Xcol_Y where X is the total number of columns and Y is 
+	the number of columns you want this column to span. Add _last behind the shortcode if it is the
+	last column.
+ *
+ */
 
 /* ============= Two Columns ============= */
 
@@ -725,11 +728,11 @@ add_shortcode('sixcol_five_last', 'prime_shortcode_sixcol_five_last');
 /*===================================================================================*/
 /* 10. Horizontal Rule / Divider - hr - divider
 /*===================================================================================*/
-/*
 
-Description: Use to separate text. 
+/**
+ * Description: Use to separate text.
+ */
 
-*/
 function prime_shortcode_hr($atts, $content = null) {
    return '<div class="prime-sc-hr"></div>';
 }
@@ -749,13 +752,13 @@ add_shortcode('divider_flat', 'prime_shortcode_divider_flat');
 /*====================================================================================*/
 /* 11. Quote - quote
 /*====================================================================================*/
-/*
 
-Optional arguments:
- - style: boxed 
- - float: left, right
- 
-*/
+/**
+ * Optional arguments:
+ 	- style: boxed 
+ 	- float: left, right
+ */
+
 function prime_shortcode_quote($atts, $content = null) {
    	extract(shortcode_atts(array(	'style' => '',
    									'float' => ''), $atts));
@@ -772,14 +775,14 @@ add_shortcode('quote', 'prime_shortcode_quote');
 /*===================================================================================*/
 /* 12. Icon links - ilink
 /*===================================================================================*/
-/*
 
-Optional arguments:
- - style: download, note, tick, info, alert
- - url: the url for your link 
- - icon: add an url to a custom icon
- 
-*/
+/**
+ * Optional arguments:
+ 	- style: download, note, tick, info, alert
+ 	- url: the url for your link 
+ 	- icon: add an url to a custom icon
+ */
+
 function prime_shortcode_ilink($atts, $content = null) {
    	extract(shortcode_atts(array( 'style' => 'info', 'url' => '', 'icon' => ''), $atts));  
    	
@@ -794,16 +797,17 @@ add_shortcode('ilink', 'prime_shortcode_ilink');
 /*===================================================================================*/
 /* 13. jQuery Toggle
 /*===================================================================================*/
-/*
 
-}
-
-Optional arguments:
- - title: The text in the main trigger
- - hide: Hide the toggle box on load
- - display_main_trigger: Display the main trigger on the toggle
+/**
+ *
+   }
+ *
+ * Optional arguments:
+ 	- title: The text in the main trigger
+ 	- hide: Hide the toggle box on load
+ 	- display_main_trigger: Display the main trigger on the toggle
+ */
  
-*/
 function prime_shortcode_toggle ( $atts, $content = null ) {
 
 		$defaults = array( 'title_open' => 'Hide the Content', 'title_closed' => 'Show the Content', 'hide' => 'yes', 'display_main_trigger' => 'yes', 'style' => 'default', 'border' => 'yes' );
@@ -838,34 +842,35 @@ function prime_shortcode_toggle ( $atts, $content = null ) {
 } // End prime_shortcode_toggle()
 
 add_shortcode( 'toggle', 'prime_shortcode_toggle', 99 );
-/*
-function prime_shortcode_toggle($atts, $content = null) {
-   	extract(shortcode_atts(array( 	'link' => 'Toggle link', 
-   									'hide' => '' ), $atts));  
-   	
-   	prime_check_shortcode_js('toggle');
-   	
-	$output .= '<a class="prime-sc-toggle-trigger">' . $link . '</a>';
-	$output .= '<div class="prime-sc-toggle-box' . $show . '">' . prime_remove_wpautop($content) . '</div>';
 
+/**
+  function prime_shortcode_toggle($atts, $content = null) {
+   	extract(shortcode_atts(array( 	'link' => 'Toggle link', 
+ 								'hide' => '' ), $atts));  
+  	
+  	prime_check_shortcode_js('toggle');
+  	
+ 	$output .= '<a class="prime-sc-toggle-trigger">' . $link . '</a>';
+ 	$output .= '<div class="prime-sc-toggle-box' . $show . '">' . prime_remove_wpautop($content) . '</div>';
+ 
 	return $output; 
-}
-add_shortcode('toggle', 'prime_shortcode_toggle');
-*/
+ }
+ add_shortcode('toggle', 'prime_shortcode_toggle');
+ */
 
 
 /*===================================================================================*/
 /* 14. Facebook Share Button - fbshare
 /*===================================================================================*/
-/*
 
-Source: http://developers.facebook.com/docs/share
+/**
+ * Source: http://developers.facebook.com/docs/share
+ *
+ * Optional arguments:
+ 	- type: box_count, button_count, button (default), icon_link, or icon
+ 	- float: none, left, right (default: left)
+ */
 
-Optional arguments:
- - type: box_count, button_count, button (default), icon_link, or icon
- - float: none, left, right (default: left)
-
-*/
 function prime_shortcode_fbshare($atts, $content = null) {
    	extract(shortcode_atts(array( 'url' => '', 'type' => 'button', 'float' => 'left' ), $atts));
 				
@@ -890,18 +895,17 @@ add_shortcode('fbshare', 'prime_shortcode_fbshare');
 /*===================================================================================*/
 /* 15. Advanced Contact Form - contact_form
 /*===================================================================================*/
-/*
 
-Optional arguments:
- - email: The e-mail address to which the form will send (defaults to prime_contactform_email).
- - subject: The subject of the e-mail (defaults to "Message via the contact form".
- 
- - Advanced form fields functionality, for creating dynamic form fields:
- --- Text Input: text_fieldname="Text Field Label|Optional Default Text"
- --- Select Box: select_fieldname="Select Box Label|key=value,key=value,key=value"
- --- Textarea Input: textarea_fieldname="Textarea Field Label|Optional Default Text|Optional Number of Rows|Optional Number of Columns"
-
-*/
+/**
+ * Optional arguments:
+ 	- email: The e-mail address to which the form will send (defaults to prime_contactform_email).
+ 	- subject: The subject of the e-mail (defaults to "Message via the contact form".
+ *
+ 	* Advanced form fields functionality, for creating dynamic form fields:
+ 		--- Text Input: text_fieldname="Text Field Label|Optional Default Text"
+ 		--- Select Box: select_fieldname="Select Box Label|key=value,key=value,key=value"
+ 		--- Textarea Input: textarea_fieldname="Textarea Field Label|Optional Default Text|Optional Number of Rows|Optional Number of Columns"
+ */
 
 function prime_shortcode_contactform ( $atts, $content = null ) {
 
