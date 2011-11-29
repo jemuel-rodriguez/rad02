@@ -23,9 +23,10 @@ TABLE OF CONTENTS
 
 define('THEME_FRAMEWORK','primethemes');
 
-/*===================================================================================*/
-/* Add default options and show Options Panel after activate  */
-/*===================================================================================*/
+/**
+ * Add default options and show Options Panel after activate
+ */
+
 if (is_admin() && isset($_GET['activated'] ) && $pagenow == "themes.php" ) {
 
 	//Call action that sets
@@ -77,9 +78,10 @@ if (!function_exists('prime_option_setup')) {
 	}
 }
 
-/*===================================================================================*/
-/* Admin Backend */
-/*===================================================================================*/
+/**
+ * Admin Backend
+ */
+
 if (!function_exists('primethemes_admin_head')) {
 	function primethemes_admin_head() { 
 	    
@@ -93,9 +95,10 @@ if (!function_exists('primethemes_admin_head')) {
 add_action('admin_head', 'primethemes_admin_head'); 
 
 
-/*===================================================================================*/
-/* Theme Header output - wp_head() */
-/*===================================================================================*/
+/**
+ * Theme Header output - wp_head()
+ */
+
 if (!function_exists('primethemes_wp_head')) {
 	function primethemes_wp_head() { 
 	    
@@ -145,9 +148,10 @@ if (!function_exists('primethemes_wp_head')) {
 add_action('wp_head', 'primethemes_wp_head');
 
 
-/*===================================================================================*/
-/* Output CSS from standarized options */
-/*===================================================================================*/
+/**
+ * Output CSS from standarized options
+ */
+
 if (!function_exists('prime_head_css')) {
 	function prime_head_css() {
 	
@@ -184,9 +188,10 @@ if (!function_exists('prime_head_css')) {
 	}
 }
 
-/*===================================================================================*/
-/* Post Images from WP2.9+ integration /*
-/*===================================================================================*/
+/**
+ * Post Images from WP2.9+ integration
+ */
+
 if(function_exists('add_theme_support')){
 	if(get_option('prime_post_image_support') == 'true'){
 		add_theme_support( 'post-thumbnails' );
@@ -205,9 +210,10 @@ if(function_exists('add_theme_support')){
 }
 
 
-/*===================================================================================*/
-/* Enqueue comment reply script */
-/*===================================================================================*/
+/**
+ * Enqueue comment reply script
+ */
+
 if (!function_exists('prime_comment_reply')) {
 	function prime_comment_reply() {
 		if ( is_singular() ) wp_enqueue_script( 'comment-reply' );
