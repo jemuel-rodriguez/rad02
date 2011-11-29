@@ -29,17 +29,17 @@ INSTANTIATE CLASS
 
 class primeThemes_Shortcode_Generator {
 
-/*===================================================================================
-  Class Variables
-  
+/**
+  * Class Variables
+  *
   * Setup of variable placeholders, to be populated when the constructor runs.
-===================================================================================*/
+  */
 
-/*===================================================================================
-  Class Constructor
-  
+/**
+  * Class Constructor
+  *
   * Constructor function. Sets up the class and registers variable action hooks.
-===================================================================================*/
+  */
 
 	function primeThemes_Shortcode_Generator () {
 	
@@ -55,11 +55,11 @@ class primeThemes_Shortcode_Generator {
 	
 	} // End primeThemes_Shortcode_Generator()
 
-/*===================================================================================
-  init()
-  
+/**
+  * init()
+  *
   * This guy runs the show. Rocket boosters... engage!
-===================================================================================*/
+  */
 
 	function init() {
 	
@@ -86,12 +86,12 @@ class primeThemes_Shortcode_Generator {
 	
 	} // End init()
 
-/*===================================================================================
-  getRequesttheen
-()
-  
+/**
+  * getRequesttheen
+  * ()
+  *
   * Add our new button to the tinyMCE editor.
-===================================================================================*/
+  */
 	
 	function getRequesttheen
 ( $buttons ) {
@@ -103,11 +103,11 @@ class primeThemes_Shortcode_Generator {
 	} // End getRequesttheen
 
 
-/*===================================================================================
-  filter_mce_external_plugins()
-  
+/**
+  * filter_mce_external_plugins()
+  *
   * Add functionality to the tinyMCE editor as an external plugin.
-===================================================================================*/
+  */
 	
 	function filter_mce_external_plugins( $plugins ) {
 		
@@ -117,17 +117,17 @@ class primeThemes_Shortcode_Generator {
         
 	} // End filter_mce_external_plugins()
 	
-/*===================================================================================
-  Utility Functions
-  
+/**
+  * Utility Functions
+  *
   * Helper functions for this class.
-===================================================================================*/
+  */
 
-/*===================================================================================
-  framework_url()
-  
+/**
+  * framework_url()
+  *
   * Returns the full URL of the primeFramework, including trailing slash.
-===================================================================================*/
+  */
 
 function framework_url() {
 	
@@ -135,15 +135,15 @@ function framework_url() {
 
 } // End framework_url()
 
-/*===================================================================================
-  ajax_action_check_url()
-  
+/**
+  * ajax_action_check_url()
+  *
   * Checks if a given url (via GET or POST) exists.
   * Returns JSON.
   *
   * NOTE: For users that are not logged in this is not called.
   * The client recieves <code>-1</code> in that case.
-===================================================================================*/
+  */
 
 function ajax_action_check_url() {
 
@@ -164,11 +164,11 @@ function ajax_action_check_url() {
 	
 } // End ajax_action_check_url()
 
-/*===================================================================================
-  shortcode_testing()
-  
+/**
+  * shortcode_testing()
+  *
   * Used for testing that the shortcodes are functioning.
-===================================================================================*/
+  */
 
 function shortcode_testing( $atts, $content = null ) {
 	
@@ -180,9 +180,9 @@ function shortcode_testing( $atts, $content = null ) {
 
 } // End Class
 
-/*===================================================================================
-  INSTANTIATE CLASS
-===================================================================================*/
+/**
+  * INSTANTIATE CLASS
+  */
 
 $prime_shortcode_generator = new primeThemes_Shortcode_Generator();
 ?>
