@@ -1,25 +1,25 @@
 <?php
 
-/*===================================================================================
+/**
+ * 
+ * TABLE OF CONTENTS
+ * 
+ * - primethemes_more_themes_page
+ * 
+ */
 
-TABLE OF CONTENTS
-
-- primethemes_more_themes_page
-
-===================================================================================*/
-
-/*===================================================================================*/
-/* primethemes_more_themes_page */
-/*===================================================================================*/
+/**
+ * primethemes_more_themes_page
+ */
 
 function primethemes_more_themes_page(){
         ?>
         <div class="wrap themes-page">
         <h2>More primeThemes</h2>
         
-		<?php // Get RSS Feed(s)
+        <?php // Get RSS Feed(s)
         include_once(ABSPATH . WPINC . '/feed.php');
-        $rss = fetch_feed('http://www.primethemes.com/?feed=more_themes');			
+        $rss = fetch_feed('http://www.primethemes.com/?feed=more_themes');          
         // Of the RSS is failed somehow.
         if ( is_wp_error($rss) ) {
                         
