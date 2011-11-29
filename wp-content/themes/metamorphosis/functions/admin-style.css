@@ -1,13 +1,15 @@
-./*===========================================================================================*/
+
 /* primeThemes admin styles */
-/*============================================================================================*/
 
 .updated, .error {display:none!important} /* disable the admin notices */
 
 #prime_container  { margin: 15px; width: 827px; position:relative; z-index: 0 }
 
 #prime_container #header  { height: 80px; background: url(images/headertile.jpg) repeat-x left top; border: 1px solid #a4bbcd; border-top-left-radius: 15px; -moz-border-radius-topleft: 15px; -webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; border-top-right-radius: 15px; -moz-border-radius-topright: 15px;  
+
+
 /*INSET SHADOW*/
+
 -webkit-box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255,255,.2);
 -moz-box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255,255,.2);
 box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255,255,.2);
@@ -135,6 +137,7 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 
 
 /* SELECT DROPDOWN */
+
 #prime_container #content select.prime-input {
 	cursor:pointer;
 	height:28px;
@@ -254,10 +257,10 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 	
 }
 
-/*
-#prime_container .prime-uploaded-image { border:2px solid #dedede; -moz-border-radius: 3px; display:block;}
-#prime_container .prime-uploaded-image img {margin:5px;display:block}
-*/
+/**
+ * #prime_container .prime-uploaded-image { border:2px solid #dedede; -moz-border-radius: 3px; display:block;}
+ * #prime_container .prime-uploaded-image img {margin:5px;display:block}
+ */
 
 #prime_container .prime-save-popup { position:absolute; -moz-border-radius:12px; background:rgba(0,0,0,0.4); color:#fff; font-size:24px; text-align:center; display:none; z-index: 10; }
 
@@ -275,7 +278,10 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 .reset-button { color:#c77!important;text-shadow:0 1px 0 #fff !important;}
 .reset-button:hover { border-color:#c77!important;}
 .save_bar_top { background: #f3f3f3; border:solid #ccc; border-width:0px 1px 1px 1px; padding: 10px 20px 0px 20px; height: 35px; text-align: right;
+
+
 /*INSET SHADOW*/
+
 -webkit-box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255,255,.2);
 -moz-box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255,255,.2);
 box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255,255,.2);
@@ -296,9 +302,8 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 
 .prime-notice { background: #ffd1d1 ; border:1px solid #DFA8A7; -moz-border-radius:8px; text-align: center; margin-bottom: 15px  }
 
-/*===========================================================================================*/
+
 /* FEEDS PAGE */
-/*===========================================================================================*/
 
 		.themes-page div.info { height:30px;}
 		.themes-page div.info a {  float:left; margin: 0 10px 0 0; padding:3px 10px; background:#D7E6F2; -moz-border-radius:4px}
@@ -324,9 +329,8 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
         ul.themes li.theme div ul li a:hover, 
         ul.themes li.theme div ul li a:active { text-decoration: underline ;}
 
-/*===========================================================================================*/
+
 /* SIDEBAR MANAGER */
-/*===========================================================================================*/
 
 #prime_container #content.sbm-content { width: 785px; padding-top:20px }
 
@@ -431,7 +435,9 @@ ul#prime-sbm-menu_ul li a span { color: #999; }
 #prime_container .delete-sidebar { float:right; font-size: 9px; color: red; margin-left: 15px}
 #prime_container .edit-sidebar { float:right; font-size: 9px; color: green}
 
+
 /* Nav Menu - From wordpress */
+
 #menu-container .inside { padding-bottom: 10px; }
 
 .menu {
@@ -533,7 +539,9 @@ body.js .item-order {
 	border-bottom-left-radius: 3px;
 }
 
+
 /* Menu editing */
+
 .menu-instructions-inactive {
 	display: none;
 }
@@ -632,9 +640,8 @@ body.js .item-order {
 .string_option span { font-weight: 700;}
 .string_option .delete { text-transform: uppercase; font-size:10px; float: right; color: red}
 
-/*===========================================================================================*/
+
 /* Icons Option panel */
-/*===========================================================================================*/
 
 #prime_container #prime-nav ul li.general a { background-image:url(images/option-icon-general.png); background-repeat: no-repeat; background-position: 15px center; padding-left:40px; }
 #prime_container #prime-nav ul li.styling a { background-image:url(images/option-icon-styling.png); background-repeat: no-repeat; background-position: 15px center; padding-left:40px; }
@@ -665,9 +672,9 @@ body.js .item-order {
 #prime_container #prime-nav ul li.post a { background-image:url(images/option-icon-post.png); background-repeat: no-repeat; background-position: 15px center; padding-left:40px; }
 #prime_container #prime-nav ul li.connect a { background-image:url(images/option-icon-connect.png); background-repeat: no-repeat; background-position: 15px center; padding-left:40px; }
 
-/*===========================================================================================*/
+
 /* GENERAL STYLES */
-/*===========================================================================================*/
+
 
 /* http://sonspring.com/journal/clearing-floats */
 
