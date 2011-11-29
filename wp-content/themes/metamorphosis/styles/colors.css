@@ -1,4 +1,6 @@
-/* Style: colors */
+/**
+ * Style: colors
+ */
 
 body { background:#FFF url(colors/bg-tile.jpg) repeat center top;}
 #wrap { background: url(colors/bg.jpg) repeat-x center top; }
