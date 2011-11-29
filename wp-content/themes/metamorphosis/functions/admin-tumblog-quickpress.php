@@ -27,9 +27,8 @@ TABLE OF CONTENTS
  * prime_upgrade_existing_tumblog_posts
 ===================================================================================*/
 
-/*===================================================================================*/
-/* Register Actions
-/*===================================================================================*/
+
+/* Register Actions */
 
 //Include iphone app functionality
 $content_method = get_option('prime_tumblog_content_method');
@@ -91,9 +90,8 @@ function prime_load_tumblog_css($hook) {
     
 }
 
-/*===================================================================================*/
-/* AJAX Callback Functions
-/*===================================================================================*/
+
+/* AJAX Callback Functions */
 
 //Handles AJAX Form Post from prime QuickPress
 function prime_tumblog_ajax_post() {
@@ -783,9 +781,8 @@ function prime_tumblog_file_upload() {
 	else { echo $uploaded_file['url'].'|'.$attach_id.'|'; } // Is the Response
 }
 
-/*===================================================================================*/
-/* Dashboard Widget
-/*===================================================================================*/
+
+/* Dashboard Widget */
 
 // Tumblog Dashboard Widget Output
 function prime_tumblog_dashboard_widget_output() {
